@@ -1,109 +1,83 @@
 import { Sidebar } from './sidebar';
 import { useMediaQuery } from '@wordpress/compose';
-import store, {
-	PlaygroundReduxState,
-	selectSite,
-	addSite as addSiteToStore,
-	removeSite as removeSiteFromStore,
-} from '../../lib/redux-store';
-import { useSelector } from 'react-redux';
+import {
+	useAppDispatch,
+	useActiveSite,
+	useAppSelector,
+} from '../../lib/state/redux/store';
 
 import css from './style.module.css';
-import { createNewSiteInfo, SiteInfo } from '../../lib/site-storage';
-import { LatestMinifiedWordPressVersion } from '@wp-playground/wordpress-builds';
-import { LatestSupportedPHPVersion } from '@php-wasm/universal';
 import { SiteInfoPanel } from './site-info-panel';
 import classNames from 'classnames';
 
-import React, { forwardRef } from 'react';
-import { useNavigatorParams } from '../../lib/use-navigator-params';
+import { forwardRef } from 'react';
+import { setSiteManagerOpen } from '../../lib/state/redux/slice-ui';
+import { BlueprintsPanel } from './blueprints-panel';
 
 export const SiteManager = forwardRef<
 	HTMLDivElement,
 	{
 		className?: string;
-		onSiteChange: (siteSlug?: string) => void;
-		siteViewRef: React.RefObject<HTMLDivElement>;
 	}
->(({ onSiteChange, siteViewRef, className, ...rest }, ref) => {
-	const {
-		goTo,
-		matchedParams: { siteSlug },
-	} = useNavigatorParams('/manager/:siteSlug');
+>(({ className }, ref) => {
+	const activeSite = useActiveSite();
+	const dispatch = useAppDispatch();
 
-	const sites = useSelector(
-		(state: PlaygroundReduxState) => state.siteListing.sites
+	const fullScreenSiteManager = useMediaQuery('(max-width: 1126px)');
+	const fullScreenSections = useMediaQuery('(max-width: 875px)');
+	const activeSiteManagerSection = useAppSelector(
+		(state) => state.ui.siteManagerSection
 	);
 
-	const selectedSite = sites.find((site) => site.slug === siteSlug);
-
-	const addSite = async (name: string) => {
-		const newSiteInfo = createNewSiteInfo({
-			name,
-			storage: 'opfs',
-			wpVersion: LatestMinifiedWordPressVersion,
-			phpVersion: LatestSupportedPHPVersion,
-			phpExtensionBundle: 'kitchen-sink',
-		});
-		await store.dispatch(addSiteToStore(newSiteInfo));
-		return newSiteInfo;
-	};
-
-	const removeSite = async (siteToRemove: SiteInfo) => {
-		const removingSelectedSite = siteToRemove.slug === selectedSite?.slug;
-		await store.dispatch(removeSiteFromStore(siteToRemove));
-		if (removingSelectedSite) {
-			// TODO: What site to select after removing the current selection?
-			onSiteClick('wordpress');
-		}
-	};
-
-	const onSiteClick = async (siteSlug: string) => {
-		onSiteChange(siteSlug);
-		const url = new URL(window.location.href);
-		if (siteSlug) {
-			url.searchParams.set('site-slug', siteSlug);
-		} else {
-			url.searchParams.delete('site-slug');
-		}
-		window.history.pushState({}, '', url.toString());
-
-		await store.dispatch(selectSite(siteSlug));
-		goTo('/manager/' + siteSlug);
-	};
-
-	const fullScreenSections = useMediaQuery('(max-width: 750px)');
-	const sitesList = (
+	const sidebar = (
 		<Sidebar
 			className={css.sidebar}
-			onSiteClick={onSiteClick}
-			siteSlug={siteSlug}
-			addSite={addSite}
-			sites={sites}
-		/>
-	);
-	const siteInfoPanel = selectedSite && (
-		<SiteInfoPanel
-			key={selectedSite.slug}
-			className={css.siteManagerSiteInfo}
-			site={selectedSite}
-			removeSite={removeSite}
-			showBackButton={fullScreenSections}
-			onBackButtonClick={() => {
-				goTo('/manager');
+			afterSiteClick={() => {
+				if (fullScreenSiteManager) {
+					// Close the site manager so the site view is visible.
+					dispatch(setSiteManagerOpen(false));
+				}
 			}}
 		/>
 	);
+
+	let activePanel;
+	switch (activeSiteManagerSection) {
+		case 'blueprints':
+			activePanel = (
+				<BlueprintsPanel
+					className={css.blueprintsPanel}
+					mobileUi={fullScreenSections}
+				/>
+			);
+			break;
+		case 'site-details':
+			activePanel = activeSite ? (
+				<SiteInfoPanel
+					key={activeSite?.slug}
+					className={css.siteManagerSiteInfo}
+					site={activeSite}
+					mobileUi={fullScreenSections}
+				/>
+			) : null;
+			break;
+		default:
+			activePanel = null;
+			break;
+	}
+	if (fullScreenSections) {
+		return (
+			<div className={classNames(css.siteManager, className)} ref={ref}>
+				{activeSiteManagerSection === 'sidebar' || !activePanel
+					? sidebar
+					: activePanel}
+			</div>
+		);
+	}
 	return (
 		<div className={classNames(css.siteManager, className)} ref={ref}>
-			{fullScreenSections ? (
-				siteInfoPanel || sitesList
-			) : (
-				<>
-					{sitesList}
-					{siteInfoPanel}
-				</>
-			)}
+			{sidebar}
+			{activePanel}
 		</div>
 	);
 });

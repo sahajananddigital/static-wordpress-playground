@@ -888,8 +888,8 @@ body.is-fullscreen-mode .interface-interface-skeleton{
   border-bottom:1px solid #ddd;
   box-sizing:border-box;
   height:60px;
-  padding-left:8px;
-  padding-right:8px;
+  padding-left:16px;
+  padding-right:16px;
 }
 
 .entities-saved-states__text-prompt{
@@ -1024,6 +1024,7 @@ body.is-fullscreen-mode .interface-interface-skeleton{
 }
 .show-icon-labels .editor-header .components-button.has-icon:after,.show-icon-labels.interface-pinned-items .components-button.has-icon:after{
   content:attr(aria-label);
+  white-space:nowrap;
 }
 .show-icon-labels .editor-header .components-button.has-icon[aria-disabled=true],.show-icon-labels.interface-pinned-items .components-button.has-icon[aria-disabled=true]{
   background-color:initial;

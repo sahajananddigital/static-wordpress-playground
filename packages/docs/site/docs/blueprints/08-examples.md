@@ -20,14 +20,14 @@ Let's see some cool things you can do with Blueprints.
 	"steps": [
 		{
 			"step": "installPlugin",
-			"pluginZipFile": {
+			"pluginData": {
 				"resource": "wordpress.org/plugins",
 				"slug": "coblocks"
 			}
 		},
 		{
 			"step": "installTheme",
-			"themeZipFile": {
+			"themeData": {
 				"resource": "wordpress.org/themes",
 				"slug": "pendant"
 			}
@@ -91,14 +91,14 @@ blueprint={{
 	"steps": [
 		{
 			"step": "installPlugin",
-			"pluginZipFile": {
+			"pluginData": {
 				"resource": "url",
 				"url": "https://your-site.com/your-plugin.zip"
 			}
 		},
 		{
 			"step": "installTheme",
-			"themeZipFile": {
+			"themeData": {
 				"resource": "url",
 				"url": "https://your-site.com/your-theme.zip"
 			}
@@ -120,13 +120,10 @@ blueprint={{
 	]
 }} />
 
-## Enable PHP extensions and networking
+## Enable networking
 
 <BlueprintExample blueprint={{
 	"landingPage": "/wp-admin/plugin-install.php",
-	"phpExtensionBundles": [
-		"kitchen-sink"
-	],
 	"features": {
 		"networking": true
 	},
@@ -143,9 +140,6 @@ Use the `writeFile` step to add code to a mu-plugin that runs on every request.
 
 <BlueprintExample blueprint={{
 	"landingPage": "/category/uncategorized/",
-	"phpExtensionBundles": [
-		"kitchen-sink"
-	],
 	"features": {
 		"networking": true
 	},
@@ -173,7 +167,7 @@ Use the `writeFile` step to add code to a mu-plugin that runs on every request.
     },
     {
       "step": "installPlugin",
-      "pluginZipFile": {
+      "pluginData": {
         "resource": "wordpress.org/plugins",
         "slug": "interactive-code-block"
       }
