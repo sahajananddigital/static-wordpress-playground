@@ -49,7 +49,7 @@ export interface WebClientMixin extends ProgressReceiver {
     onMessage: PlaygroundWorkerEndpoint['onMessage'];
     mountOpfs(options: MountDescriptor, onProgress?: SyncProgressCallback): Promise<void>;
     unmountOpfs(mountpoint: string): Promise<void>;
-    boot(options: Omit<WorkerBootOptions, 'scope'>): Promise<void>;
+    boot(options: WorkerBootOptions): Promise<void>;
 }
 /**
  * The Playground Client interface.

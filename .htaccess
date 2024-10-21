@@ -1,5 +1,4 @@
 AddType application/wasm .wasm
-AddType	application/octet-stream .data
 Options +Multiviews
 AddEncoding x-gzip .gz
 

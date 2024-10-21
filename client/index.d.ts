@@ -35,9 +35,27 @@ export interface StartPlaygroundOptions {
      * @returns
      */
     onBeforeBlueprint?: () => Promise<void>;
-    siteSlug?: string;
     mounts?: Array<MountDescriptor>;
     shouldInstallWordPress?: boolean;
+    /**
+     * The string prefix used in the site URL served by the currently
+     * running remote.html. E.g. for a prefix like `/scope:playground/`,
+     * the scope would be `playground`. See the `@php-wasm/scopes` package
+     * for more details.
+     */
+    scope?: string;
+    /**
+     * Proxy URL to use for cross-origin requests.
+     *
+     * For example, if corsProxy is set to "https://cors.wordpress.net/proxy.php",
+     * then the CORS requests to https://github.com/WordPress/wordpress-playground.git would actually
+     * be made to https://cors.wordpress.net/proxy.php?https://github.com/WordPress/wordpress-playground.git.
+     *
+     * The Blueprints library will arbitrarily choose which requests to proxy. If you need
+     * to proxy every single request, do not use this option. Instead, you should preprocess
+     * your Blueprint to replace all cross-origin URLs with the proxy URL.
+     */
+    corsProxy?: string;
 }
 /**
  * Loads playground in iframe and returns a PlaygroundClient instance.
@@ -46,4 +64,4 @@ export interface StartPlaygroundOptions {
  * @param options Options for loading the playground.
  * @returns A PlaygroundClient instance.
  */
-export declare function startPlaygroundWeb({ iframe, blueprint, remoteUrl, progressTracker, disableProgressBar, onBlueprintStepCompleted, onClientConnected, sapiName, onBeforeBlueprint, mounts, shouldInstallWordPress, }: StartPlaygroundOptions): Promise<PlaygroundClient>;
+export declare function startPlaygroundWeb({ iframe, blueprint, remoteUrl, progressTracker, disableProgressBar, onBlueprintStepCompleted, onClientConnected, sapiName, onBeforeBlueprint, mounts, scope, corsProxy, shouldInstallWordPress, }: StartPlaygroundOptions): Promise<PlaygroundClient>;

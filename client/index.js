@@ -1,73 +1,73 @@
-const Vr = function() {
-  var r;
-  return typeof process < "u" && ((r = process.release) == null ? void 0 : r.name) === "node" ? "NODE" : typeof window < "u" ? "WEB" : (
+const En = function() {
+  var e;
+  return typeof process < "u" && ((e = process.release) == null ? void 0 : e.name) === "node" ? "NODE" : typeof window < "u" ? "WEB" : (
     // @ts-ignore
     typeof WorkerGlobalScope < "u" && // @ts-ignore
     self instanceof WorkerGlobalScope ? "WORKER" : "NODE"
   );
 }();
-if (Vr === "NODE") {
-  let r = function(o) {
-    return new Promise(function(p, l) {
-      o.onload = o.onerror = function(i) {
-        o.onload = o.onerror = null, i.type === "load" ? p(o.result) : l(new Error("Failed to read the blob/file"));
+if (En === "NODE") {
+  let e = function(s) {
+    return new Promise(function(n, o) {
+      s.onload = s.onerror = function(i) {
+        s.onload = s.onerror = null, i.type === "load" ? n(s.result) : o(new Error("Failed to read the blob/file"));
       };
     });
-  }, t = function() {
-    const o = new Uint8Array([1, 2, 3, 4]), l = new File([o], "test").stream();
+  }, r = function() {
+    const s = new Uint8Array([1, 2, 3, 4]), o = new File([s], "test").stream();
     try {
-      return l.getReader({ mode: "byob" }), !0;
+      return o.getReader({ mode: "byob" }), !0;
     } catch {
       return !1;
     }
   };
   if (typeof File > "u") {
-    class o extends Blob {
-      constructor(l, i, e) {
-        super(l);
-        let f;
-        e != null && e.lastModified && (f = /* @__PURE__ */ new Date()), (!f || isNaN(f.getFullYear())) && (f = /* @__PURE__ */ new Date()), this.lastModifiedDate = f, this.lastModified = f.getMilliseconds(), this.name = i || "";
+    class s extends Blob {
+      constructor(o, i, t) {
+        super(o);
+        let p;
+        t != null && t.lastModified && (p = /* @__PURE__ */ new Date()), (!p || isNaN(p.getFullYear())) && (p = /* @__PURE__ */ new Date()), this.lastModifiedDate = p, this.lastModified = p.getMilliseconds(), this.name = i || "";
       }
     }
-    global.File = o;
+    global.File = s;
   }
   typeof Blob.prototype.arrayBuffer > "u" && (Blob.prototype.arrayBuffer = function() {
-    const p = new FileReader();
-    return p.readAsArrayBuffer(this), r(p);
+    const n = new FileReader();
+    return n.readAsArrayBuffer(this), e(n);
   }), typeof Blob.prototype.text > "u" && (Blob.prototype.text = function() {
-    const p = new FileReader();
-    return p.readAsText(this), r(p);
-  }), (typeof Blob.prototype.stream > "u" || !t()) && (Blob.prototype.stream = function() {
-    let o = 0;
-    const p = this;
+    const n = new FileReader();
+    return n.readAsText(this), e(n);
+  }), (typeof Blob.prototype.stream > "u" || !r()) && (Blob.prototype.stream = function() {
+    let s = 0;
+    const n = this;
     return new ReadableStream({
       type: "bytes",
       // 0.5 MB seems like a reasonable chunk size, let's adjust
       // this if needed.
       autoAllocateChunkSize: 512 * 1024,
-      async pull(l) {
-        const i = l.byobRequest.view, f = await p.slice(
-          o,
-          o + i.byteLength
-        ).arrayBuffer(), h = new Uint8Array(f);
-        new Uint8Array(i.buffer).set(h);
-        const b = h.byteLength;
-        l.byobRequest.respond(b), o += b, o >= p.size && l.close();
+      async pull(o) {
+        const i = o.byobRequest.view, p = await n.slice(
+          s,
+          s + i.byteLength
+        ).arrayBuffer(), y = new Uint8Array(p);
+        new Uint8Array(i.buffer).set(y);
+        const u = y.byteLength;
+        o.byobRequest.respond(u), s += u, s >= n.size && o.close();
       }
     });
   });
 }
-if (Vr === "NODE" && typeof CustomEvent > "u") {
-  class r extends Event {
-    constructor(o, p = {}) {
-      super(o, p), this.detail = p.detail;
+if (En === "NODE" && typeof CustomEvent > "u") {
+  class e extends Event {
+    constructor(s, n = {}) {
+      super(s, n), this.detail = n.detail;
     }
     initCustomEvent() {
     }
   }
-  globalThis.CustomEvent = r;
+  globalThis.CustomEvent = e;
 }
-const Hr = [
+const On = [
   "db.php",
   "plugins/akismet",
   "plugins/hello.php",
@@ -88,20 +88,20 @@ const Hr = [
   "themes/twentytwentyfour",
   "themes/twentytwentyfive",
   "themes/twentytwentysix"
-], Gr = Symbol("SleepFinished");
-function _t(r) {
-  return new Promise((t) => {
-    setTimeout(() => t(Gr), r);
+], xn = Symbol("SleepFinished");
+function io(e) {
+  return new Promise((r) => {
+    setTimeout(() => r(xn), e);
   });
 }
-class kt extends Error {
+class no extends Error {
   constructor() {
     super("Acquiring lock timed out");
   }
 }
-class Ot {
-  constructor({ concurrency: t, timeout: o }) {
-    this._running = 0, this.concurrency = t, this.timeout = o, this.queue = [];
+class ao {
+  constructor({ concurrency: r, timeout: s }) {
+    this._running = 0, this.concurrency = r, this.timeout = s, this.queue = [];
   }
   get remaining() {
     return this.concurrency - this.running;
@@ -112,178 +112,178 @@ class Ot {
   async acquire() {
     for (; ; )
       if (this._running >= this.concurrency) {
-        const t = new Promise((o) => {
-          this.queue.push(o);
+        const r = new Promise((s) => {
+          this.queue.push(s);
         });
-        this.timeout !== void 0 ? await Promise.race([t, _t(this.timeout)]).then(
-          (o) => {
-            if (o === Gr)
-              throw new kt();
+        this.timeout !== void 0 ? await Promise.race([r, io(this.timeout)]).then(
+          (s) => {
+            if (s === xn)
+              throw new no();
           }
-        ) : await t;
+        ) : await r;
       } else {
         this._running++;
-        let t = !1;
+        let r = !1;
         return () => {
-          t || (t = !0, this._running--, this.queue.length > 0 && this.queue.shift()());
+          r || (r = !0, this._running--, this.queue.length > 0 && this.queue.shift()());
         };
       }
   }
-  async run(t) {
-    const o = await this.acquire();
+  async run(r) {
+    const s = await this.acquire();
     try {
-      return await t();
+      return await r();
     } finally {
-      o();
+      s();
     }
   }
 }
-function se(...r) {
-  function t(i) {
+function ge(...e) {
+  function r(i) {
     return i.substring(i.length - 1) === "/";
   }
-  let o = r.join("/");
-  const p = o[0] === "/", l = t(o);
-  return o = Zr(o), !o && !p && (o = "."), o && l && !t(o) && (o += "/"), o;
+  let s = e.join("/");
+  const n = s[0] === "/", o = r(s);
+  return s = ri(s), !s && !n && (s = "."), s && o && !r(s) && (s += "/"), s;
 }
-function Yr(r) {
-  if (r === "/")
+function gt(e) {
+  if (e === "/")
     return "/";
-  r = Zr(r);
-  const t = r.lastIndexOf("/");
-  return t === -1 ? "" : t === 0 ? "/" : r.substr(0, t);
+  e = ri(e);
+  const r = e.lastIndexOf("/");
+  return r === -1 ? "" : r === 0 ? "/" : e.substr(0, r);
 }
-function Zr(r) {
-  const t = r[0] === "/";
-  return r = Et(
-    r.split("/").filter((o) => !!o),
-    !t
-  ).join("/"), (t ? "/" : "") + r.replace(/\/$/, "");
+function ri(e) {
+  const r = e[0] === "/";
+  return e = oo(
+    e.split("/").filter((s) => !!s),
+    !r
+  ).join("/"), (r ? "/" : "") + e.replace(/\/$/, "");
 }
-function Et(r, t) {
-  let o = 0;
-  for (let p = r.length - 1; p >= 0; p--) {
-    const l = r[p];
-    l === "." ? r.splice(p, 1) : l === ".." ? (r.splice(p, 1), o++) : o && (r.splice(p, 1), o--);
+function oo(e, r) {
+  let s = 0;
+  for (let n = e.length - 1; n >= 0; n--) {
+    const o = e[n];
+    o === "." ? e.splice(n, 1) : o === ".." ? (e.splice(n, 1), s++) : s && (e.splice(n, 1), s--);
   }
-  if (t)
-    for (; o; o--)
-      r.unshift("..");
-  return r;
+  if (r)
+    for (; s; s--)
+      e.unshift("..");
+  return e;
 }
-function Qr(r = 36, t = "!@#$%^&*()_+=-[]/.,<>?") {
-  const o = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" + t;
-  let p = "";
-  for (let l = r; l > 0; --l)
-    p += o[Math.floor(Math.random() * o.length)];
-  return p;
+function Tn(e = 36, r = "!@#$%^&*()_+=-[]/.,<>?") {
+  const s = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" + r;
+  let n = "";
+  for (let o = e; o > 0; --o)
+    n += s[Math.floor(Math.random() * s.length)];
+  return n;
 }
-function $t() {
-  return Qr(36, "-_");
+function po() {
+  return Tn(36, "-_");
 }
-function ie(r) {
-  return `json_decode(base64_decode('${Tt(
-    JSON.stringify(r)
+function Fe(e) {
+  return `json_decode(base64_decode('${fo(
+    JSON.stringify(e)
   )}'), true)`;
 }
-function lr(r) {
-  const t = {};
-  for (const o in r)
-    t[o] = ie(r[o]);
-  return t;
+function is(e) {
+  const r = {};
+  for (const s in e)
+    r[s] = Fe(e[s]);
+  return r;
 }
-function Tt(r) {
-  return jt(new TextEncoder().encode(r));
+function fo(e) {
+  return lo(new TextEncoder().encode(e));
 }
-function jt(r) {
-  const t = String.fromCodePoint(...r);
-  return btoa(t);
+function lo(e) {
+  const r = String.fromCodePoint(...e);
+  return btoa(r);
 }
-const At = "playground-log", Sr = (r, ...t) => {
-  ae.dispatchEvent(
-    new CustomEvent(At, {
+const uo = "playground-log", bi = (e, ...r) => {
+  Se.dispatchEvent(
+    new CustomEvent(uo, {
       detail: {
-        log: r,
-        args: t
+        log: e,
+        args: r
       }
     })
   );
-}, qt = (r, ...t) => {
-  switch (typeof r.message == "string" ? Reflect.set(r, "message", Pr(r.message)) : r.message.message && typeof r.message.message == "string" && Reflect.set(
-    r.message,
+}, co = (e, ...r) => {
+  switch (typeof e.message == "string" ? Reflect.set(e, "message", Us(e.message)) : e.message.message && typeof e.message.message == "string" && Reflect.set(
+    e.message,
     "message",
-    Pr(r.message.message)
-  ), r.severity) {
+    Us(e.message.message)
+  ), e.severity) {
     case "Debug":
-      console.debug(r.message, ...t);
+      console.debug(e.message, ...r);
       break;
     case "Info":
-      console.info(r.message, ...t);
+      console.info(e.message, ...r);
       break;
     case "Warn":
-      console.warn(r.message, ...t);
+      console.warn(e.message, ...r);
       break;
     case "Error":
-      console.error(r.message, ...t);
+      console.error(e.message, ...r);
       break;
     case "Fatal":
-      console.error(r.message, ...t);
+      console.error(e.message, ...r);
       break;
     default:
-      console.log(r.message, ...t);
+      console.log(e.message, ...r);
   }
-}, Rt = (r) => r instanceof Error ? [r.message, r.stack].join(`
-`) : JSON.stringify(r, null, 2), Jr = [], xr = (r) => {
-  Jr.push(r);
-}, vr = (r) => {
-  if (r.raw === !0)
-    xr(r.message);
+}, ho = (e) => e instanceof Error ? [e.message, e.stack].join(`
+`) : JSON.stringify(e, null, 2), $n = [], _i = (e) => {
+  $n.push(e);
+}, qs = (e) => {
+  if (e.raw === !0)
+    _i(e.message);
   else {
-    const t = Ft(
-      typeof r.message == "object" ? Rt(r.message) : r.message,
-      r.severity ?? "Info",
-      r.prefix ?? "JavaScript"
+    const r = bo(
+      typeof e.message == "object" ? ho(e.message) : e.message,
+      e.severity ?? "Info",
+      e.prefix ?? "JavaScript"
     );
-    xr(t);
+    _i(r);
   }
 };
-let mr = 0;
-const Nr = "/wordpress/wp-content/debug.log", Lt = async (r) => await r.fileExists(Nr) ? await r.readFileAsText(Nr) : "", St = (r, t) => {
-  t.addEventListener("request.end", async () => {
-    const o = await Lt(t);
-    if (o.length > mr) {
-      const p = o.substring(mr);
-      r.logMessage({
-        message: p,
+let ms = 0;
+const vi = "/wordpress/wp-content/debug.log", yo = async (e) => await e.fileExists(vi) ? await e.readFileAsText(vi) : "", mo = (e, r) => {
+  r.addEventListener("request.end", async () => {
+    const s = await yo(r);
+    if (s.length > ms) {
+      const n = s.substring(ms);
+      e.logMessage({
+        message: n,
         raw: !0
-      }), mr = o.length;
+      }), ms = s.length;
     }
-  }), t.addEventListener("request.error", (o) => {
-    o = o, o.error && (r.logMessage({
-      message: `${o.error.message} ${o.error.stack}`,
+  }), r.addEventListener("request.error", (s) => {
+    s = s, s.error && (e.logMessage({
+      message: `${s.error.message} ${s.error.stack}`,
       severity: "Fatal",
-      prefix: o.source === "request" ? "PHP" : "WASM Crash"
-    }), r.dispatchEvent(
-      new CustomEvent(r.fatalErrorEvent, {
+      prefix: s.source === "request" ? "PHP" : "WASM Crash"
+    }), e.dispatchEvent(
+      new CustomEvent(e.fatalErrorEvent, {
         detail: {
-          logs: r.getLogs(),
-          source: o.source
+          logs: e.getLogs(),
+          source: s.source
         }
       })
     ));
   });
 };
-class xt extends EventTarget {
+class go extends EventTarget {
   // constructor
-  constructor(t = []) {
-    super(), this.handlers = t, this.fatalErrorEvent = "playground-fatal-error";
+  constructor(r = []) {
+    super(), this.handlers = r, this.fatalErrorEvent = "playground-fatal-error";
   }
   /**
    * Get all logs.
    * @returns string[]
    */
   getLogs() {
-    return this.handlers.includes(vr) ? [...Jr] : (this.error(`Logs aren't stored because the logToMemory handler isn't registered.
+    return this.handlers.includes(qs) ? [...$n] : (this.error(`Logs aren't stored because the logToMemory handler isn't registered.
 				If you're using a custom logger instance, make sure to register logToMemory handler.
 			`), []);
   }
@@ -295,9 +295,9 @@ class xt extends EventTarget {
    * @param raw boolean
    * @param args any
    */
-  logMessage(t, ...o) {
-    for (const p of this.handlers)
-      p(t, ...o);
+  logMessage(r, ...s) {
+    for (const n of this.handlers)
+      n(r, ...s);
   }
   /**
    * Log message
@@ -305,15 +305,15 @@ class xt extends EventTarget {
    * @param message any
    * @param args any
    */
-  log(t, ...o) {
+  log(r, ...s) {
     this.logMessage(
       {
-        message: t,
+        message: r,
         severity: void 0,
         prefix: "JavaScript",
         raw: !1
       },
-      ...o
+      ...s
     );
   }
   /**
@@ -322,15 +322,15 @@ class xt extends EventTarget {
    * @param message any
    * @param args any
    */
-  debug(t, ...o) {
+  debug(r, ...s) {
     this.logMessage(
       {
-        message: t,
+        message: r,
         severity: "Debug",
         prefix: "JavaScript",
         raw: !1
       },
-      ...o
+      ...s
     );
   }
   /**
@@ -339,15 +339,15 @@ class xt extends EventTarget {
    * @param message any
    * @param args any
    */
-  info(t, ...o) {
+  info(r, ...s) {
     this.logMessage(
       {
-        message: t,
+        message: r,
         severity: "Info",
         prefix: "JavaScript",
         raw: !1
       },
-      ...o
+      ...s
     );
   }
   /**
@@ -356,15 +356,15 @@ class xt extends EventTarget {
    * @param message any
    * @param args any
    */
-  warn(t, ...o) {
+  warn(r, ...s) {
     this.logMessage(
       {
-        message: t,
+        message: r,
         severity: "Warn",
         prefix: "JavaScript",
         raw: !1
       },
-      ...o
+      ...s
     );
   }
   /**
@@ -373,52 +373,52 @@ class xt extends EventTarget {
    * @param message any
    * @param args any
    */
-  error(t, ...o) {
+  error(r, ...s) {
     this.logMessage(
       {
-        message: t,
+        message: r,
         severity: "Error",
         prefix: "JavaScript",
         raw: !1
       },
-      ...o
+      ...s
     );
   }
 }
-const Nt = () => {
+const wo = () => {
   try {
     if (process.env.NODE_ENV === "test")
-      return [vr, Sr];
+      return [qs, bi];
   } catch {
   }
-  return [vr, qt, Sr];
-}, ae = new xt(Nt()), Pr = (r) => r.replace(/\t/g, ""), Ft = (r, t, o) => {
-  const p = /* @__PURE__ */ new Date(), l = new Intl.DateTimeFormat("en-GB", {
+  return [qs, co, bi];
+}, Se = new go(wo()), Us = (e) => e.replace(/\t/g, ""), bo = (e, r, s) => {
+  const n = /* @__PURE__ */ new Date(), o = new Intl.DateTimeFormat("en-GB", {
     year: "numeric",
     month: "short",
     day: "2-digit",
     timeZone: "UTC"
-  }).format(p).replace(/ /g, "-"), i = new Intl.DateTimeFormat("en-GB", {
+  }).format(n).replace(/ /g, "-"), i = new Intl.DateTimeFormat("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
     hour12: !1,
     timeZone: "UTC",
     timeZoneName: "short"
-  }).format(p), e = l + " " + i;
-  return r = Pr(r), `[${e}] ${o} ${t}: ${r}`;
-}, $r = async (r, { pluginPath: t, pluginName: o }, p) => {
-  p == null || p.tracker.setCaption(`Activating ${o || t}`);
-  const l = await r.documentRoot, i = await r.run({
+  }).format(n), t = o + " " + i;
+  return e = Us(e), `[${t}] ${s} ${r}: ${e}`;
+}, An = async (e, { pluginPath: r, pluginName: s }, n) => {
+  n == null || n.tracker.setCaption(`Activating ${s || r}`);
+  const o = await e.documentRoot, i = await e.run({
     code: `<?php
 			define( 'WP_ADMIN', true );
-			require_once( ${ie(l)}. "/wp-load.php" );
-			require_once( ${ie(l)}. "/wp-admin/includes/plugin.php" );
+			require_once( ${Fe(o)}. "/wp-load.php" );
+			require_once( ${Fe(o)}. "/wp-admin/includes/plugin.php" );
 
 			// Set current user to admin
 			wp_set_current_user( get_users(array('role' => 'Administrator') )[0]->ID );
 
-			$plugin_path = ${ie(t)};
+			$plugin_path = ${Fe(r)};
 			$response = false;
 			if (!is_dir($plugin_path)) {
 				$response = activate_plugin($plugin_path);
@@ -445,21 +445,21 @@ const Nt = () => {
 		`
   });
   if (i.text !== "Plugin activated successfully")
-    throw ae.debug(i), new Error(
-      `Plugin ${t} could not be activated – WordPress exited with no error. Sometimes, when $_SERVER or site options are not configured correctly, WordPress exits early with a 301 redirect. Inspect the "debug" logs in the console for more details`
+    throw Se.debug(i), new Error(
+      `Plugin ${r} could not be activated – WordPress exited with no error. Sometimes, when $_SERVER or site options are not configured correctly, WordPress exits early with a 301 redirect. Inspect the "debug" logs in the console for more details`
     );
-}, Kr = async (r, { themeFolderName: t }, o) => {
-  o == null || o.tracker.setCaption(`Activating ${t}`);
-  const p = await r.documentRoot, l = `${p}/wp-content/themes/${t}`;
-  if (!await r.fileExists(l))
+}, Sn = async (e, { themeFolderName: r }, s) => {
+  s == null || s.tracker.setCaption(`Activating ${r}`);
+  const n = await e.documentRoot, o = `${n}/wp-content/themes/${r}`;
+  if (!await e.fileExists(o))
     throw new Error(`
-			Couldn't activate theme ${t}.
-			Theme not found at the provided theme path: ${l}.
+			Couldn't activate theme ${r}.
+			Theme not found at the provided theme path: ${o}.
 			Check the theme path to ensure it's correct.
 			If the theme is not installed, you can install it using the installTheme step.
 			More info can be found in the Blueprint documentation: https://wordpress.github.io/wordpress-playground/blueprints/steps/#ActivateThemeStep
 		`);
-  const i = await r.run({
+  const i = await e.run({
     code: `<?php
 			define( 'WP_ADMIN', true );
 			require_once( getenv('docroot') . "/wp-load.php" );
@@ -475,24 +475,24 @@ const Nt = () => {
 			die('Theme activated successfully');
 		`,
     env: {
-      docroot: p,
-      themeFolderName: t
+      docroot: n,
+      themeFolderName: r
     }
   });
   if (i.text !== "Theme activated successfully")
-    throw ae.debug(i), new Error(
-      `Theme ${t} could not be activated – WordPress exited with no error. Sometimes, when $_SERVER or site options are not configured correctly, WordPress exits early with a 301 redirect. Inspect the "debug" logs in the console for more details`
+    throw Se.debug(i), new Error(
+      `Theme ${r} could not be activated – WordPress exited with no error. Sometimes, when $_SERVER or site options are not configured correctly, WordPress exits early with a 301 redirect. Inspect the "debug" logs in the console for more details`
     );
-}, Ct = async (r, { code: t }) => await r.run({ code: t }), It = async (r, { options: t }) => await r.run(t), Xr = async (r, { path: t }) => {
-  await r.unlink(t);
-}, Dt = async (r, { sql: t }, o) => {
-  o == null || o.tracker.setCaption("Executing SQL Queries");
-  const p = `/tmp/${$t()}.sql`;
-  await r.writeFile(
-    p,
-    new Uint8Array(await t.arrayBuffer())
+}, _o = async (e, { code: r }) => await e.run({ code: r }), vo = async (e, { options: r }) => await e.run(r), Rn = async (e, { path: r }) => {
+  await e.unlink(r);
+}, Po = async (e, { sql: r }, s) => {
+  s == null || s.tracker.setCaption("Executing SQL Queries");
+  const n = `/tmp/${po()}.sql`;
+  await e.writeFile(
+    n,
+    new Uint8Array(await r.arrayBuffer())
   );
-  const l = await r.documentRoot, i = lr({ docroot: l, sqlFilename: p }), e = await r.run({
+  const o = await e.documentRoot, i = is({ docroot: o, sqlFilename: n }), t = await e.run({
     code: `<?php
 		require_once ${i.docroot} . '/wp-load.php';
 
@@ -514,18 +514,18 @@ const Nt = () => {
 		}
 	`
   });
-  return await Xr(r, { path: p }), e;
-}, _r = async (r, { request: t }) => {
-  ae.warn(
+  return await Rn(e, { path: n }), t;
+}, ko = async (e, { request: r }) => {
+  Se.warn(
     'Deprecated: The Blueprint step "request" is deprecated and will be removed in a future release.'
   );
-  const o = await r.request(t);
-  if (o.httpStatusCode > 399 || o.httpStatusCode < 200)
-    throw ae.warn("WordPress response was", { response: o }), new Error(
-      `Request failed with status ${o.httpStatusCode}`
+  const s = await e.request(r);
+  if (s.httpStatusCode > 399 || s.httpStatusCode < 200)
+    throw Se.warn("WordPress response was", { response: s }), new Error(
+      `Request failed with status ${s.httpStatusCode}`
     );
-  return o;
-}, Wt = `<?php
+  return s;
+}, Eo = `<?php
 
 /**
  * Rewrites the wp-config.php file to ensure specific constants are defined
@@ -856,663 +856,95 @@ function skip_whitespace($tokens) {
     }
     return $output;
 }
-`, sr = async (r, { consts: t, method: o = "define-before-run" }) => {
-  switch (o) {
+`, ti = async (e, { consts: r, method: s = "define-before-run" }) => {
+  switch (s) {
     case "define-before-run":
-      await Mt(r, t);
+      await Oo(e, r);
       break;
     case "rewrite-wp-config": {
-      const p = await r.documentRoot, l = se(p, "/wp-config.php"), i = await r.readFileAsText(l), e = await Bt(
-        r,
+      const n = await e.documentRoot, o = ge(n, "/wp-config.php"), i = await e.readFileAsText(o), t = await xo(
+        e,
         i,
-        t
+        r
       );
-      await r.writeFile(l, e);
+      await e.writeFile(o, t);
       break;
     }
     default:
-      throw new Error(`Invalid method: ${o}`);
+      throw new Error(`Invalid method: ${s}`);
   }
 };
-async function Mt(r, t) {
-  for (const o in t)
-    await r.defineConstant(o, t[o]);
+async function Oo(e, r) {
+  for (const s in r)
+    await e.defineConstant(s, r[s]);
 }
-async function Bt(r, t, o) {
-  await r.writeFile("/tmp/code.php", t);
-  const p = lr({
-    consts: o
+async function xo(e, r, s) {
+  await e.writeFile("/tmp/code.php", r);
+  const n = is({
+    consts: s
   });
-  return await r.run({
-    code: `${Wt}
+  return await e.run({
+    code: `${Eo}
 	$wp_config_path = '/tmp/code.php';
 	$wp_config = file_get_contents($wp_config_path);
-	$new_wp_config = rewrite_wp_config_to_define_constants($wp_config, ${p.consts});
+	$new_wp_config = rewrite_wp_config_to_define_constants($wp_config, ${n.consts});
 	file_put_contents($wp_config_path, $new_wp_config);
 	`
-  }), await r.readFileAsText("/tmp/code.php");
+  }), await e.readFileAsText("/tmp/code.php");
 }
-const kr = async (r, { username: t = "admin", password: o = "password" } = {}, p) => {
-  var i, e, f;
-  p == null || p.tracker.setCaption((p == null ? void 0 : p.initialCaption) || "Logging in"), await r.request({
-    url: "/wp-login.php"
-  });
-  const l = await r.request({
-    url: "/wp-login.php",
-    method: "POST",
-    body: {
-      log: t,
-      pwd: o,
-      rememberme: "forever"
-    }
-  });
-  if (!((f = (e = (i = l.headers) == null ? void 0 : i.location) == null ? void 0 : e[0]) != null && f.includes("/wp-admin/")))
-    throw ae.warn("WordPress response was", {
-      response: l,
-      text: l.text
-    }), new Error(
-      `Failed to log in as ${t} with password ${o}`
-    );
-}, et = async (r, { options: t }) => {
-  const o = await r.documentRoot;
-  await r.run({
+const Fn = async (e, { options: r }) => {
+  const s = await e.documentRoot;
+  await e.run({
     code: `<?php
-		include ${ie(o)} . '/wp-load.php';
-		$site_options = ${ie(t)};
+		include ${Fe(s)} . '/wp-load.php';
+		$site_options = ${Fe(r)};
 		foreach($site_options as $name => $value) {
 			update_option($name, $value);
 		}
 		echo "Success";
 		`
   });
-}, Ut = async (r, { meta: t, userId: o }) => {
-  const p = await r.documentRoot;
-  await r.run({
+}, To = async (e, { meta: r, userId: s }) => {
+  const n = await e.documentRoot;
+  await e.run({
     code: `<?php
-		include ${ie(p)} . '/wp-load.php';
-		$meta = ${ie(t)};
+		include ${Fe(n)} . '/wp-load.php';
+		$meta = ${Fe(r)};
 		foreach($meta as $name => $value) {
-			update_user_meta(${ie(o)}, $name, $value);
+			update_user_meta(${Fe(s)}, $name, $value);
 		}
 		`
   });
-};
-function rt(r) {
-  return r.pathname.startsWith("/scope:");
-}
-function zt(r) {
-  return rt(r) ? r.pathname.split("/")[1].split(":")[1] : null;
-}
-const Vt = async (r) => {
-  var w;
-  await sr(r, {
-    consts: {
-      WP_ALLOW_MULTISITE: 1
-    }
-  });
-  const t = new URL(await r.absoluteUrl);
-  if (t.port !== "") {
-    let S = `The current host is ${t.host}, but WordPress multisites do not support custom ports.`;
-    throw t.hostname === "localhost" && (S += " For development, you can set up a playground.test domain using the instructions at https://wordpress.github.io/wordpress-playground/contributing/code."), new Error(S);
-  }
-  const o = t.pathname.replace(/\/$/, "") + "/", p = `${t.protocol}//${t.hostname}${o}`;
-  await et(r, {
-    options: {
-      siteurl: p,
-      home: p
-    }
-  }), await kr(r, {});
-  const l = await r.documentRoot, e = (await r.run({
-    code: `<?php
-define( 'WP_ADMIN', true );
-require_once(${ie(l)} . "/wp-load.php");
-
-// Set current user to admin
-( get_users(array('role' => 'Administrator') )[0] );
-
-require_once(${ie(l)} . "/wp-admin/includes/plugin.php");
-$plugins_root = ${ie(l)} . "/wp-content/plugins";
-$plugins = glob($plugins_root . "/*");
-
-$deactivated_plugins = [];
-foreach($plugins as $plugin_path) {
-	if (str_ends_with($plugin_path, '/index.php')) {
-		continue;
-	}
-	if (!is_dir($plugin_path)) {
-		$deactivated_plugins[] = substr($plugin_path, strlen($plugins_root) + 1);
-		deactivate_plugins($plugin_path);
-		continue;
-	}
-	// Find plugin entry file
-	foreach ( ( glob( $plugin_path . '/*.php' ) ?: array() ) as $file ) {
-		$info = get_plugin_data( $file, false, false );
-		if ( ! empty( $info['Name'] ) ) {
-			deactivate_plugins( $file );
-			$deactivated_plugins[] = substr($file, strlen($plugins_root) + 1);
-			break;
-		}
-	}
-}
-echo json_encode($deactivated_plugins);
-`
-  })).json, h = (w = (await _r(r, {
-    request: {
-      url: "/wp-admin/network.php"
-    }
-  })).text.match(
-    /name="_wpnonce"\s+value="([^"]+)"/
-  )) == null ? void 0 : w[1], b = await _r(r, {
-    request: {
-      url: "/wp-admin/network.php",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: Ht({
-        _wpnonce: h,
-        _wp_http_referer: o + "wp-admin/network.php",
-        sitename: "My WordPress Website Sites",
-        email: "admin@localhost.com",
-        submit: "Install"
-      })
-    }
-  });
-  if (b.httpStatusCode !== 200)
-    throw ae.warn("WordPress response was", {
-      response: b,
-      text: b.text,
-      headers: b.headers
-    }), new Error(
-      `Failed to enable multisite. Response code was ${b.httpStatusCode}`
-    );
-  await sr(r, {
-    consts: {
-      MULTISITE: !0,
-      SUBDOMAIN_INSTALL: !1,
-      SITE_ID_CURRENT_SITE: 1,
-      BLOG_ID_CURRENT_SITE: 1,
-      DOMAIN_CURRENT_SITE: t.hostname,
-      PATH_CURRENT_SITE: o
-    }
-  });
-  const k = new URL(await r.absoluteUrl), m = rt(k) ? "scope:" + zt(k) : null;
-  await r.writeFile(
-    "/internal/shared/preload/sunrise.php",
-    `<?php
-	$_SERVER['HTTP_HOST'] = ${ie(k.hostname)};
-	$folder = ${ie(m)};
-	if ($folder && strpos($_SERVER['REQUEST_URI'],"/$folder") === false) {
-		$_SERVER['REQUEST_URI'] = "/$folder/" . ltrim($_SERVER['REQUEST_URI'], '/');
-	}
-`
-  ), await r.writeFile(
-    "/internal/shared/mu-plugins/sunrise.php",
-    `<?php
-		if ( !defined( 'BLOG_ID_CURRENT_SITE' ) ) {
-			define( 'BLOG_ID_CURRENT_SITE', 1 );
-		}
-`
-  ), await kr(r, {});
-  for (const S of e)
-    await $r(r, {
-      pluginPath: S
-    });
-};
-function Ht(r) {
-  return Object.keys(r).map(
-    (t) => encodeURIComponent(t) + "=" + encodeURIComponent(r[t])
-  ).join("&");
-}
-const Gt = async (r, { fromPath: t, toPath: o }) => {
-  await r.writeFile(
-    o,
-    await r.readFileAsBuffer(t)
-  );
-}, Yt = async (r, { fromPath: t, toPath: o }) => {
-  await r.mv(t, o);
-}, Zt = async (r, { path: t }) => {
-  await r.mkdir(t);
-}, Qt = async (r, { path: t }) => {
-  await r.rmdir(t);
-}, tt = async (r, { path: t, data: o }) => {
-  o instanceof File && (o = new Uint8Array(await o.arrayBuffer())), t.startsWith("/wordpress/wp-content/mu-plugins") && !await r.fileExists("/wordpress/wp-content/mu-plugins") && await r.mkdir("/wordpress/wp-content/mu-plugins"), await r.writeFile(t, o);
-}, st = async (r, { siteUrl: t }) => {
-  await sr(r, {
-    consts: {
-      WP_HOME: t,
-      WP_SITEURL: t
-    }
-  });
-}, Jt = async (r, { file: t }, o) => {
-  var l;
-  (l = o == null ? void 0 : o.tracker) == null || l.setCaption("Importing content"), await tt(r, {
-    path: "/tmp/import.wxr",
-    data: t
-  });
-  const p = await r.documentRoot;
-  await r.run({
-    code: `<?php
-		require ${ie(p)} . '/wp-load.php';
-		require ${ie(p)} . '/wp-admin/includes/admin.php';
-  
-		kses_remove_filters();
-		$admin_id = get_users(array('role' => 'Administrator') )[0]->ID;
-        wp_set_current_user( $admin_id );
-		$importer = new WXR_Importer( array(
-			'fetch_attachments' => true,
-			'default_author' => $admin_id
-		) );
-		$logger = new WP_Importer_Logger_CLI();
-		$importer->set_logger( $logger );
-
-		// Slashes from the imported content are lost if we don't call wp_slash here.
-		add_action( 'wp_insert_post_data', function( $data ) {
-			return wp_slash($data);
-		});
-
-		$result = $importer->import( '/tmp/import.wxr' );
-		`
-  });
-}, it = async (r, { themeSlug: t = "" }, o) => {
-  var l;
-  (l = o == null ? void 0 : o.tracker) == null || l.setCaption("Importing theme starter content");
-  const p = await r.documentRoot;
-  await r.run({
-    code: `<?php
-
-		/**
-		 * Ensure that the customizer loads as an admin user.
-		 *
-		 * For compatibility with themes, this MUST be run prior to theme inclusion, which is why this is a plugins_loaded filter instead
-		 * of running _wp_customize_include() manually after load.
-		 */
-		function importThemeStarterContent_plugins_loaded() {
-			// Set as the admin user, this ensures we can customize the site.
-			wp_set_current_user(
-				get_users( [ 'role' => 'Administrator' ] )[0]
-			);
-
-			// Force the site to be fresh, although it should already be.
-			add_filter( 'pre_option_fresh_site', '__return_true' );
-
-			/*
-			 * Simulate this request as the customizer loading with the current theme in preview mode.
-			 *
-			 * See _wp_customize_include()
-			 */
-			$_REQUEST['wp_customize']    = 'on';
-			$_REQUEST['customize_theme'] = ${ie(t)} ?: get_stylesheet();
-
-			/*
-			 * Claim this is a ajax request saving settings, to avoid the preview filters being applied.
-			 */
-			$_REQUEST['action'] = 'customize_save';
-			add_filter( 'wp_doing_ajax', '__return_true' );
-
-			$_GET = $_REQUEST;
-		}
-		playground_add_filter( 'plugins_loaded', 'importThemeStarterContent_plugins_loaded', 0 );
-
-		require ${ie(p)} . '/wp-load.php';
-
-		// Return early if there's no starter content.
-		if ( ! get_theme_starter_content() ) {
-			return;
-		}
-
-		// Import the Starter Content.
-		$wp_customize->import_theme_starter_content();
-
-		// Publish the changeset, which publishes the starter content.
-		wp_publish_post( $wp_customize->changeset_post_id() );
-		`
-  });
-}, yr = "/tmp/file.zip", ot = async (r, t, o, p = !0) => {
-  if (t instanceof File) {
-    const i = t;
-    t = yr, await r.writeFile(
-      t,
-      new Uint8Array(await i.arrayBuffer())
-    );
-  }
-  const l = lr({
-    zipPath: t,
-    extractToPath: o,
-    overwriteFiles: p
-  });
-  await r.run({
-    code: `<?php
-        function unzip($zipPath, $extractTo, $overwriteFiles = true)
-        {
-            if (!is_dir($extractTo)) {
-                mkdir($extractTo, 0777, true);
-            }
-            $zip = new ZipArchive;
-            $res = $zip->open($zipPath);
-            if ($res === TRUE) {
-				for ($i = 0; $i < $zip->numFiles; $i++) {
-					$filename = $zip->getNameIndex($i);
-					$fileinfo = pathinfo($filename);
-					$extractFilePath = rtrim($extractTo, '/') . '/' . $filename;
-					// Check if file exists and $overwriteFiles is false
-					if (!file_exists($extractFilePath) || $overwriteFiles) {
-						// Extract file
-						$zip->extractTo($extractTo, $filename);
-					}
-				}
-				$zip->close();
-				chmod($extractTo, 0777);
-            } else {
-                throw new Exception("Could not unzip file");
-            }
-        }
-        unzip(${l.zipPath}, ${l.extractToPath}, ${l.overwriteFiles});
-        `
-  }), await r.fileExists(yr) && await r.unlink(yr);
-}, Tr = async (r, { zipFile: t, zipPath: o, extractToPath: p }) => {
-  if (o)
-    ae.warn(
-      'The "zipPath" option of the unzip() Blueprint step is deprecated and will be removed. Use "zipFile" instead.'
-    );
-  else if (!t)
-    throw new Error("Either zipPath or zipFile must be provided");
-  await ot(r, t || o, p);
-}, Kt = async (r, { wordPressFilesZip: t, pathInZip: o = "" }) => {
-  const p = await r.documentRoot;
-  let l = se("/tmp", "import");
-  await r.mkdir(l), await Tr(r, {
-    zipFile: t,
-    extractToPath: l
-  }), l = se(l, o);
-  const i = se(l, "wp-content"), e = se(p, "wp-content");
-  for (const k of Hr) {
-    const m = se(
-      i,
-      k
-    );
-    await Fr(r, m);
-    const w = se(e, k);
-    await r.fileExists(w) && (await r.mkdir(Yr(m)), await r.mv(w, m));
-  }
-  const f = se(
-    l,
-    "wp-content",
-    "database"
-  );
-  await r.fileExists(f) || await r.mv(
-    se(p, "wp-content", "database"),
-    f
-  );
-  const h = await r.listFiles(l);
-  for (const k of h)
-    await Fr(r, se(p, k)), await r.mv(
-      se(l, k),
-      se(p, k)
-    );
-  await r.rmdir(l), await st(r, {
-    siteUrl: await r.absoluteUrl
-  });
-  const b = ie(
-    se(p, "wp-admin", "upgrade.php")
-  );
-  await r.run({
-    code: `<?php
-            $_GET['step'] = 'upgrade_db';
-            require ${b};
-            `
-  });
-};
-async function Fr(r, t) {
-  await r.fileExists(t) && (await r.isDir(t) ? await r.rmdir(t) : await r.unlink(t));
-}
-async function Xt(r) {
-  const t = await r.request({
-    url: "/wp-admin/export.php?download=true&content=all"
-  });
-  return new File([t.bytes], "export.xml");
-}
-async function nt(r, {
-  targetPath: t,
-  zipFile: o,
-  ifAlreadyInstalled: p = "overwrite"
-}) {
-  const i = o.name.replace(/\.zip$/, ""), e = se(await r.documentRoot, "wp-content"), f = se(e, Qr()), h = se(f, "assets", i);
-  await r.fileExists(h) && await r.rmdir(f, {
-    recursive: !0
-  }), await r.mkdir(f);
-  try {
-    await Tr(r, {
-      zipFile: o,
-      extractToPath: h
-    });
-    let b = await r.listFiles(h, {
-      prependPath: !0
-    });
-    b = b.filter((D) => !D.endsWith("/__MACOSX"));
-    const k = b.length === 1 && await r.isDir(b[0]);
-    let m, w = "";
-    k ? (w = b[0], m = b[0].split("/").pop()) : (w = h, m = i);
-    const S = `${t}/${m}`;
-    if (await r.fileExists(S)) {
-      if (!await r.isDir(S))
-        throw new Error(
-          `Cannot install asset ${m} to ${S} because a file with the same name already exists. Note it's a file, not a directory! Is this by mistake?`
-        );
-      if (p === "overwrite")
-        await r.rmdir(S, {
-          recursive: !0
-        });
-      else {
-        if (p === "skip")
-          return {
-            assetFolderPath: S,
-            assetFolderName: m
-          };
-        throw new Error(
-          `Cannot install asset ${m} to ${t} because it already exists and the ifAlreadyInstalled option was set to ${p}`
-        );
-      }
-    }
-    return await r.mv(w, S), {
-      assetFolderPath: S,
-      assetFolderName: m
-    };
-  } finally {
-    await r.rmdir(f, {
-      recursive: !0
-    });
-  }
-}
-function fr(r) {
-  const t = r.split(".").shift().replace(/-/g, " ");
-  return t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
-}
-const es = async (r, { pluginZipFile: t, ifAlreadyInstalled: o, options: p = {} }, l) => {
-  const i = t.name.split("/").pop() || "plugin.zip", e = fr(i);
-  l == null || l.tracker.setCaption(`Installing the ${e} plugin`);
-  const { assetFolderPath: f } = await nt(r, {
-    ifAlreadyInstalled: o,
-    zipFile: t,
-    targetPath: `${await r.documentRoot}/wp-content/plugins`
-  });
-  ("activate" in p ? p.activate : !0) && await $r(
-    r,
-    {
-      pluginPath: f,
-      pluginName: e
-    },
-    l
-  );
-}, rs = async (r, { themeZipFile: t, ifAlreadyInstalled: o, options: p = {} }, l) => {
-  const i = fr(t.name);
-  l == null || l.tracker.setCaption(`Installing the ${i} theme`);
-  const { assetFolderName: e } = await nt(r, {
-    ifAlreadyInstalled: o,
-    zipFile: t,
-    targetPath: `${await r.documentRoot}/wp-content/themes`
-  });
-  ("activate" in p ? p.activate : !0) && await Kr(
-    r,
-    {
-      themeFolderName: e
-    },
-    l
-  ), ("importStarterContent" in p ? p.importStarterContent : !1) && await it(
-    r,
-    {
-      themeSlug: e
-    },
-    l
-  );
-}, ts = async (r, t, o) => {
-  var l;
-  (l = o == null ? void 0 : o.tracker) == null || l.setCaption("Resetting WordPress data");
-  const p = await r.documentRoot;
-  await r.run({
-    env: {
-      DOCROOT: p
-    },
-    code: `<?php
-		require getenv('DOCROOT') . '/wp-load.php';
-
-		$GLOBALS['@pdo']->query('DELETE FROM wp_posts WHERE id > 0');
-		$GLOBALS['@pdo']->query("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='wp_posts'");
-		
-		$GLOBALS['@pdo']->query('DELETE FROM wp_postmeta WHERE post_id > 1');
-		$GLOBALS['@pdo']->query("UPDATE SQLITE_SEQUENCE SET SEQ=20 WHERE NAME='wp_postmeta'");
-
-		$GLOBALS['@pdo']->query('DELETE FROM wp_comments');
-		$GLOBALS['@pdo']->query("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='wp_comments'");
-
-		$GLOBALS['@pdo']->query('DELETE FROM wp_commentmeta');
-		$GLOBALS['@pdo']->query("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='wp_commentmeta'");
-		`
-  });
-}, ss = async (r, { options: t }) => {
-  await r.request({
-    url: "/wp-admin/install.php?step=2",
-    method: "POST",
-    body: {
-      language: "en",
-      prefix: "wp_",
-      weblog_title: "My WordPress Website",
-      user_name: t.adminPassword || "admin",
-      admin_password: t.adminPassword || "password",
-      // The installation wizard demands typing the same password twice
-      admin_password2: t.adminPassword || "password",
-      Submit: "Install WordPress",
-      pw_weak: "1",
-      admin_email: "admin@localhost.com"
-    }
-  });
-}, is = async (r, { selfContained: t = !1 } = {}) => {
-  const o = "/tmp/wordpress-playground.zip", p = await r.documentRoot, l = se(p, "wp-content");
-  let i = Hr;
-  t && (i = i.filter((h) => !h.startsWith("themes/twenty")).filter(
-    (h) => h !== "mu-plugins/sqlite-database-integration"
-  ));
-  const e = lr({
-    zipPath: o,
-    wpContentPath: l,
-    documentRoot: p,
-    exceptPaths: i.map(
-      (h) => se(p, "wp-content", h)
-    ),
-    additionalPaths: t ? {
-      [se(p, "wp-config.php")]: "wp-config.php"
-    } : {}
-  });
-  await ns(
-    r,
-    `zipDir(${e.wpContentPath}, ${e.zipPath}, array(
-			'exclude_paths' => ${e.exceptPaths},
-			'zip_root'      => ${e.documentRoot},
-			'additional_paths' => ${e.additionalPaths}
-		));`
-  );
-  const f = await r.readFileAsBuffer(o);
-  return r.unlink(o), f;
-}, os = `<?php
-
-function zipDir($root, $output, $options = array())
-{
-    $root = rtrim($root, '/');
-    $additionalPaths = array_key_exists('additional_paths', $options) ? $options['additional_paths'] : array();
-    $excludePaths = array_key_exists('exclude_paths', $options) ? $options['exclude_paths'] : array();
-    $zip_root = array_key_exists('zip_root', $options) ? $options['zip_root'] : $root;
-
-    $zip = new ZipArchive;
-    $res = $zip->open($output, ZipArchive::CREATE);
-    if ($res === TRUE) {
-        $directories = array(
-            $root . '/'
-        );
-        while (sizeof($directories)) {
-            $current_dir = array_pop($directories);
-
-            if ($handle = opendir($current_dir)) {
-                while (false !== ($entry = readdir($handle))) {
-                    if ($entry == '.' || $entry == '..') {
-                        continue;
-                    }
-
-                    $entry = join_paths($current_dir, $entry);
-                    if (in_array($entry, $excludePaths)) {
-                        continue;
-                    }
-
-                    if (is_dir($entry)) {
-                        $directory_path = $entry . '/';
-                        array_push($directories, $directory_path);
-                    } else if (is_file($entry)) {
-                        $zip->addFile($entry, substr($entry, strlen($zip_root)));
-                    }
-                }
-                closedir($handle);
-            }
-        }
-        foreach ($additionalPaths as $disk_path => $zip_path) {
-            $zip->addFile($disk_path, $zip_path);
-        }
-        $zip->close();
-        chmod($output, 0777);
-    }
-}
-
-function join_paths()
-{
-    $paths = array();
-
-    foreach (func_get_args() as $arg) {
-        if ($arg !== '') {
-            $paths[] = $arg;
-        }
-    }
-
-    return preg_replace('#/+#', '/', join('/', $paths));
-}
-`;
-async function ns(r, t) {
-  return await r.run({
-    code: os + t
-  });
-}
-const as = async (r, { command: t, wpCliPath: o = "/tmp/wp-cli.phar" }) => {
-  if (!await r.fileExists(o))
-    throw new Error(`wp-cli.phar not found at ${o}.
+}, si = "/tmp/wp-cli.phar", $o = {
+  resource: "url",
+  /**
+   * Use compression for downloading the wp-cli.phar file.
+   * The official release, hosted at raw.githubusercontent.com, is ~7MB
+   * and the transfer is uncompressed. playground.wordpress.net supports
+   * transfer compression and only transmits ~1.4MB.
+   *
+   * @TODO: minify the wp-cli.phar file. It can be as small as 1MB when all the
+   *        whitespaces and are removed, and even 500KB when libraries
+   *        like the JavaScript parser or Composer are removed.
+   */
+  url: "https://playground.wordpress.net/wp-cli.phar"
+}, jn = async (e, r = si) => {
+  if (!await e.fileExists(r))
+    throw new Error(`wp-cli.phar not found at ${r}.
 			You can enable wp-cli support by adding "wp-cli" to the list of extra libraries in your blueprint as follows:
 			{
 				"extraLibraries": [ "wp-cli" ]
 			}
-
 			Read more about it in the documentation.
 			https://wordpress.github.io/wordpress-playground/blueprints/data-format#extra-libraries`);
-  let p;
-  if (typeof t == "string" ? (t = t.trim(), p = ps(t)) : p = t, p.shift() !== "wp")
+}, Bn = async (e, { command: r, wpCliPath: s = si }) => {
+  await jn(e, s);
+  let n;
+  if (typeof r == "string" ? (r = r.trim(), n = Ao(r)) : n = r, n.shift() !== "wp")
     throw new Error('The first argument must be "wp".');
-  await r.writeFile("/tmp/stdout", ""), await r.writeFile("/tmp/stderr", ""), await r.writeFile(
-    "/wordpress/run-cli.php",
+  const i = await e.documentRoot;
+  await e.writeFile("/tmp/stdout", ""), await e.writeFile("/tmp/stderr", ""), await e.writeFile(
+    ge(i, "run-cli.php"),
     `<?php
 		// Set up the environment to emulate a shell script
 		// call.
@@ -1525,8 +957,8 @@ const as = async (r, { command: t, wpCliPath: o = "/tmp/wp-cli.phar" }) => {
 		// Set the argv global.
 		$GLOBALS['argv'] = array_merge([
 		  "/tmp/wp-cli.phar",
-		  "--path=/wordpress"
-		], ${ie(p)});
+		  "--path=${i}"
+		], ${Fe(n)});
 
 		// Provide stdin, stdout, stderr streams outside of
 		// the CLI SAPI.
@@ -1534,353 +966,60 @@ const as = async (r, { command: t, wpCliPath: o = "/tmp/wp-cli.phar" }) => {
 		define('STDOUT', fopen('php://stdout', 'wb'));
 		define('STDERR', fopen('php://stderr', 'wb'));
 
-		require( ${ie(o)} );
+		require( ${Fe(s)} );
 		`
   );
-  const i = await r.run({
-    scriptPath: "/wordpress/run-cli.php"
+  const t = await e.run({
+    scriptPath: ge(i, "run-cli.php")
   });
-  if (i.errors)
-    throw new Error(i.errors);
-  return i;
+  if (t.errors)
+    throw new Error(t.errors);
+  return t;
 };
-function ps(r) {
-  let p = 0, l = "";
+function Ao(e) {
+  let n = 0, o = "";
   const i = [];
-  let e = "";
-  for (let f = 0; f < r.length; f++) {
-    const h = r[f];
-    p === 0 ? h === '"' || h === "'" ? (p = 1, l = h) : h.match(/\s/) ? (e && i.push(e), e = "") : e += h : p === 1 && (h === "\\" ? (f++, e += r[f]) : h === l ? (p = 0, l = "") : e += h);
+  let t = "";
+  for (let p = 0; p < e.length; p++) {
+    const y = e[p];
+    n === 0 ? y === '"' || y === "'" ? (n = 1, o = y) : y.match(/\s/) ? (t && i.push(t), t = "") : t += y : n === 1 && (y === "\\" ? (p++, t += e[p]) : y === o ? (n = 0, o = "") : t += y);
   }
-  return e && i.push(e), i;
+  return t && i.push(t), i;
 }
-const ls = async (r, { language: t }, o) => {
-  o == null || o.tracker.setCaption((o == null ? void 0 : o.initialCaption) || "Translating"), await r.defineConstant("WPLANG", t);
-  const p = await r.documentRoot, i = [
-    {
-      url: `https://downloads.wordpress.org/translation/core/${(await r.run({
-        code: `<?php
-			require '${p}/wp-includes/version.php';
-			echo $wp_version;
-		`
-      })).text}/${t}.zip`,
-      type: "core"
+const So = async (e, { wpCliPath: r }) => {
+  await jn(e, r), await ti(e, {
+    consts: {
+      WP_ALLOW_MULTISITE: 1
     }
-  ], f = (await r.run({
-    code: `<?php
-		require_once('${p}/wp-load.php');
-		require_once('${p}/wp-admin/includes/plugin.php');
-		echo json_encode(
-			array_values(
-				array_map(
-					function($plugin) {
-						return [
-							'slug'    => $plugin['TextDomain'],
-							'version' => $plugin['Version']
-						];
-					},
-					array_filter(
-						get_plugins(),
-						function($plugin) {
-							return !empty($plugin['TextDomain']);
-						}
-					)
-				)
-			)
-		);`
-  })).json;
-  for (const { slug: k, version: m } of f)
-    i.push({
-      url: `https://downloads.wordpress.org/translation/plugin/${k}/${m}/${t}.zip`,
-      type: "plugin"
-    });
-  const b = (await r.run({
-    code: `<?php
-		require_once('${p}/wp-load.php');
-		require_once('${p}/wp-admin/includes/theme.php');
-		echo json_encode(
-			array_values(
-				array_map(
-					function($theme) {
-						return [
-							'slug'    => $theme->get('TextDomain'),
-							'version' => $theme->get('Version')
-						];
-					},
-					wp_get_themes()
-				)
-			)
-		);`
-  })).json;
-  for (const { slug: k, version: m } of b)
-    i.push({
-      url: `https://downloads.wordpress.org/translation/theme/${k}/${m}/${t}.zip`,
-      type: "theme"
-    });
-  await r.isDir(`${p}/wp-content/languages/plugins`) || await r.mkdir(`${p}/wp-content/languages/plugins`), await r.isDir(`${p}/wp-content/languages/themes`) || await r.mkdir(`${p}/wp-content/languages/themes`);
-  for (const { url: k, type: m } of i)
-    try {
-      const w = await fetch(k);
-      if (!w.ok)
-        throw new Error(
-          `Failed to download translations for ${m}: ${w.statusText}`
-        );
-      let S = `${p}/wp-content/languages`;
-      m === "plugin" ? S += "/plugins" : m === "theme" && (S += "/themes"), await ot(
-        r,
-        new File([await w.blob()], `${t}-${m}.zip`),
-        S
-      );
-    } catch (w) {
-      if (m === "core")
-        throw new Error(
-          `Failed to download translations for WordPress. Please check if the language code ${t} is correct. You can find all available languages and translations on https://translate.wordpress.org/.`
-        );
-      ae.warn(`Error downloading translations for ${m}: ${w}`);
-    }
-}, fs = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  activatePlugin: $r,
-  activateTheme: Kr,
-  cp: Gt,
-  defineSiteUrl: st,
-  defineWpConfigConsts: sr,
-  enableMultisite: Vt,
-  exportWXR: Xt,
-  importThemeStarterContent: it,
-  importWordPressFiles: Kt,
-  importWxr: Jt,
-  installPlugin: es,
-  installTheme: rs,
-  login: kr,
-  mkdir: Zt,
-  mv: Yt,
-  request: _r,
-  resetData: ts,
-  rm: Xr,
-  rmdir: Qt,
-  runPHP: Ct,
-  runPHPWithOptions: It,
-  runSql: Dt,
-  runWpInstallationWizard: ss,
-  setSiteLanguage: ls,
-  setSiteOptions: et,
-  unzip: Tr,
-  updateUserMeta: Ut,
-  wpCLI: as,
-  writeFile: tt,
-  zipWpContent: is
-}, Symbol.toStringTag, { value: "Module" })), us = 5 * 1024 * 1024;
-function ds(r, t) {
-  const o = r.headers.get("content-length") || "", p = parseInt(o, 10) || us;
-  function l(i, e) {
-    t(
-      new CustomEvent("progress", {
-        detail: {
-          loaded: i,
-          total: e
-        }
-      })
-    );
+  });
+  const s = new URL(await e.absoluteUrl);
+  if (s.port !== "") {
+    let i = `The current host is ${s.host}, but WordPress multisites do not support custom ports.`;
+    throw s.hostname === "localhost" && (i += " For development, you can set up a playground.test domain using the instructions at https://wordpress.github.io/wordpress-playground/contributing/code."), new Error(i);
   }
-  return new Response(
-    new ReadableStream({
-      async start(i) {
-        if (!r.body) {
-          i.close();
-          return;
-        }
-        const e = r.body.getReader();
-        let f = 0;
-        for (; ; )
-          try {
-            const { done: h, value: b } = await e.read();
-            if (b && (f += b.byteLength), h) {
-              l(f, f), i.close();
-              break;
-            } else
-              l(f, p), i.enqueue(b);
-          } catch (h) {
-            ae.error({ e: h }), i.error(h);
-            break;
-          }
-      }
-    }),
-    {
-      status: r.status,
-      statusText: r.statusText,
-      headers: r.headers
+  const n = s.pathname.replace(/\/$/, "") + "/", o = `${s.protocol}//${s.hostname}${n}`;
+  await Fn(e, {
+    options: {
+      siteurl: o,
+      home: o
     }
+  }), await Bn(e, {
+    command: "wp core multisite-convert"
+  });
+}, Ro = async (e, { fromPath: r, toPath: s }) => {
+  await e.writeFile(
+    s,
+    await e.readFileAsBuffer(r)
   );
-}
-const hr = 1e-5;
-class ur extends EventTarget {
-  constructor({
-    weight: t = 1,
-    caption: o = "",
-    fillTime: p = 4
-  } = {}) {
-    super(), this._selfWeight = 1, this._selfDone = !1, this._selfProgress = 0, this._selfCaption = "", this._isFilling = !1, this._subTrackers = [], this._weight = t, this._selfCaption = o, this._fillTime = p;
-  }
-  /**
-   * Creates a new sub-tracker with a specific weight.
-   *
-   * The weight determines what percentage of the overall progress
-   * the sub-tracker represents. For example, if the main tracker is
-   * monitoring a process that has two stages, and the first stage
-   * is expected to take twice as long as the second stage, you could
-   * create the first sub-tracker with a weight of 0.67 and the second
-   * sub-tracker with a weight of 0.33.
-   *
-   * The caption is an optional string that describes the current stage
-   * of the operation. If provided, it will be used as the progress caption
-   * for the sub-tracker. If not provided, the main tracker will look for
-   * the next sub-tracker with a non-empty caption and use that as the progress
-   * caption instead.
-   *
-   * Returns the newly-created sub-tracker.
-   *
-   * @throws {Error} If the weight of the new stage would cause the total weight of all stages to exceed 1.
-   *
-   * @param weight The weight of the new stage, as a decimal value between 0 and 1.
-   * @param caption The caption for the new stage, which will be used as the progress caption for the sub-tracker.
-   *
-   * @example
-   * ```ts
-   * const tracker = new ProgressTracker();
-   * const subTracker1 = tracker.stage(0.67, 'Slow stage');
-   * const subTracker2 = tracker.stage(0.33, 'Fast stage');
-   *
-   * subTracker2.set(50);
-   * subTracker1.set(75);
-   * subTracker2.set(100);
-   * subTracker1.set(100);
-   * ```
-   */
-  stage(t, o = "") {
-    if (t || (t = this._selfWeight), this._selfWeight - t < -hr)
-      throw new Error(
-        `Cannot add a stage with weight ${t} as the total weight of registered stages would exceed 1.`
-      );
-    this._selfWeight -= t;
-    const p = new ur({
-      caption: o,
-      weight: t,
-      fillTime: this._fillTime
-    });
-    return this._subTrackers.push(p), p.addEventListener("progress", () => this.notifyProgress()), p.addEventListener("done", () => {
-      this.done && this.notifyDone();
-    }), p;
-  }
-  /**
-   * Fills the progress bar slowly over time, simulating progress.
-   *
-   * The progress bar is filled in a 100 steps, and each step, the progress
-   * is increased by 1. If `stopBeforeFinishing` is true, the progress bar
-   * will stop filling when it reaches 99% so that you can call `finish()`
-   * explicitly.
-   *
-   * If the progress bar is filling or already filled, this method does nothing.
-   *
-   * @example
-   * ```ts
-   * const progress = new ProgressTracker({ caption: 'Processing...' });
-   * progress.fillSlowly();
-   * ```
-   *
-   * @param options Optional options.
-   */
-  fillSlowly({ stopBeforeFinishing: t = !0 } = {}) {
-    if (this._isFilling)
-      return;
-    this._isFilling = !0;
-    const o = 100, p = this._fillTime / o;
-    this._fillInterval = setInterval(() => {
-      this.set(this._selfProgress + 1), t && this._selfProgress >= 99 && clearInterval(this._fillInterval);
-    }, p);
-  }
-  set(t) {
-    this._selfProgress = Math.min(t, 100), this.notifyProgress(), this._selfProgress + hr >= 100 && this.finish();
-  }
-  finish() {
-    this._fillInterval && clearInterval(this._fillInterval), this._selfDone = !0, this._selfProgress = 100, this._isFilling = !1, this._fillInterval = void 0, this.notifyProgress(), this.notifyDone();
-  }
-  get caption() {
-    for (let t = this._subTrackers.length - 1; t >= 0; t--)
-      if (!this._subTrackers[t].done) {
-        const o = this._subTrackers[t].caption;
-        if (o)
-          return o;
-      }
-    return this._selfCaption;
-  }
-  setCaption(t) {
-    this._selfCaption = t, this.notifyProgress();
-  }
-  get done() {
-    return this.progress + hr >= 100;
-  }
-  get progress() {
-    if (this._selfDone)
-      return 100;
-    const t = this._subTrackers.reduce(
-      (o, p) => o + p.progress * p.weight,
-      this._selfProgress * this._selfWeight
-    );
-    return Math.round(t * 1e4) / 1e4;
-  }
-  get weight() {
-    return this._weight;
-  }
-  get observer() {
-    return this._progressObserver || (this._progressObserver = (t) => {
-      this.set(t);
-    }), this._progressObserver;
-  }
-  get loadingListener() {
-    return this._loadingListener || (this._loadingListener = (t) => {
-      this.set(t.detail.loaded / t.detail.total * 100);
-    }), this._loadingListener;
-  }
-  pipe(t) {
-    t.setProgress({
-      progress: this.progress,
-      caption: this.caption
-    }), this.addEventListener("progress", (o) => {
-      t.setProgress({
-        progress: o.detail.progress,
-        caption: o.detail.caption
-      });
-    }), this.addEventListener("done", () => {
-      t.setLoaded();
-    });
-  }
-  addEventListener(t, o) {
-    super.addEventListener(t, o);
-  }
-  removeEventListener(t, o) {
-    super.removeEventListener(t, o);
-  }
-  notifyProgress() {
-    const t = this;
-    this.dispatchEvent(
-      new CustomEvent("progress", {
-        detail: {
-          get progress() {
-            return t.progress;
-          },
-          get caption() {
-            return t.caption;
-          }
-        }
-      })
-    );
-  }
-  notifyDone() {
-    this.dispatchEvent(new CustomEvent("done"));
-  }
-}
-const ir = {
+}, Fo = async (e, { fromPath: r, toPath: s }) => {
+  await e.mv(r, s);
+}, jo = async (e, { path: r }) => {
+  await e.mkdir(r);
+}, Bo = async (e, { path: r }) => {
+  await e.rmdir(r);
+}, In = async (e, { path: r, data: s }) => {
+  s instanceof File && (s = new Uint8Array(await s.arrayBuffer())), r.startsWith("/wordpress/wp-content/mu-plugins") && !await e.fileExists("/wordpress/wp-content/mu-plugins") && await e.mkdir("/wordpress/wp-content/mu-plugins"), await e.writeFile(r, s);
+}, Kt = {
   0: "No error occurred. System call completed successfully.",
   1: "Argument list too long.",
   2: "Permission denied.",
@@ -1959,47 +1098,47 @@ const ir = {
   75: "Cross-device link.",
   76: "Extension: Capabilities insufficient."
 };
-function cs(r) {
-  const t = typeof r == "object" ? r == null ? void 0 : r.errno : null;
-  if (t in ir)
-    return ir[t];
+function Io(e) {
+  const r = typeof e == "object" ? e == null ? void 0 : e.errno : null;
+  if (r in Kt)
+    return Kt[r];
 }
-function ge(r = "") {
-  return function(o, p, l) {
-    const i = l.value;
-    l.value = function(...e) {
+function Ye(e = "") {
+  return function(s, n, o) {
+    const i = o.value;
+    o.value = function(...t) {
       try {
-        return i.apply(this, e);
-      } catch (f) {
-        const h = typeof f == "object" ? f == null ? void 0 : f.errno : null;
-        if (h in ir) {
-          const b = ir[h], k = typeof e[1] == "string" ? e[1] : null, m = k !== null ? r.replaceAll("{path}", k) : r;
-          throw new Error(`${m}: ${b}`, {
-            cause: f
+        return i.apply(this, t);
+      } catch (p) {
+        const y = typeof p == "object" ? p == null ? void 0 : p.errno : null;
+        if (y in Kt) {
+          const u = Kt[y], d = typeof t[1] == "string" ? t[1] : null, w = d !== null ? e.replaceAll("{path}", d) : e;
+          throw new Error(`${w}: ${u}`, {
+            cause: p
           });
         }
-        throw f;
+        throw p;
       }
     };
   };
 }
-var ms = Object.defineProperty, ys = Object.getOwnPropertyDescriptor, be = (r, t, o, p) => {
-  for (var l = p > 1 ? void 0 : p ? ys(t, o) : t, i = r.length - 1, e; i >= 0; i--)
-    (e = r[i]) && (l = (p ? e(t, o, l) : e(l)) || l);
-  return p && l && ms(t, o, l), l;
+var Lo = Object.defineProperty, No = Object.getOwnPropertyDescriptor, Ke = (e, r, s, n) => {
+  for (var o = n > 1 ? void 0 : n ? No(r, s) : r, i = e.length - 1, t; i >= 0; i--)
+    (t = e[i]) && (o = (n ? t(r, s, o) : t(o)) || o);
+  return n && o && Lo(r, s, o), o;
 };
-const we = class pe {
-  static readFileAsText(t, o) {
-    return new TextDecoder().decode(pe.readFileAsBuffer(t, o));
+const Xe = class Be {
+  static readFileAsText(r, s) {
+    return new TextDecoder().decode(Be.readFileAsBuffer(r, s));
   }
-  static readFileAsBuffer(t, o) {
-    return t.readFile(o);
+  static readFileAsBuffer(r, s) {
+    return r.readFile(s);
   }
-  static writeFile(t, o, p) {
-    t.writeFile(o, p);
+  static writeFile(r, s, n) {
+    r.writeFile(s, n);
   }
-  static unlink(t, o) {
-    t.unlink(o);
+  static unlink(r, s) {
+    r.unlink(s);
   }
   /**
    * Moves a file or directory in the PHP filesystem to a
@@ -2009,47 +1148,47 @@ const we = class pe {
    * @param fromPath The path to rename.
    * @param toPath The new path.
    */
-  static mv(t, o, p) {
+  static mv(r, s, n) {
     try {
-      const l = t.lookupPath(o).node.mount, i = pe.fileExists(t, p) ? t.lookupPath(p).node.mount : t.lookupPath(Yr(p)).node.mount;
-      l.mountpoint !== i.mountpoint ? (pe.copyRecursive(t, o, p), pe.isDir(t, o) ? pe.rmdir(t, o, { recursive: !0 }) : t.unlink(o)) : t.rename(o, p);
-    } catch (l) {
-      const i = cs(l);
+      const o = r.lookupPath(s).node.mount, i = Be.fileExists(r, n) ? r.lookupPath(n).node.mount : r.lookupPath(gt(n)).node.mount;
+      o.mountpoint !== i.mountpoint ? (Be.copyRecursive(r, s, n), Be.isDir(r, s) ? Be.rmdir(r, s, { recursive: !0 }) : r.unlink(s)) : r.rename(s, n);
+    } catch (o) {
+      const i = Io(o);
       throw i ? new Error(
-        `Could not move ${o} to ${p}: ${i}`,
+        `Could not move ${s} to ${n}: ${i}`,
         {
-          cause: l
+          cause: o
         }
-      ) : l;
+      ) : o;
     }
   }
-  static rmdir(t, o, p = { recursive: !0 }) {
-    p != null && p.recursive && pe.listFiles(t, o).forEach((l) => {
-      const i = `${o}/${l}`;
-      pe.isDir(t, i) ? pe.rmdir(t, i, p) : pe.unlink(t, i);
-    }), t.rmdir(o);
+  static rmdir(r, s, n = { recursive: !0 }) {
+    n != null && n.recursive && Be.listFiles(r, s).forEach((o) => {
+      const i = `${s}/${o}`;
+      Be.isDir(r, i) ? Be.rmdir(r, i, n) : Be.unlink(r, i);
+    }), r.rmdir(s);
   }
-  static listFiles(t, o, p = { prependPath: !1 }) {
-    if (!pe.fileExists(t, o))
+  static listFiles(r, s, n = { prependPath: !1 }) {
+    if (!Be.fileExists(r, s))
       return [];
     try {
-      const l = t.readdir(o).filter(
+      const o = r.readdir(s).filter(
         (i) => i !== "." && i !== ".."
       );
-      if (p.prependPath) {
-        const i = o.replace(/\/$/, "");
-        return l.map((e) => `${i}/${e}`);
+      if (n.prependPath) {
+        const i = s.replace(/\/$/, "");
+        return o.map((t) => `${i}/${t}`);
       }
-      return l;
-    } catch (l) {
-      return ae.error(l, { path: o }), [];
+      return o;
+    } catch (o) {
+      return Se.error(o, { path: s }), [];
     }
   }
-  static isDir(t, o) {
-    return pe.fileExists(t, o) ? t.isDir(t.lookupPath(o, { follow: !0 }).node.mode) : !1;
+  static isDir(r, s) {
+    return Be.fileExists(r, s) ? r.isDir(r.lookupPath(s, { follow: !0 }).node.mode) : !1;
   }
-  static isFile(t, o) {
-    return pe.fileExists(t, o) ? t.isFile(t.lookupPath(o, { follow: !0 }).node.mode) : !1;
+  static isFile(r, s) {
+    return Be.fileExists(r, s) ? r.isFile(r.lookupPath(s, { follow: !0 }).node.mode) : !1;
   }
   /**
    * Creates a symlink in the PHP filesystem.
@@ -2058,8 +1197,8 @@ const we = class pe {
    * @param target
    * @param link
    */
-  static symlink(t, o, p) {
-    return t.symlink(o, p);
+  static symlink(r, s, n) {
+    return r.symlink(s, n);
   }
   /**
    * Checks if a path is a symlink in the PHP filesystem.
@@ -2068,8 +1207,8 @@ const we = class pe {
    * @param path
    * @returns True if the path is a symlink, false otherwise.
    */
-  static isSymlink(t, o) {
-    return pe.fileExists(t, o) ? t.isLink(t.lookupPath(o).node.mode) : !1;
+  static isSymlink(r, s) {
+    return Be.fileExists(r, s) ? r.isLink(r.lookupPath(s).node.mode) : !1;
   }
   /**
    * Reads the target of a symlink in the PHP filesystem.
@@ -2078,76 +1217,76 @@ const we = class pe {
    * @returns The target of the symlink.
    * @throws {@link @php-wasm/universal:ErrnoError} – If the path is not a symlink.
    */
-  static readlink(t, o) {
-    return t.readlink(o);
+  static readlink(r, s) {
+    return r.readlink(s);
   }
-  static realpath(t, o) {
-    return t.lookupPath(o, { follow: !0 }).path;
+  static realpath(r, s) {
+    return r.lookupPath(s, { follow: !0 }).path;
   }
-  static fileExists(t, o) {
+  static fileExists(r, s) {
     try {
-      return t.lookupPath(o), !0;
+      return r.lookupPath(s), !0;
     } catch {
       return !1;
     }
   }
-  static mkdir(t, o) {
-    t.mkdirTree(o);
+  static mkdir(r, s) {
+    r.mkdirTree(s);
   }
-  static copyRecursive(t, o, p) {
-    const l = t.lookupPath(o).node;
-    if (t.isDir(l.mode)) {
-      t.mkdirTree(p);
-      const i = t.readdir(o).filter(
-        (e) => e !== "." && e !== ".."
+  static copyRecursive(r, s, n) {
+    const o = r.lookupPath(s).node;
+    if (r.isDir(o.mode)) {
+      r.mkdirTree(n);
+      const i = r.readdir(s).filter(
+        (t) => t !== "." && t !== ".."
       );
-      for (const e of i)
-        pe.copyRecursive(
-          t,
-          se(o, e),
-          se(p, e)
+      for (const t of i)
+        Be.copyRecursive(
+          r,
+          ge(s, t),
+          ge(n, t)
         );
     } else
-      t.writeFile(p, t.readFile(o));
+      r.writeFile(n, r.readFile(s));
   }
 };
-be([
-  ge('Could not read "{path}"')
-], we, "readFileAsText", 1);
-be([
-  ge('Could not read "{path}"')
-], we, "readFileAsBuffer", 1);
-be([
-  ge('Could not write to "{path}"')
-], we, "writeFile", 1);
-be([
-  ge('Could not unlink "{path}"')
-], we, "unlink", 1);
-be([
-  ge('Could not remove directory "{path}"')
-], we, "rmdir", 1);
-be([
-  ge('Could not list files in "{path}"')
-], we, "listFiles", 1);
-be([
-  ge('Could not stat "{path}"')
-], we, "isDir", 1);
-be([
-  ge('Could not stat "{path}"')
-], we, "isFile", 1);
-be([
-  ge('Could not stat "{path}"')
-], we, "realpath", 1);
-be([
-  ge('Could not stat "{path}"')
-], we, "fileExists", 1);
-be([
-  ge('Could not create directory "{path}"')
-], we, "mkdir", 1);
-be([
-  ge('Could not copy files from "{path}"')
-], we, "copyRecursive", 1);
-const hs = {
+Ke([
+  Ye('Could not read "{path}"')
+], Xe, "readFileAsText", 1);
+Ke([
+  Ye('Could not read "{path}"')
+], Xe, "readFileAsBuffer", 1);
+Ke([
+  Ye('Could not write to "{path}"')
+], Xe, "writeFile", 1);
+Ke([
+  Ye('Could not unlink "{path}"')
+], Xe, "unlink", 1);
+Ke([
+  Ye('Could not remove directory "{path}"')
+], Xe, "rmdir", 1);
+Ke([
+  Ye('Could not list files in "{path}"')
+], Xe, "listFiles", 1);
+Ke([
+  Ye('Could not stat "{path}"')
+], Xe, "isDir", 1);
+Ke([
+  Ye('Could not stat "{path}"')
+], Xe, "isFile", 1);
+Ke([
+  Ye('Could not stat "{path}"')
+], Xe, "realpath", 1);
+Ke([
+  Ye('Could not stat "{path}"')
+], Xe, "fileExists", 1);
+Ke([
+  Ye('Could not create directory "{path}"')
+], Xe, "mkdir", 1);
+Ke([
+  Ye('Could not copy files from "{path}"')
+], Xe, "copyRecursive", 1);
+const Co = {
   500: "Internal Server Error",
   502: "Bad Gateway",
   404: "Not Found",
@@ -2162,26 +1301,26 @@ const hs = {
   201: "Created",
   200: "OK"
 };
-class or {
-  constructor(t, o, p, l = "", i = 0) {
-    this.httpStatusCode = t, this.headers = o, this.bytes = p, this.exitCode = i, this.errors = l;
+class Xt {
+  constructor(r, s, n, o = "", i = 0) {
+    this.httpStatusCode = r, this.headers = s, this.bytes = n, this.exitCode = i, this.errors = o;
   }
-  static forHttpCode(t, o = "") {
-    return new or(
-      t,
+  static forHttpCode(r, s = "") {
+    return new Xt(
+      r,
       {},
       new TextEncoder().encode(
-        o || hs[t] || ""
+        s || Co[r] || ""
       )
     );
   }
-  static fromRawData(t) {
-    return new or(
-      t.httpStatusCode,
-      t.headers,
-      t.bytes,
-      t.errors,
-      t.exitCode
+  static fromRawData(r) {
+    return new Xt(
+      r.httpStatusCode,
+      r.headers,
+      r.bytes,
+      r.errors,
+      r.exitCode
     );
   }
   toRawData() {
@@ -2207,143 +1346,147 @@ class or {
   }
 }
 (function() {
-  var r;
-  return typeof process < "u" && ((r = process.release) == null ? void 0 : r.name) === "node" ? "NODE" : typeof window < "u" ? "WEB" : typeof WorkerGlobalScope < "u" && self instanceof WorkerGlobalScope ? "WORKER" : "NODE";
+  var e;
+  return typeof process < "u" && ((e = process.release) == null ? void 0 : e.name) === "node" ? "NODE" : typeof window < "u" ? "WEB" : typeof WorkerGlobalScope < "u" && self instanceof WorkerGlobalScope ? "WORKER" : "NODE";
 })();
-const Cr = "/internal/shared/php.ini", { hasOwnProperty: gr } = Object.prototype, Or = (r, t = {}) => {
-  typeof t == "string" && (t = { section: t }), t.align = t.align === !0, t.newline = t.newline === !0, t.sort = t.sort === !0, t.whitespace = t.whitespace === !0 || t.align === !0, t.platform = t.platform || typeof process < "u" && process.platform, t.bracketedArray = t.bracketedArray !== !1;
-  const o = t.platform === "win32" ? `\r
-` : `
-`, p = t.whitespace ? " = " : "=", l = [], i = t.sort ? Object.keys(r).sort() : Object.keys(r);
-  let e = 0;
-  t.align && (e = Ee(
-    i.filter((b) => r[b] === null || Array.isArray(r[b]) || typeof r[b] != "object").map((b) => Array.isArray(r[b]) ? `${b}[]` : b).concat([""]).reduce((b, k) => Ee(b).length >= Ee(k).length ? b : k)
-  ).length);
-  let f = "";
-  const h = t.bracketedArray ? "[]" : "";
-  for (const b of i) {
-    const k = r[b];
-    if (k && Array.isArray(k))
-      for (const m of k)
-        f += Ee(`${b}${h}`).padEnd(e, " ") + p + Ee(m) + o;
-    else
-      k && typeof k == "object" ? l.push(b) : f += Ee(b).padEnd(e, " ") + p + Ee(k) + o;
-  }
-  t.section && f.length && (f = "[" + Ee(t.section) + "]" + (t.newline ? o + o : o) + f);
-  for (const b of l) {
-    const k = at(b, ".").join("\\."), m = (t.section ? t.section + "." : "") + k, w = Or(r[b], {
-      ...t,
-      section: m
-    });
-    f.length && w.length && (f += o), f += w;
-  }
-  return f;
-};
-function at(r, t) {
-  var o = 0, p = 0, l = 0, i = [];
-  do
-    if (l = r.indexOf(t, o), l !== -1) {
-      if (o = l + t.length, l > 0 && r[l - 1] === "\\")
-        continue;
-      i.push(r.slice(p, l)), p = l + t.length;
-    }
-  while (l !== -1);
-  return i.push(r.slice(p)), i;
+const Pi = "/internal/shared/php.ini";
+function ii(e) {
+  return e && e.__esModule && Object.prototype.hasOwnProperty.call(e, "default") ? e.default : e;
 }
-const Ir = (r, t = {}) => {
-  t.bracketedArray = t.bracketedArray !== !1;
-  const o = /* @__PURE__ */ Object.create(null);
-  let p = o, l = null;
-  const i = /^\[([^\]]*)\]\s*$|^([^=]+)(=(.*))?$/i, e = r.split(/[\r\n]+/g), f = {};
-  for (const b of e) {
-    if (!b || b.match(/^\s*[;#]/) || b.match(/^\s*$/))
+const { hasOwnProperty: gs } = Object.prototype, zs = (e, r = {}) => {
+  typeof r == "string" && (r = { section: r }), r.align = r.align === !0, r.newline = r.newline === !0, r.sort = r.sort === !0, r.whitespace = r.whitespace === !0 || r.align === !0, r.platform = r.platform || typeof process < "u" && process.platform, r.bracketedArray = r.bracketedArray !== !1;
+  const s = r.platform === "win32" ? `\r
+` : `
+`, n = r.whitespace ? " = " : "=", o = [], i = r.sort ? Object.keys(e).sort() : Object.keys(e);
+  let t = 0;
+  r.align && (t = yr(
+    i.filter((u) => e[u] === null || Array.isArray(e[u]) || typeof e[u] != "object").map((u) => Array.isArray(e[u]) ? `${u}[]` : u).concat([""]).reduce((u, d) => yr(u).length >= yr(d).length ? u : d)
+  ).length);
+  let p = "";
+  const y = r.bracketedArray ? "[]" : "";
+  for (const u of i) {
+    const d = e[u];
+    if (d && Array.isArray(d))
+      for (const w of d)
+        p += yr(`${u}${y}`).padEnd(t, " ") + n + yr(w) + s;
+    else
+      d && typeof d == "object" ? o.push(u) : p += yr(u).padEnd(t, " ") + n + yr(d) + s;
+  }
+  r.section && p.length && (p = "[" + yr(r.section) + "]" + (r.newline ? s + s : s) + p);
+  for (const u of o) {
+    const d = Ln(u, ".").join("\\."), w = (r.section ? r.section + "." : "") + d, _ = zs(e[u], {
+      ...r,
+      section: w
+    });
+    p.length && _.length && (p += s), p += _;
+  }
+  return p;
+};
+function Ln(e, r) {
+  var s = 0, n = 0, o = 0, i = [];
+  do
+    if (o = e.indexOf(r, s), o !== -1) {
+      if (s = o + r.length, o > 0 && e[o - 1] === "\\")
+        continue;
+      i.push(e.slice(n, o)), n = o + r.length;
+    }
+  while (o !== -1);
+  return i.push(e.slice(n)), i;
+}
+const ki = (e, r = {}) => {
+  r.bracketedArray = r.bracketedArray !== !1;
+  const s = /* @__PURE__ */ Object.create(null);
+  let n = s, o = null;
+  const i = /^\[([^\]]*)\]\s*$|^([^=]+)(=(.*))?$/i, t = e.split(/[\r\n]+/g), p = {};
+  for (const u of t) {
+    if (!u || u.match(/^\s*[;#]/) || u.match(/^\s*$/))
       continue;
-    const k = b.match(i);
-    if (!k)
+    const d = u.match(i);
+    if (!d)
       continue;
-    if (k[1] !== void 0) {
-      if (l = Xe(k[1]), l === "__proto__") {
-        p = /* @__PURE__ */ Object.create(null);
+    if (d[1] !== void 0) {
+      if (o = Ut(d[1]), o === "__proto__") {
+        n = /* @__PURE__ */ Object.create(null);
         continue;
       }
-      p = o[l] = o[l] || /* @__PURE__ */ Object.create(null);
+      n = s[o] = s[o] || /* @__PURE__ */ Object.create(null);
       continue;
     }
-    const m = Xe(k[2]);
-    let w;
-    t.bracketedArray ? w = m.length > 2 && m.slice(-2) === "[]" : (f[m] = ((f == null ? void 0 : f[m]) || 0) + 1, w = f[m] > 1);
-    const S = w ? m.slice(0, -2) : m;
-    if (S === "__proto__")
+    const w = Ut(d[2]);
+    let _;
+    r.bracketedArray ? _ = w.length > 2 && w.slice(-2) === "[]" : (p[w] = ((p == null ? void 0 : p[w]) || 0) + 1, _ = p[w] > 1);
+    const b = _ ? w.slice(0, -2) : w;
+    if (b === "__proto__")
       continue;
-    const D = k[3] ? Xe(k[4]) : !0, P = D === "true" || D === "false" || D === "null" ? JSON.parse(D) : D;
-    w && (gr.call(p, S) ? Array.isArray(p[S]) || (p[S] = [p[S]]) : p[S] = []), Array.isArray(p[S]) ? p[S].push(P) : p[S] = P;
+    const j = d[3] ? Ut(d[4]) : !0, P = j === "true" || j === "false" || j === "null" ? JSON.parse(j) : j;
+    _ && (gs.call(n, b) ? Array.isArray(n[b]) || (n[b] = [n[b]]) : n[b] = []), Array.isArray(n[b]) ? n[b].push(P) : n[b] = P;
   }
-  const h = [];
-  for (const b of Object.keys(o)) {
-    if (!gr.call(o, b) || typeof o[b] != "object" || Array.isArray(o[b]))
+  const y = [];
+  for (const u of Object.keys(s)) {
+    if (!gs.call(s, u) || typeof s[u] != "object" || Array.isArray(s[u]))
       continue;
-    const k = at(b, ".");
-    p = o;
-    const m = k.pop(), w = m.replace(/\\\./g, ".");
-    for (const S of k)
-      S !== "__proto__" && ((!gr.call(p, S) || typeof p[S] != "object") && (p[S] = /* @__PURE__ */ Object.create(null)), p = p[S]);
-    p === o && w === m || (p[w] = o[b], h.push(b));
+    const d = Ln(u, ".");
+    n = s;
+    const w = d.pop(), _ = w.replace(/\\\./g, ".");
+    for (const b of d)
+      b !== "__proto__" && ((!gs.call(n, b) || typeof n[b] != "object") && (n[b] = /* @__PURE__ */ Object.create(null)), n = n[b]);
+    n === s && _ === w || (n[_] = s[u], y.push(u));
   }
-  for (const b of h)
-    delete o[b];
-  return o;
-}, pt = (r) => r.startsWith('"') && r.endsWith('"') || r.startsWith("'") && r.endsWith("'"), Ee = (r) => typeof r != "string" || r.match(/[=\r\n]/) || r.match(/^\[/) || r.length > 1 && pt(r) || r !== r.trim() ? JSON.stringify(r) : r.split(";").join("\\;").split("#").join("\\#"), Xe = (r) => {
-  if (r = (r || "").trim(), pt(r)) {
-    r.charAt(0) === "'" && (r = r.slice(1, -1));
+  for (const u of y)
+    delete s[u];
+  return s;
+}, Nn = (e) => e.startsWith('"') && e.endsWith('"') || e.startsWith("'") && e.endsWith("'"), yr = (e) => typeof e != "string" || e.match(/[=\r\n]/) || e.match(/^\[/) || e.length > 1 && Nn(e) || e !== e.trim() ? JSON.stringify(e) : e.split(";").join("\\;").split("#").join("\\#"), Ut = (e) => {
+  if (e = (e || "").trim(), Nn(e)) {
+    e.charAt(0) === "'" && (e = e.slice(1, -1));
     try {
-      r = JSON.parse(r);
+      e = JSON.parse(e);
     } catch {
     }
   } else {
-    let t = !1, o = "";
-    for (let p = 0, l = r.length; p < l; p++) {
-      const i = r.charAt(p);
-      if (t)
-        "\\;#".indexOf(i) !== -1 ? o += i : o += "\\" + i, t = !1;
+    let r = !1, s = "";
+    for (let n = 0, o = e.length; n < o; n++) {
+      const i = e.charAt(n);
+      if (r)
+        "\\;#".indexOf(i) !== -1 ? s += i : s += "\\" + i, r = !1;
       else {
         if (";#".indexOf(i) !== -1)
           break;
-        i === "\\" ? t = !0 : o += i;
+        i === "\\" ? r = !0 : s += i;
       }
     }
-    return t && (o += "\\"), o.trim();
+    return r && (s += "\\"), s.trim();
   }
-  return r;
+  return e;
 };
-var Dr = {
-  parse: Ir,
-  decode: Ir,
-  stringify: Or,
-  encode: Or,
-  safe: Ee,
-  unsafe: Xe
+var Ei = {
+  parse: ki,
+  decode: ki,
+  stringify: zs,
+  encode: zs,
+  safe: yr,
+  unsafe: Ut
 };
-async function ai(r, t) {
-  const o = Dr.parse(await r.readFileAsText(Cr));
-  for (const [p, l] of Object.entries(t))
-    l == null ? delete o[p] : o[p] = l;
-  await r.writeFile(Cr, Dr.stringify(o));
+async function Uu(e, r) {
+  const s = Ei.parse(await e.readFileAsText(Pi));
+  for (const [n, o] of Object.entries(r))
+    o == null ? delete s[n] : s[n] = o;
+  await e.writeFile(Pi, Ei.stringify(s));
 }
 ReadableStream.prototype[Symbol.asyncIterator] || (ReadableStream.prototype[Symbol.asyncIterator] = async function* () {
-  const r = this.getReader();
+  const e = this.getReader();
   try {
     for (; ; ) {
-      const { done: t, value: o } = await r.read();
-      if (t)
+      const { done: r, value: s } = await e.read();
+      if (r)
         return;
-      yield o;
+      yield s;
     }
   } finally {
-    r.releaseLock();
+    e.releaseLock();
   }
 }, ReadableStream.prototype.iterate = // @ts-ignore
 ReadableStream.prototype[Symbol.asyncIterator]);
-const jr = [
+const ni = [
   "8.3",
   "8.2",
   "8.1",
@@ -2353,25 +1496,5104 @@ const jr = [
   "7.2",
   "7.1",
   "7.0"
-], gs = jr[0], pi = jr, lt = [
-  "iconv",
-  "mbstring",
-  "xml-bundle",
-  "gd"
-], Wr = {
-  "kitchen-sink": lt,
-  light: []
-}, bs = [
+], Do = ni[0], zu = ni;
+async function ns(e, r, s, { rmRoot: n = !1 } = {}) {
+  n && await e.isDir(r) && await e.rmdir(r, { recursive: !0 });
+  for (const [o, i] of Object.entries(s)) {
+    const t = ge(r, o);
+    await e.fileExists(gt(t)) || await e.mkdir(gt(t)), i instanceof Uint8Array || typeof i == "string" ? await e.writeFile(t, i) : await ns(e, t, i);
+  }
+}
+const qo = async (e, { writeToPath: r, filesTree: s }) => {
+  await ns(e, r, s.files);
+}, Cn = async (e, { siteUrl: r }) => {
+  await ti(e, {
+    consts: {
+      WP_HOME: r,
+      WP_SITEURL: r
+    }
+  });
+}, Uo = async (e, { file: r }, s) => {
+  var o;
+  (o = s == null ? void 0 : s.tracker) == null || o.setCaption("Importing content"), await In(e, {
+    path: "/tmp/import.wxr",
+    data: r
+  });
+  const n = await e.documentRoot;
+  await e.run({
+    code: `<?php
+		require ${Fe(n)} . '/wp-load.php';
+		require ${Fe(n)} . '/wp-admin/includes/admin.php';
+  
+		kses_remove_filters();
+		$admin_id = get_users(array('role' => 'Administrator') )[0]->ID;
+        wp_set_current_user( $admin_id );
+		$importer = new WXR_Importer( array(
+			'fetch_attachments' => true,
+			'default_author' => $admin_id
+		) );
+		$logger = new WP_Importer_Logger_CLI();
+		$importer->set_logger( $logger );
+
+		// Slashes from the imported content are lost if we don't call wp_slash here.
+		add_action( 'wp_insert_post_data', function( $data ) {
+			return wp_slash($data);
+		});
+
+		$result = $importer->import( '/tmp/import.wxr' );
+		`
+  });
+}, Dn = async (e, { themeSlug: r = "" }, s) => {
+  var o;
+  (o = s == null ? void 0 : s.tracker) == null || o.setCaption("Importing theme starter content");
+  const n = await e.documentRoot;
+  await e.run({
+    code: `<?php
+
+		/**
+		 * Ensure that the customizer loads as an admin user.
+		 *
+		 * For compatibility with themes, this MUST be run prior to theme inclusion, which is why this is a plugins_loaded filter instead
+		 * of running _wp_customize_include() manually after load.
+		 */
+		function importThemeStarterContent_plugins_loaded() {
+			// Set as the admin user, this ensures we can customize the site.
+			wp_set_current_user(
+				get_users( [ 'role' => 'Administrator' ] )[0]
+			);
+
+			// Force the site to be fresh, although it should already be.
+			add_filter( 'pre_option_fresh_site', '__return_true' );
+
+			/*
+			 * Simulate this request as the customizer loading with the current theme in preview mode.
+			 *
+			 * See _wp_customize_include()
+			 */
+			$_REQUEST['wp_customize']    = 'on';
+			$_REQUEST['customize_theme'] = ${Fe(r)} ?: get_stylesheet();
+
+			/*
+			 * Claim this is a ajax request saving settings, to avoid the preview filters being applied.
+			 */
+			$_REQUEST['action'] = 'customize_save';
+			add_filter( 'wp_doing_ajax', '__return_true' );
+
+			$_GET = $_REQUEST;
+		}
+		playground_add_filter( 'plugins_loaded', 'importThemeStarterContent_plugins_loaded', 0 );
+
+		require ${Fe(n)} . '/wp-load.php';
+
+		// Return early if there's no starter content.
+		if ( ! get_theme_starter_content() ) {
+			return;
+		}
+
+		// Import the Starter Content.
+		$wp_customize->import_theme_starter_content();
+
+		// Publish the changeset, which publishes the starter content.
+		wp_publish_post( $wp_customize->changeset_post_id() );
+		`
+  });
+}, ws = "/tmp/file.zip", qn = async (e, r, s, n = !0) => {
+  if (r instanceof File) {
+    const i = r;
+    r = ws, await e.writeFile(
+      r,
+      new Uint8Array(await i.arrayBuffer())
+    );
+  }
+  const o = is({
+    zipPath: r,
+    extractToPath: s,
+    overwriteFiles: n
+  });
+  await e.run({
+    code: `<?php
+        function unzip($zipPath, $extractTo, $overwriteFiles = true)
+        {
+            if (!is_dir($extractTo)) {
+                mkdir($extractTo, 0777, true);
+            }
+            $zip = new ZipArchive;
+            $res = $zip->open($zipPath);
+            if ($res === TRUE) {
+				for ($i = 0; $i < $zip->numFiles; $i++) {
+					$filename = $zip->getNameIndex($i);
+					$fileinfo = pathinfo($filename);
+					$extractFilePath = rtrim($extractTo, '/') . '/' . $filename;
+					// Check if file exists and $overwriteFiles is false
+					if (!file_exists($extractFilePath) || $overwriteFiles) {
+						// Extract file
+						$zip->extractTo($extractTo, $filename);
+					}
+				}
+				$zip->close();
+				chmod($extractTo, 0777);
+            } else {
+                throw new Exception("Could not unzip file");
+            }
+        }
+        unzip(${o.zipPath}, ${o.extractToPath}, ${o.overwriteFiles});
+        `
+  }), await e.fileExists(ws) && await e.unlink(ws);
+}, ai = async (e, { zipFile: r, zipPath: s, extractToPath: n }) => {
+  if (s)
+    Se.warn(
+      'The "zipPath" option of the unzip() Blueprint step is deprecated and will be removed. Use "zipFile" instead.'
+    );
+  else if (!r)
+    throw new Error("Either zipPath or zipFile must be provided");
+  await qn(e, r || s, n);
+}, zo = async (e, { wordPressFilesZip: r, pathInZip: s = "" }) => {
+  const n = await e.documentRoot;
+  let o = ge("/tmp", "import");
+  await e.mkdir(o), await ai(e, {
+    zipFile: r,
+    extractToPath: o
+  }), o = ge(o, s);
+  const i = ge(o, "wp-content"), t = ge(n, "wp-content");
+  for (const d of On) {
+    const w = ge(
+      i,
+      d
+    );
+    await Oi(e, w);
+    const _ = ge(t, d);
+    await e.fileExists(_) && (await e.mkdir(gt(w)), await e.mv(_, w));
+  }
+  const p = ge(
+    o,
+    "wp-content",
+    "database"
+  );
+  await e.fileExists(p) || await e.mv(
+    ge(n, "wp-content", "database"),
+    p
+  );
+  const y = await e.listFiles(o);
+  for (const d of y)
+    await Oi(e, ge(n, d)), await e.mv(
+      ge(o, d),
+      ge(n, d)
+    );
+  await e.rmdir(o), await Cn(e, {
+    siteUrl: await e.absoluteUrl
+  });
+  const u = Fe(
+    ge(n, "wp-admin", "upgrade.php")
+  );
+  await e.run({
+    code: `<?php
+            $_GET['step'] = 'upgrade_db';
+            require ${u};
+            `
+  });
+};
+async function Oi(e, r) {
+  await e.fileExists(r) && (await e.isDir(r) ? await e.rmdir(r) : await e.unlink(r));
+}
+async function Mo(e) {
+  const r = await e.request({
+    url: "/wp-admin/export.php?download=true&content=all"
+  });
+  return new File([r.bytes], "export.xml");
+}
+async function Un(e, {
+  targetPath: r,
+  zipFile: s,
+  ifAlreadyInstalled: n = "overwrite",
+  targetFolderName: o = ""
+}) {
+  const t = s.name.replace(/\.zip$/, ""), p = ge(await e.documentRoot, "wp-content"), y = ge(p, Tn()), u = ge(y, "assets", t);
+  await e.fileExists(u) && await e.rmdir(y, {
+    recursive: !0
+  }), await e.mkdir(y);
+  try {
+    await ai(e, {
+      zipFile: s,
+      extractToPath: u
+    });
+    let d = await e.listFiles(u, {
+      prependPath: !0
+    });
+    d = d.filter((P) => !P.endsWith("/__MACOSX"));
+    const w = d.length === 1 && await e.isDir(d[0]);
+    let _, b = "";
+    w ? (b = d[0], _ = d[0].split("/").pop()) : (b = u, _ = t), o && o.length && (_ = o);
+    const j = `${r}/${_}`;
+    if (await e.fileExists(j)) {
+      if (!await e.isDir(j))
+        throw new Error(
+          `Cannot install asset ${_} to ${j} because a file with the same name already exists. Note it's a file, not a directory! Is this by mistake?`
+        );
+      if (n === "overwrite")
+        await e.rmdir(j, {
+          recursive: !0
+        });
+      else {
+        if (n === "skip")
+          return {
+            assetFolderPath: j,
+            assetFolderName: _
+          };
+        throw new Error(
+          `Cannot install asset ${_} to ${r} because it already exists and the ifAlreadyInstalled option was set to ${n}`
+        );
+      }
+    }
+    return await e.mv(b, j), {
+      assetFolderPath: j,
+      assetFolderName: _
+    };
+  } finally {
+    await e.rmdir(y, {
+      recursive: !0
+    });
+  }
+}
+function as(e) {
+  const r = e.split(".").shift().replace(/-/g, " ");
+  return r.charAt(0).toUpperCase() + r.slice(1).toLowerCase();
+}
+const Wo = async (e, { pluginData: r, pluginZipFile: s, ifAlreadyInstalled: n, options: o = {} }, i) => {
+  s && (r = s, Se.warn(
+    'The "pluginZipFile" option is deprecated. Use "pluginData" instead.'
+  ));
+  const t = "targetFolderName" in o ? o.targetFolderName : "";
+  let p = "", y = "";
+  if (r instanceof File) {
+    const d = r.name.split("/").pop() || "plugin.zip";
+    y = as(d), i == null || i.tracker.setCaption(`Installing the ${y} plugin`);
+    const w = await Un(e, {
+      ifAlreadyInstalled: n,
+      zipFile: r,
+      targetPath: `${await e.documentRoot}/wp-content/plugins`,
+      targetFolderName: t
+    });
+    p = w.assetFolderPath, y = w.assetFolderName;
+  } else if (r) {
+    y = r.name, i == null || i.tracker.setCaption(`Installing the ${y} plugin`);
+    const d = ge(
+      await e.documentRoot,
+      "wp-content",
+      "plugins",
+      t || r.name
+    );
+    await ns(e, d, r.files, {
+      rmRoot: !0
+    }), p = d;
+  }
+  ("activate" in o ? o.activate : !0) && await An(
+    e,
+    {
+      pluginPath: p,
+      pluginName: y
+    },
+    i
+  );
+}, Ho = async (e, { themeData: r, themeZipFile: s, ifAlreadyInstalled: n, options: o = {} }, i) => {
+  s && (r = s, Se.warn(
+    'The "themeZipFile" option is deprecated. Use "themeData" instead.'
+  ));
+  const t = "targetFolderName" in o ? o.targetFolderName : "";
+  let p = "", y = "";
+  if (r instanceof File) {
+    const w = r.name.split("/").pop() || "theme.zip";
+    y = as(w), i == null || i.tracker.setCaption(`Installing the ${y} theme`), p = (await Un(e, {
+      ifAlreadyInstalled: n,
+      zipFile: r,
+      targetPath: `${await e.documentRoot}/wp-content/themes`,
+      targetFolderName: t
+    })).assetFolderName;
+  } else {
+    y = r.name, p = t || y, i == null || i.tracker.setCaption(`Installing the ${y} theme`);
+    const w = ge(
+      await e.documentRoot,
+      "wp-content",
+      "themes",
+      p
+    );
+    await ns(e, w, r.files, {
+      rmRoot: !0
+    });
+  }
+  ("activate" in o ? o.activate : !0) && await Sn(
+    e,
+    {
+      themeFolderName: p
+    },
+    i
+  ), ("importStarterContent" in o ? o.importStarterContent : !1) && await Dn(
+    e,
+    {
+      themeSlug: p
+    },
+    i
+  );
+}, Zo = async (e, { username: r = "admin" } = {}, s) => {
+  s == null || s.tracker.setCaption((s == null ? void 0 : s.initialCaption) || "Logging in"), e.defineConstant("PLAYGROUND_AUTO_LOGIN_AS_USER", r);
+}, Go = async (e, r, s) => {
+  var o;
+  (o = s == null ? void 0 : s.tracker) == null || o.setCaption("Resetting WordPress data");
+  const n = await e.documentRoot;
+  await e.run({
+    env: {
+      DOCROOT: n
+    },
+    code: `<?php
+		require getenv('DOCROOT') . '/wp-load.php';
+
+		$GLOBALS['@pdo']->query('DELETE FROM wp_posts WHERE id > 0');
+		$GLOBALS['@pdo']->query("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='wp_posts'");
+		
+		$GLOBALS['@pdo']->query('DELETE FROM wp_postmeta WHERE post_id > 1');
+		$GLOBALS['@pdo']->query("UPDATE SQLITE_SEQUENCE SET SEQ=20 WHERE NAME='wp_postmeta'");
+
+		$GLOBALS['@pdo']->query('DELETE FROM wp_comments');
+		$GLOBALS['@pdo']->query("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='wp_comments'");
+
+		$GLOBALS['@pdo']->query('DELETE FROM wp_commentmeta');
+		$GLOBALS['@pdo']->query("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='wp_commentmeta'");
+		`
+  });
+}, Vo = async (e, { options: r }) => {
+  await e.request({
+    url: "/wp-admin/install.php?step=2",
+    method: "POST",
+    body: {
+      language: "en",
+      prefix: "wp_",
+      weblog_title: "My WordPress Website",
+      user_name: r.adminPassword || "admin",
+      admin_password: r.adminPassword || "password",
+      // The installation wizard demands typing the same password twice
+      admin_password2: r.adminPassword || "password",
+      Submit: "Install WordPress",
+      pw_weak: "1",
+      admin_email: "admin@localhost.com"
+    }
+  });
+}, Yo = async (e, { selfContained: r = !1 } = {}) => {
+  const s = "/tmp/wordpress-playground.zip", n = await e.documentRoot, o = ge(n, "wp-content");
+  let i = On;
+  r && (i = i.filter((y) => !y.startsWith("themes/twenty")).filter(
+    (y) => y !== "mu-plugins/sqlite-database-integration"
+  ));
+  const t = is({
+    zipPath: s,
+    wpContentPath: o,
+    documentRoot: n,
+    exceptPaths: i.map(
+      (y) => ge(n, "wp-content", y)
+    ),
+    additionalPaths: r ? {
+      [ge(n, "wp-config.php")]: "wp-config.php"
+    } : {}
+  });
+  await Xo(
+    e,
+    `zipDir(${t.wpContentPath}, ${t.zipPath}, array(
+			'exclude_paths' => ${t.exceptPaths},
+			'zip_root'      => ${t.documentRoot},
+			'additional_paths' => ${t.additionalPaths}
+		));`
+  );
+  const p = await e.readFileAsBuffer(s);
+  return e.unlink(s), p;
+}, Ko = `<?php
+
+function zipDir($root, $output, $options = array())
+{
+    $root = rtrim($root, '/');
+    $additionalPaths = array_key_exists('additional_paths', $options) ? $options['additional_paths'] : array();
+    $excludePaths = array_key_exists('exclude_paths', $options) ? $options['exclude_paths'] : array();
+    $zip_root = array_key_exists('zip_root', $options) ? $options['zip_root'] : $root;
+
+    $zip = new ZipArchive;
+    $res = $zip->open($output, ZipArchive::CREATE);
+    if ($res === TRUE) {
+        $directories = array(
+            $root . '/'
+        );
+        while (sizeof($directories)) {
+            $current_dir = array_pop($directories);
+
+            if ($handle = opendir($current_dir)) {
+                while (false !== ($entry = readdir($handle))) {
+                    if ($entry == '.' || $entry == '..') {
+                        continue;
+                    }
+
+                    $entry = join_paths($current_dir, $entry);
+                    if (in_array($entry, $excludePaths)) {
+                        continue;
+                    }
+
+                    if (is_dir($entry)) {
+                        $directory_path = $entry . '/';
+                        array_push($directories, $directory_path);
+                    } else if (is_file($entry)) {
+                        $zip->addFile($entry, substr($entry, strlen($zip_root)));
+                    }
+                }
+                closedir($handle);
+            }
+        }
+        foreach ($additionalPaths as $disk_path => $zip_path) {
+            $zip->addFile($disk_path, $zip_path);
+        }
+        $zip->close();
+        chmod($output, 0777);
+    }
+}
+
+function join_paths()
+{
+    $paths = array();
+
+    foreach (func_get_args() as $arg) {
+        if ($arg !== '') {
+            $paths[] = $arg;
+        }
+    }
+
+    return preg_replace('#/+#', '/', join('/', $paths));
+}
+`;
+async function Xo(e, r) {
+  return await e.run({
+    code: Ko + r
+  });
+}
+const Qo = async (e, { language: r }, s) => {
+  s == null || s.tracker.setCaption((s == null ? void 0 : s.initialCaption) || "Translating"), await e.defineConstant("WPLANG", r);
+  const n = await e.documentRoot, i = [
+    {
+      url: `https://downloads.wordpress.org/translation/core/${(await e.run({
+        code: `<?php
+			require '${n}/wp-includes/version.php';
+			echo $wp_version;
+		`
+      })).text}/${r}.zip`,
+      type: "core"
+    }
+  ], p = (await e.run({
+    code: `<?php
+		require_once('${n}/wp-load.php');
+		require_once('${n}/wp-admin/includes/plugin.php');
+		echo json_encode(
+			array_values(
+				array_map(
+					function($plugin) {
+						return [
+							'slug'    => $plugin['TextDomain'],
+							'version' => $plugin['Version']
+						];
+					},
+					array_filter(
+						get_plugins(),
+						function($plugin) {
+							return !empty($plugin['TextDomain']);
+						}
+					)
+				)
+			)
+		);`
+  })).json;
+  for (const { slug: d, version: w } of p)
+    i.push({
+      url: `https://downloads.wordpress.org/translation/plugin/${d}/${w}/${r}.zip`,
+      type: "plugin"
+    });
+  const u = (await e.run({
+    code: `<?php
+		require_once('${n}/wp-load.php');
+		require_once('${n}/wp-admin/includes/theme.php');
+		echo json_encode(
+			array_values(
+				array_map(
+					function($theme) {
+						return [
+							'slug'    => $theme->get('TextDomain'),
+							'version' => $theme->get('Version')
+						];
+					},
+					wp_get_themes()
+				)
+			)
+		);`
+  })).json;
+  for (const { slug: d, version: w } of u)
+    i.push({
+      url: `https://downloads.wordpress.org/translation/theme/${d}/${w}/${r}.zip`,
+      type: "theme"
+    });
+  await e.isDir(`${n}/wp-content/languages/plugins`) || await e.mkdir(`${n}/wp-content/languages/plugins`), await e.isDir(`${n}/wp-content/languages/themes`) || await e.mkdir(`${n}/wp-content/languages/themes`);
+  for (const { url: d, type: w } of i)
+    try {
+      const _ = await fetch(d);
+      if (!_.ok)
+        throw new Error(
+          `Failed to download translations for ${w}: ${_.statusText}`
+        );
+      let b = `${n}/wp-content/languages`;
+      w === "plugin" ? b += "/plugins" : w === "theme" && (b += "/themes"), await qn(
+        e,
+        new File([await _.blob()], `${r}-${w}.zip`),
+        b
+      );
+    } catch (_) {
+      if (w === "core")
+        throw new Error(
+          `Failed to download translations for WordPress. Please check if the language code ${r} is correct. You can find all available languages and translations on https://translate.wordpress.org/.`
+        );
+      Se.warn(`Error downloading translations for ${w}: ${_}`);
+    }
+}, Jo = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  activatePlugin: An,
+  activateTheme: Sn,
+  cp: Ro,
+  defineSiteUrl: Cn,
+  defineWpConfigConsts: ti,
+  enableMultisite: So,
+  exportWXR: Mo,
+  importThemeStarterContent: Dn,
+  importWordPressFiles: zo,
+  importWxr: Uo,
+  installPlugin: Wo,
+  installTheme: Ho,
+  login: Zo,
+  mkdir: jo,
+  mv: Fo,
+  request: ko,
+  resetData: Go,
+  rm: Rn,
+  rmdir: Bo,
+  runPHP: _o,
+  runPHPWithOptions: vo,
+  runSql: Po,
+  runWpInstallationWizard: Vo,
+  setSiteLanguage: Qo,
+  setSiteOptions: Fn,
+  unzip: ai,
+  updateUserMeta: To,
+  wpCLI: Bn,
+  writeFile: In,
+  writeFiles: qo,
+  zipWpContent: Yo
+}, Symbol.toStringTag, { value: "Module" })), ep = 5 * 1024 * 1024;
+function rp(e, r) {
+  const s = e.headers.get("content-length") || "", n = parseInt(s, 10) || ep;
+  function o(i, t) {
+    r(
+      new CustomEvent("progress", {
+        detail: {
+          loaded: i,
+          total: t
+        }
+      })
+    );
+  }
+  return new Response(
+    new ReadableStream({
+      async start(i) {
+        if (!e.body) {
+          i.close();
+          return;
+        }
+        const t = e.body.getReader();
+        let p = 0;
+        for (; ; )
+          try {
+            const { done: y, value: u } = await t.read();
+            if (u && (p += u.byteLength), y) {
+              o(p, p), i.close();
+              break;
+            } else
+              o(p, n), i.enqueue(u);
+          } catch (y) {
+            Se.error({ e: y }), i.error(y);
+            break;
+          }
+      }
+    }),
+    {
+      status: e.status,
+      statusText: e.statusText,
+      headers: e.headers
+    }
+  );
+}
+const bs = 1e-5;
+class os extends EventTarget {
+  constructor({
+    weight: r = 1,
+    caption: s = "",
+    fillTime: n = 4
+  } = {}) {
+    super(), this._selfWeight = 1, this._selfDone = !1, this._selfProgress = 0, this._selfCaption = "", this._isFilling = !1, this._subTrackers = [], this._weight = r, this._selfCaption = s, this._fillTime = n;
+  }
+  /**
+   * Creates a new sub-tracker with a specific weight.
+   *
+   * The weight determines what percentage of the overall progress
+   * the sub-tracker represents. For example, if the main tracker is
+   * monitoring a process that has two stages, and the first stage
+   * is expected to take twice as long as the second stage, you could
+   * create the first sub-tracker with a weight of 0.67 and the second
+   * sub-tracker with a weight of 0.33.
+   *
+   * The caption is an optional string that describes the current stage
+   * of the operation. If provided, it will be used as the progress caption
+   * for the sub-tracker. If not provided, the main tracker will look for
+   * the next sub-tracker with a non-empty caption and use that as the progress
+   * caption instead.
+   *
+   * Returns the newly-created sub-tracker.
+   *
+   * @throws {Error} If the weight of the new stage would cause the total weight of all stages to exceed 1.
+   *
+   * @param weight The weight of the new stage, as a decimal value between 0 and 1.
+   * @param caption The caption for the new stage, which will be used as the progress caption for the sub-tracker.
+   *
+   * @example
+   * ```ts
+   * const tracker = new ProgressTracker();
+   * const subTracker1 = tracker.stage(0.67, 'Slow stage');
+   * const subTracker2 = tracker.stage(0.33, 'Fast stage');
+   *
+   * subTracker2.set(50);
+   * subTracker1.set(75);
+   * subTracker2.set(100);
+   * subTracker1.set(100);
+   * ```
+   */
+  stage(r, s = "") {
+    if (r || (r = this._selfWeight), this._selfWeight - r < -bs)
+      throw new Error(
+        `Cannot add a stage with weight ${r} as the total weight of registered stages would exceed 1.`
+      );
+    this._selfWeight -= r;
+    const n = new os({
+      caption: s,
+      weight: r,
+      fillTime: this._fillTime
+    });
+    return this._subTrackers.push(n), n.addEventListener("progress", () => this.notifyProgress()), n.addEventListener("done", () => {
+      this.done && this.notifyDone();
+    }), n;
+  }
+  /**
+   * Fills the progress bar slowly over time, simulating progress.
+   *
+   * The progress bar is filled in a 100 steps, and each step, the progress
+   * is increased by 1. If `stopBeforeFinishing` is true, the progress bar
+   * will stop filling when it reaches 99% so that you can call `finish()`
+   * explicitly.
+   *
+   * If the progress bar is filling or already filled, this method does nothing.
+   *
+   * @example
+   * ```ts
+   * const progress = new ProgressTracker({ caption: 'Processing...' });
+   * progress.fillSlowly();
+   * ```
+   *
+   * @param options Optional options.
+   */
+  fillSlowly({ stopBeforeFinishing: r = !0 } = {}) {
+    if (this._isFilling)
+      return;
+    this._isFilling = !0;
+    const s = 100, n = this._fillTime / s;
+    this._fillInterval = setInterval(() => {
+      this.set(this._selfProgress + 1), r && this._selfProgress >= 99 && clearInterval(this._fillInterval);
+    }, n);
+  }
+  set(r) {
+    this._selfProgress = Math.min(r, 100), this.notifyProgress(), this._selfProgress + bs >= 100 && this.finish();
+  }
+  finish() {
+    this._fillInterval && clearInterval(this._fillInterval), this._selfDone = !0, this._selfProgress = 100, this._isFilling = !1, this._fillInterval = void 0, this.notifyProgress(), this.notifyDone();
+  }
+  get caption() {
+    for (let r = this._subTrackers.length - 1; r >= 0; r--)
+      if (!this._subTrackers[r].done) {
+        const s = this._subTrackers[r].caption;
+        if (s)
+          return s;
+      }
+    return this._selfCaption;
+  }
+  setCaption(r) {
+    this._selfCaption = r, this.notifyProgress();
+  }
+  get done() {
+    return this.progress + bs >= 100;
+  }
+  get progress() {
+    if (this._selfDone)
+      return 100;
+    const r = this._subTrackers.reduce(
+      (s, n) => s + n.progress * n.weight,
+      this._selfProgress * this._selfWeight
+    );
+    return Math.round(r * 1e4) / 1e4;
+  }
+  get weight() {
+    return this._weight;
+  }
+  get observer() {
+    return this._progressObserver || (this._progressObserver = (r) => {
+      this.set(r);
+    }), this._progressObserver;
+  }
+  get loadingListener() {
+    return this._loadingListener || (this._loadingListener = (r) => {
+      this.set(r.detail.loaded / r.detail.total * 100);
+    }), this._loadingListener;
+  }
+  pipe(r) {
+    r.setProgress({
+      progress: this.progress,
+      caption: this.caption
+    }), this.addEventListener("progress", (s) => {
+      r.setProgress({
+        progress: s.detail.progress,
+        caption: s.detail.caption
+      });
+    }), this.addEventListener("done", () => {
+      r.setLoaded();
+    });
+  }
+  addEventListener(r, s) {
+    super.addEventListener(r, s);
+  }
+  removeEventListener(r, s) {
+    super.removeEventListener(r, s);
+  }
+  notifyProgress() {
+    const r = this;
+    this.dispatchEvent(
+      new CustomEvent("progress", {
+        detail: {
+          get progress() {
+            return r.progress;
+          },
+          get caption() {
+            return r.caption;
+          }
+        }
+      })
+    );
+  }
+  notifyDone() {
+    this.dispatchEvent(new CustomEvent("done"));
+  }
+}
+function tp(e) {
+  let r = [e];
+  return {
+    next() {
+      return Promise.resolve({ done: r.length === 0, value: r.pop() });
+    },
+    return() {
+      return r = [], {};
+    },
+    [Symbol.asyncIterator]() {
+      return this;
+    }
+  };
+}
+function zn(e) {
+  return e[Symbol.asyncIterator] ? e[Symbol.asyncIterator]() : e[Symbol.iterator] ? e[Symbol.iterator]() : e.next ? e : tp(e);
+}
+class Mn {
+  constructor(r) {
+    if (typeof Buffer > "u")
+      throw new Error("Missing Buffer dependency");
+    this.stream = zn(r), this.buffer = null, this.cursor = 0, this.undoCursor = 0, this.started = !1, this._ended = !1, this._discardedBytes = 0;
+  }
+  eof() {
+    return this._ended && this.cursor === this.buffer.length;
+  }
+  tell() {
+    return this._discardedBytes + this.cursor;
+  }
+  async byte() {
+    if (!this.eof() && (this.started || await this._init(), !(this.cursor === this.buffer.length && (await this._loadnext(), this._ended))))
+      return this._moveCursor(1), this.buffer[this.undoCursor];
+  }
+  async chunk() {
+    if (!this.eof() && (this.started || await this._init(), !(this.cursor === this.buffer.length && (await this._loadnext(), this._ended))))
+      return this._moveCursor(this.buffer.length), this.buffer.slice(this.undoCursor, this.cursor);
+  }
+  async read(r) {
+    if (!this.eof())
+      return this.started || await this._init(), this.cursor + r > this.buffer.length && (this._trim(), await this._accumulate(r)), this._moveCursor(r), this.buffer.slice(this.undoCursor, this.cursor);
+  }
+  async skip(r) {
+    this.eof() || (this.started || await this._init(), this.cursor + r > this.buffer.length && (this._trim(), await this._accumulate(r)), this._moveCursor(r));
+  }
+  async undo() {
+    this.cursor = this.undoCursor;
+  }
+  async _next() {
+    this.started = !0;
+    let { done: r, value: s } = await this.stream.next();
+    return r && (this._ended = !0, !s) ? Buffer.alloc(0) : (s && (s = Buffer.from(s)), s);
+  }
+  _trim() {
+    this.buffer = this.buffer.slice(this.undoCursor), this.cursor -= this.undoCursor, this._discardedBytes += this.undoCursor, this.undoCursor = 0;
+  }
+  _moveCursor(r) {
+    this.undoCursor = this.cursor, this.cursor += r, this.cursor > this.buffer.length && (this.cursor = this.buffer.length);
+  }
+  async _accumulate(r) {
+    if (this._ended)
+      return;
+    const s = [this.buffer];
+    for (; this.cursor + r > sp(s); ) {
+      const n = await this._next();
+      if (this._ended)
+        break;
+      s.push(n);
+    }
+    this.buffer = Buffer.concat(s);
+  }
+  async _loadnext() {
+    this._discardedBytes += this.buffer.length, this.undoCursor = 0, this.cursor = 0, this.buffer = await this._next();
+  }
+  async _init() {
+    this.buffer = await this._next();
+  }
+}
+function sp(e) {
+  return e.reduce((r, s) => r + s.length, 0);
+}
+function ip(e, r) {
+  const s = r.toString(16);
+  return "0".repeat(e - s.length) + s;
+}
+class $e {
+  static flush() {
+    return Buffer.from("0000", "utf8");
+  }
+  static delim() {
+    return Buffer.from("0001", "utf8");
+  }
+  static encode(r) {
+    typeof r == "string" && (r = Buffer.from(r));
+    const s = r.length + 4, n = ip(4, s);
+    return Buffer.concat([Buffer.from(n, "utf8"), r]);
+  }
+  static streamReader(r) {
+    const s = new Mn(r);
+    return async function() {
+      try {
+        let o = await s.read(4);
+        if (o == null)
+          return !0;
+        if (o = parseInt(o.toString("utf8"), 16), o === 0 || o === 1)
+          return null;
+        const i = await s.read(o - 4);
+        return i ?? !0;
+      } catch (o) {
+        return r.error = o, !0;
+      }
+    };
+  }
+}
+class st extends Error {
+  constructor(r) {
+    super(r), this.caller = "";
+  }
+  toJSON() {
+    return {
+      code: this.code,
+      data: this.data,
+      caller: this.caller,
+      message: this.message,
+      stack: this.stack
+    };
+  }
+  fromJSON(r) {
+    const s = new st(r.message);
+    return s.code = r.code, s.data = r.data, s.caller = r.caller, s.stack = r.stack, s;
+  }
+  get isIsomorphicGitError() {
+    return !0;
+  }
+}
+class _e extends st {
+  /**
+   * @param {string} message
+   */
+  constructor(r) {
+    super(
+      `An internal error caused this command to fail. Please file a bug report at https://github.com/isomorphic-git/isomorphic-git/issues with this error message: ${r}`
+    ), this.code = this.name = _e.code, this.data = { message: r };
+  }
+}
+_e.code = "InternalError";
+class ps extends st {
+  /**
+   * @param {string} filepath
+   */
+  constructor(r) {
+    super(`The filepath "${r}" contains unsafe character sequences`), this.code = this.name = ps.code, this.data = { filepath: r };
+  }
+}
+ps.code = "UnsafeFilepathError";
+function Wn(e, r) {
+  return -(e < r) || +(e > r);
+}
+function np(e, r) {
+  return Wn(e.path, r.path);
+}
+function ap(e, r) {
+  return Wn(xi(e), xi(r));
+}
+function xi(e) {
+  return e.mode === "040000" ? e.path + "/" : e.path;
+}
+function Hn(e) {
+  switch (e) {
+    case "040000":
+      return "tree";
+    case "100644":
+      return "blob";
+    case "100755":
+      return "blob";
+    case "120000":
+      return "blob";
+    case "160000":
+      return "commit";
+  }
+  throw new _e(`Unexpected GitTree entry mode: ${e}`);
+}
+function op(e) {
+  const r = [];
+  let s = 0;
+  for (; s < e.length; ) {
+    const n = e.indexOf(32, s);
+    if (n === -1)
+      throw new _e(
+        `GitTree: Error parsing buffer at byte location ${s}: Could not find the next space character.`
+      );
+    const o = e.indexOf(0, s);
+    if (o === -1)
+      throw new _e(
+        `GitTree: Error parsing buffer at byte location ${s}: Could not find the next null character.`
+      );
+    let i = e.slice(s, n).toString("utf8");
+    i === "40000" && (i = "040000");
+    const t = Hn(i), p = e.slice(n + 1, o).toString("utf8");
+    if (p.includes("\\") || p.includes("/"))
+      throw new ps(p);
+    const y = e.slice(o + 1, o + 21).toString("hex");
+    s = o + 21, r.push({ mode: i, path: p, oid: y, type: t });
+  }
+  return r;
+}
+function pp(e) {
+  if (typeof e == "number" && (e = e.toString(8)), e.match(/^0?4.*/))
+    return "040000";
+  if (e.match(/^1006.*/))
+    return "100644";
+  if (e.match(/^1007.*/))
+    return "100755";
+  if (e.match(/^120.*/))
+    return "120000";
+  if (e.match(/^160.*/))
+    return "160000";
+  throw new _e(`Could not understand file mode: ${e}`);
+}
+function fp(e) {
+  return !e.oid && e.sha && (e.oid = e.sha), e.mode = pp(e.mode), e.type || (e.type = Hn(e.mode)), e;
+}
+class oi {
+  constructor(r) {
+    if (Buffer.isBuffer(r))
+      this._entries = op(r);
+    else if (Array.isArray(r))
+      this._entries = r.map(fp);
+    else
+      throw new _e("invalid type passed to GitTree constructor");
+    this._entries.sort(np);
+  }
+  static from(r) {
+    return new oi(r);
+  }
+  render() {
+    return this._entries.map((r) => `${r.mode} ${r.type} ${r.oid}    ${r.path}`).join(`
+`);
+  }
+  toObject() {
+    const r = [...this._entries];
+    return r.sort(ap), Buffer.concat(
+      r.map((s) => {
+        const n = Buffer.from(s.mode.replace(/^0/, "")), o = Buffer.from(" "), i = Buffer.from(s.path, "utf8"), t = Buffer.from([0]), p = Buffer.from(s.oid, "hex");
+        return Buffer.concat([n, o, i, t, p]);
+      })
+    );
+  }
+  /**
+   * @returns {TreeEntry[]}
+   */
+  entries() {
+    return this._entries;
+  }
+  *[Symbol.iterator]() {
+    for (const r of this._entries)
+      yield r;
+  }
+}
+function Ms({ name: e, email: r, timestamp: s, timezoneOffset: n }) {
+  return n = lp(n), `${e} <${r}> ${s} ${n}`;
+}
+function lp(e) {
+  const r = up(cp(e));
+  e = Math.abs(e);
+  const s = Math.floor(e / 60);
+  e -= s * 60;
+  let n = String(s), o = String(e);
+  return n.length < 2 && (n = "0" + n), o.length < 2 && (o = "0" + o), (r === -1 ? "-" : "+") + n + o;
+}
+function up(e) {
+  return Math.sign(e) || (Object.is(e, -0) ? -1 : 1);
+}
+function cp(e) {
+  return e === 0 ? e : -e;
+}
+function mr(e) {
+  return e = e.replace(/\r/g, ""), e = e.replace(/^\n+/, ""), e = e.replace(/\n+$/, "") + `
+`, e;
+}
+function Qt(e) {
+  const [, r, s, n, o] = e.match(
+    /^(.*) <(.*)> (.*) (.*)$/
+  );
+  return {
+    name: r,
+    email: s,
+    timestamp: Number(n),
+    timezoneOffset: dp(o)
+  };
+}
+function dp(e) {
+  let [, r, s, n] = e.match(/(\+|-)(\d\d)(\d\d)/);
+  return n = (r === "+" ? 1 : -1) * (Number(s) * 60 + Number(n)), hp(n);
+}
+function hp(e) {
+  return e === 0 ? e : -e;
+}
+class ut {
+  constructor(r) {
+    if (typeof r == "string")
+      this._tag = r;
+    else if (Buffer.isBuffer(r))
+      this._tag = r.toString("utf8");
+    else if (typeof r == "object")
+      this._tag = ut.render(r);
+    else
+      throw new _e(
+        "invalid type passed to GitAnnotatedTag constructor"
+      );
+  }
+  static from(r) {
+    return new ut(r);
+  }
+  static render(r) {
+    return `object ${r.object}
+type ${r.type}
+tag ${r.tag}
+tagger ${Ms(r.tagger)}
+
+${r.message}
+${r.gpgsig ? r.gpgsig : ""}`;
+  }
+  justHeaders() {
+    return this._tag.slice(0, this._tag.indexOf(`
+
+`));
+  }
+  message() {
+    const r = this.withoutSignature();
+    return r.slice(r.indexOf(`
+
+`) + 2);
+  }
+  parse() {
+    return Object.assign(this.headers(), {
+      message: this.message(),
+      gpgsig: this.gpgsig()
+    });
+  }
+  render() {
+    return this._tag;
+  }
+  headers() {
+    const r = this.justHeaders().split(`
+`), s = [];
+    for (const o of r)
+      o[0] === " " ? s[s.length - 1] += `
+` + o.slice(1) : s.push(o);
+    const n = {};
+    for (const o of s) {
+      const i = o.slice(0, o.indexOf(" ")), t = o.slice(o.indexOf(" ") + 1);
+      Array.isArray(n[i]) ? n[i].push(t) : n[i] = t;
+    }
+    return n.tagger && (n.tagger = Qt(n.tagger)), n.committer && (n.committer = Qt(n.committer)), n;
+  }
+  withoutSignature() {
+    const r = mr(this._tag);
+    return r.indexOf(`
+-----BEGIN PGP SIGNATURE-----`) === -1 ? r : r.slice(0, r.lastIndexOf(`
+-----BEGIN PGP SIGNATURE-----`));
+  }
+  gpgsig() {
+    if (this._tag.indexOf(`
+-----BEGIN PGP SIGNATURE-----`) === -1)
+      return;
+    const r = this._tag.slice(
+      this._tag.indexOf("-----BEGIN PGP SIGNATURE-----"),
+      this._tag.indexOf("-----END PGP SIGNATURE-----") + 27
+    );
+    return mr(r);
+  }
+  payload() {
+    return this.withoutSignature() + `
+`;
+  }
+  toObject() {
+    return Buffer.from(this._tag, "utf8");
+  }
+  static async sign(r, s, n) {
+    const o = r.payload();
+    let { signature: i } = await s({ payload: o, secretKey: n });
+    i = mr(i);
+    const t = o + i;
+    return ut.from(t);
+  }
+}
+function _s(e) {
+  return e.trim().split(`
+`).map((r) => " " + r).join(`
+`) + `
+`;
+}
+function yp(e) {
+  return e.split(`
+`).map((r) => r.replace(/^ /, "")).join(`
+`);
+}
+class qe {
+  constructor(r) {
+    if (typeof r == "string")
+      this._commit = r;
+    else if (Buffer.isBuffer(r))
+      this._commit = r.toString("utf8");
+    else if (typeof r == "object")
+      this._commit = qe.render(r);
+    else
+      throw new _e("invalid type passed to GitCommit constructor");
+  }
+  static fromPayloadSignature({ payload: r, signature: s }) {
+    const n = qe.justHeaders(r), o = qe.justMessage(r), i = mr(
+      n + `
+gpgsig` + _s(s) + `
+` + o
+    );
+    return new qe(i);
+  }
+  static from(r) {
+    return new qe(r);
+  }
+  toObject() {
+    return Buffer.from(this._commit, "utf8");
+  }
+  // Todo: allow setting the headers and message
+  headers() {
+    return this.parseHeaders();
+  }
+  // Todo: allow setting the headers and message
+  message() {
+    return qe.justMessage(this._commit);
+  }
+  parse() {
+    return Object.assign({ message: this.message() }, this.headers());
+  }
+  static justMessage(r) {
+    return mr(r.slice(r.indexOf(`
+
+`) + 2));
+  }
+  static justHeaders(r) {
+    return r.slice(0, r.indexOf(`
+
+`));
+  }
+  parseHeaders() {
+    const r = qe.justHeaders(this._commit).split(`
+`), s = [];
+    for (const o of r)
+      o[0] === " " ? s[s.length - 1] += `
+` + o.slice(1) : s.push(o);
+    const n = {
+      parent: []
+    };
+    for (const o of s) {
+      const i = o.slice(0, o.indexOf(" ")), t = o.slice(o.indexOf(" ") + 1);
+      Array.isArray(n[i]) ? n[i].push(t) : n[i] = t;
+    }
+    return n.author && (n.author = Qt(n.author)), n.committer && (n.committer = Qt(n.committer)), n;
+  }
+  static renderHeaders(r) {
+    let s = "";
+    if (r.tree ? s += `tree ${r.tree}
+` : s += `tree 4b825dc642cb6eb9a060e54bf8d69288fbee4904
+`, r.parent) {
+      if (r.parent.length === void 0)
+        throw new _e("commit 'parent' property should be an array");
+      for (const i of r.parent)
+        s += `parent ${i}
+`;
+    }
+    const n = r.author;
+    s += `author ${Ms(n)}
+`;
+    const o = r.committer || r.author;
+    return s += `committer ${Ms(o)}
+`, r.gpgsig && (s += "gpgsig" + _s(r.gpgsig)), s;
+  }
+  static render(r) {
+    return qe.renderHeaders(r) + `
+` + mr(r.message);
+  }
+  render() {
+    return this._commit;
+  }
+  withoutSignature() {
+    const r = mr(this._commit);
+    if (r.indexOf(`
+gpgsig`) === -1)
+      return r;
+    const s = r.slice(0, r.indexOf(`
+gpgsig`)), n = r.slice(
+      r.indexOf(`-----END PGP SIGNATURE-----
+`) + 28
+    );
+    return mr(s + `
+` + n);
+  }
+  isolateSignature() {
+    const r = this._commit.slice(
+      this._commit.indexOf("-----BEGIN PGP SIGNATURE-----"),
+      this._commit.indexOf("-----END PGP SIGNATURE-----") + 27
+    );
+    return yp(r);
+  }
+  static async sign(r, s, n) {
+    const o = r.withoutSignature(), i = qe.justMessage(r._commit);
+    let { signature: t } = await s({ payload: o, secretKey: n });
+    t = mr(t);
+    const y = qe.justHeaders(r._commit) + `
+gpgsig` + _s(t) + `
+` + i;
+    return qe.from(y);
+  }
+}
+var Zn = {};
+/*! crc32.js (C) 2014-present SheetJS -- http://sheetjs.com */
+(function(e) {
+  (function(r) {
+    r(typeof DO_NOT_EXPORT_CRC > "u" ? e : {});
+  })(function(r) {
+    r.version = "1.2.2";
+    function s() {
+      for (var S = 0, T = new Array(256), E = 0; E != 256; ++E)
+        S = E, S = S & 1 ? -306674912 ^ S >>> 1 : S >>> 1, S = S & 1 ? -306674912 ^ S >>> 1 : S >>> 1, S = S & 1 ? -306674912 ^ S >>> 1 : S >>> 1, S = S & 1 ? -306674912 ^ S >>> 1 : S >>> 1, S = S & 1 ? -306674912 ^ S >>> 1 : S >>> 1, S = S & 1 ? -306674912 ^ S >>> 1 : S >>> 1, S = S & 1 ? -306674912 ^ S >>> 1 : S >>> 1, S = S & 1 ? -306674912 ^ S >>> 1 : S >>> 1, T[E] = S;
+      return typeof Int32Array < "u" ? new Int32Array(T) : T;
+    }
+    var n = s();
+    function o(S) {
+      var T = 0, E = 0, O = 0, C = typeof Int32Array < "u" ? new Int32Array(4096) : new Array(4096);
+      for (O = 0; O != 256; ++O)
+        C[O] = S[O];
+      for (O = 0; O != 256; ++O)
+        for (E = S[O], T = 256 + O; T < 4096; T += 256)
+          E = C[T] = E >>> 8 ^ S[E & 255];
+      var L = [];
+      for (O = 1; O != 16; ++O)
+        L[O - 1] = typeof Int32Array < "u" ? C.subarray(O * 256, O * 256 + 256) : C.slice(O * 256, O * 256 + 256);
+      return L;
+    }
+    var i = o(n), t = i[0], p = i[1], y = i[2], u = i[3], d = i[4], w = i[5], _ = i[6], b = i[7], j = i[8], P = i[9], q = i[10], D = i[11], M = i[12], B = i[13], U = i[14];
+    function A(S, T) {
+      for (var E = T ^ -1, O = 0, C = S.length; O < C; )
+        E = E >>> 8 ^ n[(E ^ S.charCodeAt(O++)) & 255];
+      return ~E;
+    }
+    function x(S, T) {
+      for (var E = T ^ -1, O = S.length - 15, C = 0; C < O; )
+        E = U[S[C++] ^ E & 255] ^ B[S[C++] ^ E >> 8 & 255] ^ M[S[C++] ^ E >> 16 & 255] ^ D[S[C++] ^ E >>> 24] ^ q[S[C++]] ^ P[S[C++]] ^ j[S[C++]] ^ b[S[C++]] ^ _[S[C++]] ^ w[S[C++]] ^ d[S[C++]] ^ u[S[C++]] ^ y[S[C++]] ^ p[S[C++]] ^ t[S[C++]] ^ n[S[C++]];
+      for (O += 15; C < O; )
+        E = E >>> 8 ^ n[(E ^ S[C++]) & 255];
+      return ~E;
+    }
+    function N(S, T) {
+      for (var E = T ^ -1, O = 0, C = S.length, L = 0, F = 0; O < C; )
+        L = S.charCodeAt(O++), L < 128 ? E = E >>> 8 ^ n[(E ^ L) & 255] : L < 2048 ? (E = E >>> 8 ^ n[(E ^ (192 | L >> 6 & 31)) & 255], E = E >>> 8 ^ n[(E ^ (128 | L & 63)) & 255]) : L >= 55296 && L < 57344 ? (L = (L & 1023) + 64, F = S.charCodeAt(O++) & 1023, E = E >>> 8 ^ n[(E ^ (240 | L >> 8 & 7)) & 255], E = E >>> 8 ^ n[(E ^ (128 | L >> 2 & 63)) & 255], E = E >>> 8 ^ n[(E ^ (128 | F >> 6 & 15 | (L & 3) << 4)) & 255], E = E >>> 8 ^ n[(E ^ (128 | F & 63)) & 255]) : (E = E >>> 8 ^ n[(E ^ (224 | L >> 12 & 15)) & 255], E = E >>> 8 ^ n[(E ^ (128 | L >> 6 & 63)) & 255], E = E >>> 8 ^ n[(E ^ (128 | L & 63)) & 255]);
+      return ~E;
+    }
+    r.table = n, r.bstr = A, r.buf = x, r.str = N;
+  });
+})(Zn);
+const mp = /* @__PURE__ */ ii(Zn);
+class gp {
+  static wrap({ type: r, object: s }) {
+    return Buffer.concat([
+      Buffer.from(`${r} ${s.byteLength.toString()}\0`),
+      Buffer.from(s)
+    ]);
+  }
+  static unwrap(r) {
+    const s = r.indexOf(32), n = r.indexOf(0), o = r.slice(0, s).toString("utf8"), i = r.slice(s + 1, n).toString("utf8"), t = r.length - (n + 1);
+    if (parseInt(i) !== t)
+      throw new _e(
+        `Length mismatch: expected ${i} bytes but got ${t} instead.`
+      );
+    return {
+      type: o,
+      object: Buffer.from(r.slice(n + 1))
+    };
+  }
+}
+class Sr {
+  constructor(r) {
+    this.buffer = r, this._start = 0;
+  }
+  eof() {
+    return this._start >= this.buffer.length;
+  }
+  tell() {
+    return this._start;
+  }
+  seek(r) {
+    this._start = r;
+  }
+  slice(r) {
+    const s = this.buffer.slice(this._start, this._start + r);
+    return this._start += r, s;
+  }
+  toString(r, s) {
+    const n = this.buffer.toString(r, this._start, this._start + s);
+    return this._start += s, n;
+  }
+  write(r, s, n) {
+    const o = this.buffer.write(r, this._start, s, n);
+    return this._start += s, o;
+  }
+  copy(r, s, n) {
+    const o = r.copy(this.buffer, this._start, s, n);
+    return this._start += o, o;
+  }
+  readUInt8() {
+    const r = this.buffer.readUInt8(this._start);
+    return this._start += 1, r;
+  }
+  writeUInt8(r) {
+    const s = this.buffer.writeUInt8(r, this._start);
+    return this._start += 1, s;
+  }
+  readUInt16BE() {
+    const r = this.buffer.readUInt16BE(this._start);
+    return this._start += 2, r;
+  }
+  writeUInt16BE(r) {
+    const s = this.buffer.writeUInt16BE(r, this._start);
+    return this._start += 2, s;
+  }
+  readUInt32BE() {
+    const r = this.buffer.readUInt32BE(this._start);
+    return this._start += 4, r;
+  }
+  writeUInt32BE(r) {
+    const s = this.buffer.writeUInt32BE(r, this._start);
+    return this._start += 4, s;
+  }
+}
+function wp(e, r) {
+  const s = new Sr(e), n = Ti(s);
+  if (n !== r.byteLength)
+    throw new _e(
+      `applyDelta expected source buffer to be ${n} bytes but the provided buffer was ${r.length} bytes`
+    );
+  const o = Ti(s);
+  let i;
+  const t = Ai(s, r);
+  if (t.byteLength === o)
+    i = t;
+  else {
+    i = Buffer.alloc(o);
+    const p = new Sr(i);
+    for (p.copy(t); !s.eof(); )
+      p.copy(Ai(s, r));
+    const y = p.tell();
+    if (o !== y)
+      throw new _e(
+        `applyDelta expected target buffer to be ${o} bytes but the resulting buffer was ${y} bytes`
+      );
+  }
+  return i;
+}
+function Ti(e) {
+  let r = 0, s = 0, n = null;
+  do
+    n = e.readUInt8(), r |= (n & 127) << s, s += 7;
+  while (n & 128);
+  return r;
+}
+function $i(e, r, s) {
+  let n = 0, o = 0;
+  for (; s--; )
+    r & 1 && (n |= e.readUInt8() << o), r >>= 1, o += 8;
+  return n;
+}
+function Ai(e, r) {
+  const s = e.readUInt8(), n = 128, o = 15, i = 112;
+  if (s & n) {
+    const t = $i(e, s & o, 4);
+    let p = $i(e, (s & i) >> 4, 3);
+    return p === 0 && (p = 65536), r.slice(t, t + p);
+  } else
+    return e.slice(s);
+}
+var br = {};
+(function(e) {
+  var r = typeof Uint8Array < "u" && typeof Uint16Array < "u" && typeof Int32Array < "u";
+  function s(i, t) {
+    return Object.prototype.hasOwnProperty.call(i, t);
+  }
+  e.assign = function(i) {
+    for (var t = Array.prototype.slice.call(arguments, 1); t.length; ) {
+      var p = t.shift();
+      if (p) {
+        if (typeof p != "object")
+          throw new TypeError(p + "must be non-object");
+        for (var y in p)
+          s(p, y) && (i[y] = p[y]);
+      }
+    }
+    return i;
+  }, e.shrinkBuf = function(i, t) {
+    return i.length === t ? i : i.subarray ? i.subarray(0, t) : (i.length = t, i);
+  };
+  var n = {
+    arraySet: function(i, t, p, y, u) {
+      if (t.subarray && i.subarray) {
+        i.set(t.subarray(p, p + y), u);
+        return;
+      }
+      for (var d = 0; d < y; d++)
+        i[u + d] = t[p + d];
+    },
+    // Join array of chunks to single array.
+    flattenChunks: function(i) {
+      var t, p, y, u, d, w;
+      for (y = 0, t = 0, p = i.length; t < p; t++)
+        y += i[t].length;
+      for (w = new Uint8Array(y), u = 0, t = 0, p = i.length; t < p; t++)
+        d = i[t], w.set(d, u), u += d.length;
+      return w;
+    }
+  }, o = {
+    arraySet: function(i, t, p, y, u) {
+      for (var d = 0; d < y; d++)
+        i[u + d] = t[p + d];
+    },
+    // Join array of chunks to single array.
+    flattenChunks: function(i) {
+      return [].concat.apply([], i);
+    }
+  };
+  e.setTyped = function(i) {
+    i ? (e.Buf8 = Uint8Array, e.Buf16 = Uint16Array, e.Buf32 = Int32Array, e.assign(e, n)) : (e.Buf8 = Array, e.Buf16 = Array, e.Buf32 = Array, e.assign(e, o));
+  }, e.setTyped(r);
+})(br);
+var xt = {}, ur = {}, it = {}, bp = br, _p = 4, Si = 0, Ri = 1, vp = 2;
+function nt(e) {
+  for (var r = e.length; --r >= 0; )
+    e[r] = 0;
+}
+var Pp = 0, Gn = 1, kp = 2, Ep = 3, Op = 258, pi = 29, Tt = 256, wt = Tt + 1 + pi, et = 30, fi = 19, Vn = 2 * wt + 1, Fr = 15, vs = 16, xp = 7, li = 256, Yn = 16, Kn = 17, Xn = 18, Ws = (
+  /* extra bits for each length code */
+  [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0]
+), zt = (
+  /* extra bits for each distance code */
+  [0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13]
+), Tp = (
+  /* extra bits for each bit length code */
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 7]
+), Qn = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15], $p = 512, gr = new Array((wt + 2) * 2);
+nt(gr);
+var ct = new Array(et * 2);
+nt(ct);
+var bt = new Array($p);
+nt(bt);
+var _t = new Array(Op - Ep + 1);
+nt(_t);
+var ui = new Array(pi);
+nt(ui);
+var Jt = new Array(et);
+nt(Jt);
+function Ps(e, r, s, n, o) {
+  this.static_tree = e, this.extra_bits = r, this.extra_base = s, this.elems = n, this.max_length = o, this.has_stree = e && e.length;
+}
+var Jn, ea, ra;
+function ks(e, r) {
+  this.dyn_tree = e, this.max_code = 0, this.stat_desc = r;
+}
+function ta(e) {
+  return e < 256 ? bt[e] : bt[256 + (e >>> 7)];
+}
+function vt(e, r) {
+  e.pending_buf[e.pending++] = r & 255, e.pending_buf[e.pending++] = r >>> 8 & 255;
+}
+function Ne(e, r, s) {
+  e.bi_valid > vs - s ? (e.bi_buf |= r << e.bi_valid & 65535, vt(e, e.bi_buf), e.bi_buf = r >> vs - e.bi_valid, e.bi_valid += s - vs) : (e.bi_buf |= r << e.bi_valid & 65535, e.bi_valid += s);
+}
+function pr(e, r, s) {
+  Ne(
+    e,
+    s[r * 2],
+    s[r * 2 + 1]
+    /*.Len*/
+  );
+}
+function sa(e, r) {
+  var s = 0;
+  do
+    s |= e & 1, e >>>= 1, s <<= 1;
+  while (--r > 0);
+  return s >>> 1;
+}
+function Ap(e) {
+  e.bi_valid === 16 ? (vt(e, e.bi_buf), e.bi_buf = 0, e.bi_valid = 0) : e.bi_valid >= 8 && (e.pending_buf[e.pending++] = e.bi_buf & 255, e.bi_buf >>= 8, e.bi_valid -= 8);
+}
+function Sp(e, r) {
+  var s = r.dyn_tree, n = r.max_code, o = r.stat_desc.static_tree, i = r.stat_desc.has_stree, t = r.stat_desc.extra_bits, p = r.stat_desc.extra_base, y = r.stat_desc.max_length, u, d, w, _, b, j, P = 0;
+  for (_ = 0; _ <= Fr; _++)
+    e.bl_count[_] = 0;
+  for (s[e.heap[e.heap_max] * 2 + 1] = 0, u = e.heap_max + 1; u < Vn; u++)
+    d = e.heap[u], _ = s[s[d * 2 + 1] * 2 + 1] + 1, _ > y && (_ = y, P++), s[d * 2 + 1] = _, !(d > n) && (e.bl_count[_]++, b = 0, d >= p && (b = t[d - p]), j = s[d * 2], e.opt_len += j * (_ + b), i && (e.static_len += j * (o[d * 2 + 1] + b)));
+  if (P !== 0) {
+    do {
+      for (_ = y - 1; e.bl_count[_] === 0; )
+        _--;
+      e.bl_count[_]--, e.bl_count[_ + 1] += 2, e.bl_count[y]--, P -= 2;
+    } while (P > 0);
+    for (_ = y; _ !== 0; _--)
+      for (d = e.bl_count[_]; d !== 0; )
+        w = e.heap[--u], !(w > n) && (s[w * 2 + 1] !== _ && (e.opt_len += (_ - s[w * 2 + 1]) * s[w * 2], s[w * 2 + 1] = _), d--);
+  }
+}
+function ia(e, r, s) {
+  var n = new Array(Fr + 1), o = 0, i, t;
+  for (i = 1; i <= Fr; i++)
+    n[i] = o = o + s[i - 1] << 1;
+  for (t = 0; t <= r; t++) {
+    var p = e[t * 2 + 1];
+    p !== 0 && (e[t * 2] = sa(n[p]++, p));
+  }
+}
+function Rp() {
+  var e, r, s, n, o, i = new Array(Fr + 1);
+  for (s = 0, n = 0; n < pi - 1; n++)
+    for (ui[n] = s, e = 0; e < 1 << Ws[n]; e++)
+      _t[s++] = n;
+  for (_t[s - 1] = n, o = 0, n = 0; n < 16; n++)
+    for (Jt[n] = o, e = 0; e < 1 << zt[n]; e++)
+      bt[o++] = n;
+  for (o >>= 7; n < et; n++)
+    for (Jt[n] = o << 7, e = 0; e < 1 << zt[n] - 7; e++)
+      bt[256 + o++] = n;
+  for (r = 0; r <= Fr; r++)
+    i[r] = 0;
+  for (e = 0; e <= 143; )
+    gr[e * 2 + 1] = 8, e++, i[8]++;
+  for (; e <= 255; )
+    gr[e * 2 + 1] = 9, e++, i[9]++;
+  for (; e <= 279; )
+    gr[e * 2 + 1] = 7, e++, i[7]++;
+  for (; e <= 287; )
+    gr[e * 2 + 1] = 8, e++, i[8]++;
+  for (ia(gr, wt + 1, i), e = 0; e < et; e++)
+    ct[e * 2 + 1] = 5, ct[e * 2] = sa(e, 5);
+  Jn = new Ps(gr, Ws, Tt + 1, wt, Fr), ea = new Ps(ct, zt, 0, et, Fr), ra = new Ps(new Array(0), Tp, 0, fi, xp);
+}
+function na(e) {
+  var r;
+  for (r = 0; r < wt; r++)
+    e.dyn_ltree[r * 2] = 0;
+  for (r = 0; r < et; r++)
+    e.dyn_dtree[r * 2] = 0;
+  for (r = 0; r < fi; r++)
+    e.bl_tree[r * 2] = 0;
+  e.dyn_ltree[li * 2] = 1, e.opt_len = e.static_len = 0, e.last_lit = e.matches = 0;
+}
+function aa(e) {
+  e.bi_valid > 8 ? vt(e, e.bi_buf) : e.bi_valid > 0 && (e.pending_buf[e.pending++] = e.bi_buf), e.bi_buf = 0, e.bi_valid = 0;
+}
+function Fp(e, r, s, n) {
+  aa(e), n && (vt(e, s), vt(e, ~s)), bp.arraySet(e.pending_buf, e.window, r, s, e.pending), e.pending += s;
+}
+function Fi(e, r, s, n) {
+  var o = r * 2, i = s * 2;
+  return e[o] < e[i] || e[o] === e[i] && n[r] <= n[s];
+}
+function Es(e, r, s) {
+  for (var n = e.heap[s], o = s << 1; o <= e.heap_len && (o < e.heap_len && Fi(r, e.heap[o + 1], e.heap[o], e.depth) && o++, !Fi(r, n, e.heap[o], e.depth)); )
+    e.heap[s] = e.heap[o], s = o, o <<= 1;
+  e.heap[s] = n;
+}
+function ji(e, r, s) {
+  var n, o, i = 0, t, p;
+  if (e.last_lit !== 0)
+    do
+      n = e.pending_buf[e.d_buf + i * 2] << 8 | e.pending_buf[e.d_buf + i * 2 + 1], o = e.pending_buf[e.l_buf + i], i++, n === 0 ? pr(e, o, r) : (t = _t[o], pr(e, t + Tt + 1, r), p = Ws[t], p !== 0 && (o -= ui[t], Ne(e, o, p)), n--, t = ta(n), pr(e, t, s), p = zt[t], p !== 0 && (n -= Jt[t], Ne(e, n, p)));
+    while (i < e.last_lit);
+  pr(e, li, r);
+}
+function Hs(e, r) {
+  var s = r.dyn_tree, n = r.stat_desc.static_tree, o = r.stat_desc.has_stree, i = r.stat_desc.elems, t, p, y = -1, u;
+  for (e.heap_len = 0, e.heap_max = Vn, t = 0; t < i; t++)
+    s[t * 2] !== 0 ? (e.heap[++e.heap_len] = y = t, e.depth[t] = 0) : s[t * 2 + 1] = 0;
+  for (; e.heap_len < 2; )
+    u = e.heap[++e.heap_len] = y < 2 ? ++y : 0, s[u * 2] = 1, e.depth[u] = 0, e.opt_len--, o && (e.static_len -= n[u * 2 + 1]);
+  for (r.max_code = y, t = e.heap_len >> 1; t >= 1; t--)
+    Es(e, s, t);
+  u = i;
+  do
+    t = e.heap[
+      1
+      /*SMALLEST*/
+    ], e.heap[
+      1
+      /*SMALLEST*/
+    ] = e.heap[e.heap_len--], Es(
+      e,
+      s,
+      1
+      /*SMALLEST*/
+    ), p = e.heap[
+      1
+      /*SMALLEST*/
+    ], e.heap[--e.heap_max] = t, e.heap[--e.heap_max] = p, s[u * 2] = s[t * 2] + s[p * 2], e.depth[u] = (e.depth[t] >= e.depth[p] ? e.depth[t] : e.depth[p]) + 1, s[t * 2 + 1] = s[p * 2 + 1] = u, e.heap[
+      1
+      /*SMALLEST*/
+    ] = u++, Es(
+      e,
+      s,
+      1
+      /*SMALLEST*/
+    );
+  while (e.heap_len >= 2);
+  e.heap[--e.heap_max] = e.heap[
+    1
+    /*SMALLEST*/
+  ], Sp(e, r), ia(s, y, e.bl_count);
+}
+function Bi(e, r, s) {
+  var n, o = -1, i, t = r[0 * 2 + 1], p = 0, y = 7, u = 4;
+  for (t === 0 && (y = 138, u = 3), r[(s + 1) * 2 + 1] = 65535, n = 0; n <= s; n++)
+    i = t, t = r[(n + 1) * 2 + 1], !(++p < y && i === t) && (p < u ? e.bl_tree[i * 2] += p : i !== 0 ? (i !== o && e.bl_tree[i * 2]++, e.bl_tree[Yn * 2]++) : p <= 10 ? e.bl_tree[Kn * 2]++ : e.bl_tree[Xn * 2]++, p = 0, o = i, t === 0 ? (y = 138, u = 3) : i === t ? (y = 6, u = 3) : (y = 7, u = 4));
+}
+function Ii(e, r, s) {
+  var n, o = -1, i, t = r[0 * 2 + 1], p = 0, y = 7, u = 4;
+  for (t === 0 && (y = 138, u = 3), n = 0; n <= s; n++)
+    if (i = t, t = r[(n + 1) * 2 + 1], !(++p < y && i === t)) {
+      if (p < u)
+        do
+          pr(e, i, e.bl_tree);
+        while (--p !== 0);
+      else
+        i !== 0 ? (i !== o && (pr(e, i, e.bl_tree), p--), pr(e, Yn, e.bl_tree), Ne(e, p - 3, 2)) : p <= 10 ? (pr(e, Kn, e.bl_tree), Ne(e, p - 3, 3)) : (pr(e, Xn, e.bl_tree), Ne(e, p - 11, 7));
+      p = 0, o = i, t === 0 ? (y = 138, u = 3) : i === t ? (y = 6, u = 3) : (y = 7, u = 4);
+    }
+}
+function jp(e) {
+  var r;
+  for (Bi(e, e.dyn_ltree, e.l_desc.max_code), Bi(e, e.dyn_dtree, e.d_desc.max_code), Hs(e, e.bl_desc), r = fi - 1; r >= 3 && e.bl_tree[Qn[r] * 2 + 1] === 0; r--)
+    ;
+  return e.opt_len += 3 * (r + 1) + 5 + 5 + 4, r;
+}
+function Bp(e, r, s, n) {
+  var o;
+  for (Ne(e, r - 257, 5), Ne(e, s - 1, 5), Ne(e, n - 4, 4), o = 0; o < n; o++)
+    Ne(e, e.bl_tree[Qn[o] * 2 + 1], 3);
+  Ii(e, e.dyn_ltree, r - 1), Ii(e, e.dyn_dtree, s - 1);
+}
+function Ip(e) {
+  var r = 4093624447, s;
+  for (s = 0; s <= 31; s++, r >>>= 1)
+    if (r & 1 && e.dyn_ltree[s * 2] !== 0)
+      return Si;
+  if (e.dyn_ltree[9 * 2] !== 0 || e.dyn_ltree[10 * 2] !== 0 || e.dyn_ltree[13 * 2] !== 0)
+    return Ri;
+  for (s = 32; s < Tt; s++)
+    if (e.dyn_ltree[s * 2] !== 0)
+      return Ri;
+  return Si;
+}
+var Li = !1;
+function Lp(e) {
+  Li || (Rp(), Li = !0), e.l_desc = new ks(e.dyn_ltree, Jn), e.d_desc = new ks(e.dyn_dtree, ea), e.bl_desc = new ks(e.bl_tree, ra), e.bi_buf = 0, e.bi_valid = 0, na(e);
+}
+function oa(e, r, s, n) {
+  Ne(e, (Pp << 1) + (n ? 1 : 0), 3), Fp(e, r, s, !0);
+}
+function Np(e) {
+  Ne(e, Gn << 1, 3), pr(e, li, gr), Ap(e);
+}
+function Cp(e, r, s, n) {
+  var o, i, t = 0;
+  e.level > 0 ? (e.strm.data_type === vp && (e.strm.data_type = Ip(e)), Hs(e, e.l_desc), Hs(e, e.d_desc), t = jp(e), o = e.opt_len + 3 + 7 >>> 3, i = e.static_len + 3 + 7 >>> 3, i <= o && (o = i)) : o = i = s + 5, s + 4 <= o && r !== -1 ? oa(e, r, s, n) : e.strategy === _p || i === o ? (Ne(e, (Gn << 1) + (n ? 1 : 0), 3), ji(e, gr, ct)) : (Ne(e, (kp << 1) + (n ? 1 : 0), 3), Bp(e, e.l_desc.max_code + 1, e.d_desc.max_code + 1, t + 1), ji(e, e.dyn_ltree, e.dyn_dtree)), na(e), n && aa(e);
+}
+function Dp(e, r, s) {
+  return e.pending_buf[e.d_buf + e.last_lit * 2] = r >>> 8 & 255, e.pending_buf[e.d_buf + e.last_lit * 2 + 1] = r & 255, e.pending_buf[e.l_buf + e.last_lit] = s & 255, e.last_lit++, r === 0 ? e.dyn_ltree[s * 2]++ : (e.matches++, r--, e.dyn_ltree[(_t[s] + Tt + 1) * 2]++, e.dyn_dtree[ta(r) * 2]++), e.last_lit === e.lit_bufsize - 1;
+}
+it._tr_init = Lp;
+it._tr_stored_block = oa;
+it._tr_flush_block = Cp;
+it._tr_tally = Dp;
+it._tr_align = Np;
+function qp(e, r, s, n) {
+  for (var o = e & 65535 | 0, i = e >>> 16 & 65535 | 0, t = 0; s !== 0; ) {
+    t = s > 2e3 ? 2e3 : s, s -= t;
+    do
+      o = o + r[n++] | 0, i = i + o | 0;
+    while (--t);
+    o %= 65521, i %= 65521;
+  }
+  return o | i << 16 | 0;
+}
+var pa = qp;
+function Up() {
+  for (var e, r = [], s = 0; s < 256; s++) {
+    e = s;
+    for (var n = 0; n < 8; n++)
+      e = e & 1 ? 3988292384 ^ e >>> 1 : e >>> 1;
+    r[s] = e;
+  }
+  return r;
+}
+var zp = Up();
+function Mp(e, r, s, n) {
+  var o = zp, i = n + s;
+  e ^= -1;
+  for (var t = n; t < i; t++)
+    e = e >>> 8 ^ o[(e ^ r[t]) & 255];
+  return e ^ -1;
+}
+var fa = Mp, ci = {
+  2: "need dictionary",
+  /* Z_NEED_DICT       2  */
+  1: "stream end",
+  /* Z_STREAM_END      1  */
+  0: "",
+  /* Z_OK              0  */
+  "-1": "file error",
+  /* Z_ERRNO         (-1) */
+  "-2": "stream error",
+  /* Z_STREAM_ERROR  (-2) */
+  "-3": "data error",
+  /* Z_DATA_ERROR    (-3) */
+  "-4": "insufficient memory",
+  /* Z_MEM_ERROR     (-4) */
+  "-5": "buffer error",
+  /* Z_BUF_ERROR     (-5) */
+  "-6": "incompatible version"
+  /* Z_VERSION_ERROR (-6) */
+}, Ie = br, Ze = it, la = pa, kr = fa, Wp = ci, Ur = 0, Hp = 1, Zp = 3, $r = 4, Ni = 5, fr = 0, Ci = 1, Ge = -2, Gp = -3, Os = -5, Vp = -1, Yp = 1, It = 2, Kp = 3, Xp = 4, Qp = 0, Jp = 2, fs = 8, ef = 9, rf = 15, tf = 8, sf = 29, nf = 256, Zs = nf + 1 + sf, af = 30, of = 19, pf = 2 * Zs + 1, ff = 15, oe = 3, xr = 258, er = xr + oe + 1, lf = 32, ls = 42, Gs = 69, Mt = 73, Wt = 91, Ht = 103, jr = 113, lt = 666, xe = 1, $t = 2, Lr = 3, at = 4, uf = 3;
+function Tr(e, r) {
+  return e.msg = Wp[r], r;
+}
+function Di(e) {
+  return (e << 1) - (e > 4 ? 9 : 0);
+}
+function Or(e) {
+  for (var r = e.length; --r >= 0; )
+    e[r] = 0;
+}
+function Er(e) {
+  var r = e.state, s = r.pending;
+  s > e.avail_out && (s = e.avail_out), s !== 0 && (Ie.arraySet(e.output, r.pending_buf, r.pending_out, s, e.next_out), e.next_out += s, r.pending_out += s, e.total_out += s, e.avail_out -= s, r.pending -= s, r.pending === 0 && (r.pending_out = 0));
+}
+function Re(e, r) {
+  Ze._tr_flush_block(e, e.block_start >= 0 ? e.block_start : -1, e.strstart - e.block_start, r), e.block_start = e.strstart, Er(e.strm);
+}
+function fe(e, r) {
+  e.pending_buf[e.pending++] = r;
+}
+function ft(e, r) {
+  e.pending_buf[e.pending++] = r >>> 8 & 255, e.pending_buf[e.pending++] = r & 255;
+}
+function cf(e, r, s, n) {
+  var o = e.avail_in;
+  return o > n && (o = n), o === 0 ? 0 : (e.avail_in -= o, Ie.arraySet(r, e.input, e.next_in, o, s), e.state.wrap === 1 ? e.adler = la(e.adler, r, o, s) : e.state.wrap === 2 && (e.adler = kr(e.adler, r, o, s)), e.next_in += o, e.total_in += o, o);
+}
+function ua(e, r) {
+  var s = e.max_chain_length, n = e.strstart, o, i, t = e.prev_length, p = e.nice_match, y = e.strstart > e.w_size - er ? e.strstart - (e.w_size - er) : 0, u = e.window, d = e.w_mask, w = e.prev, _ = e.strstart + xr, b = u[n + t - 1], j = u[n + t];
+  e.prev_length >= e.good_match && (s >>= 2), p > e.lookahead && (p = e.lookahead);
+  do
+    if (o = r, !(u[o + t] !== j || u[o + t - 1] !== b || u[o] !== u[n] || u[++o] !== u[n + 1])) {
+      n += 2, o++;
+      do
+        ;
+      while (u[++n] === u[++o] && u[++n] === u[++o] && u[++n] === u[++o] && u[++n] === u[++o] && u[++n] === u[++o] && u[++n] === u[++o] && u[++n] === u[++o] && u[++n] === u[++o] && n < _);
+      if (i = xr - (_ - n), n = _ - xr, i > t) {
+        if (e.match_start = r, t = i, i >= p)
+          break;
+        b = u[n + t - 1], j = u[n + t];
+      }
+    }
+  while ((r = w[r & d]) > y && --s !== 0);
+  return t <= e.lookahead ? t : e.lookahead;
+}
+function Nr(e) {
+  var r = e.w_size, s, n, o, i, t;
+  do {
+    if (i = e.window_size - e.lookahead - e.strstart, e.strstart >= r + (r - er)) {
+      Ie.arraySet(e.window, e.window, r, r, 0), e.match_start -= r, e.strstart -= r, e.block_start -= r, n = e.hash_size, s = n;
+      do
+        o = e.head[--s], e.head[s] = o >= r ? o - r : 0;
+      while (--n);
+      n = r, s = n;
+      do
+        o = e.prev[--s], e.prev[s] = o >= r ? o - r : 0;
+      while (--n);
+      i += r;
+    }
+    if (e.strm.avail_in === 0)
+      break;
+    if (n = cf(e.strm, e.window, e.strstart + e.lookahead, i), e.lookahead += n, e.lookahead + e.insert >= oe)
+      for (t = e.strstart - e.insert, e.ins_h = e.window[t], e.ins_h = (e.ins_h << e.hash_shift ^ e.window[t + 1]) & e.hash_mask; e.insert && (e.ins_h = (e.ins_h << e.hash_shift ^ e.window[t + oe - 1]) & e.hash_mask, e.prev[t & e.w_mask] = e.head[e.ins_h], e.head[e.ins_h] = t, t++, e.insert--, !(e.lookahead + e.insert < oe)); )
+        ;
+  } while (e.lookahead < er && e.strm.avail_in !== 0);
+}
+function df(e, r) {
+  var s = 65535;
+  for (s > e.pending_buf_size - 5 && (s = e.pending_buf_size - 5); ; ) {
+    if (e.lookahead <= 1) {
+      if (Nr(e), e.lookahead === 0 && r === Ur)
+        return xe;
+      if (e.lookahead === 0)
+        break;
+    }
+    e.strstart += e.lookahead, e.lookahead = 0;
+    var n = e.block_start + s;
+    if ((e.strstart === 0 || e.strstart >= n) && (e.lookahead = e.strstart - n, e.strstart = n, Re(e, !1), e.strm.avail_out === 0) || e.strstart - e.block_start >= e.w_size - er && (Re(e, !1), e.strm.avail_out === 0))
+      return xe;
+  }
+  return e.insert = 0, r === $r ? (Re(e, !0), e.strm.avail_out === 0 ? Lr : at) : (e.strstart > e.block_start && (Re(e, !1), e.strm.avail_out === 0), xe);
+}
+function xs(e, r) {
+  for (var s, n; ; ) {
+    if (e.lookahead < er) {
+      if (Nr(e), e.lookahead < er && r === Ur)
+        return xe;
+      if (e.lookahead === 0)
+        break;
+    }
+    if (s = 0, e.lookahead >= oe && (e.ins_h = (e.ins_h << e.hash_shift ^ e.window[e.strstart + oe - 1]) & e.hash_mask, s = e.prev[e.strstart & e.w_mask] = e.head[e.ins_h], e.head[e.ins_h] = e.strstart), s !== 0 && e.strstart - s <= e.w_size - er && (e.match_length = ua(e, s)), e.match_length >= oe)
+      if (n = Ze._tr_tally(e, e.strstart - e.match_start, e.match_length - oe), e.lookahead -= e.match_length, e.match_length <= e.max_lazy_match && e.lookahead >= oe) {
+        e.match_length--;
+        do
+          e.strstart++, e.ins_h = (e.ins_h << e.hash_shift ^ e.window[e.strstart + oe - 1]) & e.hash_mask, s = e.prev[e.strstart & e.w_mask] = e.head[e.ins_h], e.head[e.ins_h] = e.strstart;
+        while (--e.match_length !== 0);
+        e.strstart++;
+      } else
+        e.strstart += e.match_length, e.match_length = 0, e.ins_h = e.window[e.strstart], e.ins_h = (e.ins_h << e.hash_shift ^ e.window[e.strstart + 1]) & e.hash_mask;
+    else
+      n = Ze._tr_tally(e, 0, e.window[e.strstart]), e.lookahead--, e.strstart++;
+    if (n && (Re(e, !1), e.strm.avail_out === 0))
+      return xe;
+  }
+  return e.insert = e.strstart < oe - 1 ? e.strstart : oe - 1, r === $r ? (Re(e, !0), e.strm.avail_out === 0 ? Lr : at) : e.last_lit && (Re(e, !1), e.strm.avail_out === 0) ? xe : $t;
+}
+function Vr(e, r) {
+  for (var s, n, o; ; ) {
+    if (e.lookahead < er) {
+      if (Nr(e), e.lookahead < er && r === Ur)
+        return xe;
+      if (e.lookahead === 0)
+        break;
+    }
+    if (s = 0, e.lookahead >= oe && (e.ins_h = (e.ins_h << e.hash_shift ^ e.window[e.strstart + oe - 1]) & e.hash_mask, s = e.prev[e.strstart & e.w_mask] = e.head[e.ins_h], e.head[e.ins_h] = e.strstart), e.prev_length = e.match_length, e.prev_match = e.match_start, e.match_length = oe - 1, s !== 0 && e.prev_length < e.max_lazy_match && e.strstart - s <= e.w_size - er && (e.match_length = ua(e, s), e.match_length <= 5 && (e.strategy === Yp || e.match_length === oe && e.strstart - e.match_start > 4096) && (e.match_length = oe - 1)), e.prev_length >= oe && e.match_length <= e.prev_length) {
+      o = e.strstart + e.lookahead - oe, n = Ze._tr_tally(e, e.strstart - 1 - e.prev_match, e.prev_length - oe), e.lookahead -= e.prev_length - 1, e.prev_length -= 2;
+      do
+        ++e.strstart <= o && (e.ins_h = (e.ins_h << e.hash_shift ^ e.window[e.strstart + oe - 1]) & e.hash_mask, s = e.prev[e.strstart & e.w_mask] = e.head[e.ins_h], e.head[e.ins_h] = e.strstart);
+      while (--e.prev_length !== 0);
+      if (e.match_available = 0, e.match_length = oe - 1, e.strstart++, n && (Re(e, !1), e.strm.avail_out === 0))
+        return xe;
+    } else if (e.match_available) {
+      if (n = Ze._tr_tally(e, 0, e.window[e.strstart - 1]), n && Re(e, !1), e.strstart++, e.lookahead--, e.strm.avail_out === 0)
+        return xe;
+    } else
+      e.match_available = 1, e.strstart++, e.lookahead--;
+  }
+  return e.match_available && (n = Ze._tr_tally(e, 0, e.window[e.strstart - 1]), e.match_available = 0), e.insert = e.strstart < oe - 1 ? e.strstart : oe - 1, r === $r ? (Re(e, !0), e.strm.avail_out === 0 ? Lr : at) : e.last_lit && (Re(e, !1), e.strm.avail_out === 0) ? xe : $t;
+}
+function hf(e, r) {
+  for (var s, n, o, i, t = e.window; ; ) {
+    if (e.lookahead <= xr) {
+      if (Nr(e), e.lookahead <= xr && r === Ur)
+        return xe;
+      if (e.lookahead === 0)
+        break;
+    }
+    if (e.match_length = 0, e.lookahead >= oe && e.strstart > 0 && (o = e.strstart - 1, n = t[o], n === t[++o] && n === t[++o] && n === t[++o])) {
+      i = e.strstart + xr;
+      do
+        ;
+      while (n === t[++o] && n === t[++o] && n === t[++o] && n === t[++o] && n === t[++o] && n === t[++o] && n === t[++o] && n === t[++o] && o < i);
+      e.match_length = xr - (i - o), e.match_length > e.lookahead && (e.match_length = e.lookahead);
+    }
+    if (e.match_length >= oe ? (s = Ze._tr_tally(e, 1, e.match_length - oe), e.lookahead -= e.match_length, e.strstart += e.match_length, e.match_length = 0) : (s = Ze._tr_tally(e, 0, e.window[e.strstart]), e.lookahead--, e.strstart++), s && (Re(e, !1), e.strm.avail_out === 0))
+      return xe;
+  }
+  return e.insert = 0, r === $r ? (Re(e, !0), e.strm.avail_out === 0 ? Lr : at) : e.last_lit && (Re(e, !1), e.strm.avail_out === 0) ? xe : $t;
+}
+function yf(e, r) {
+  for (var s; ; ) {
+    if (e.lookahead === 0 && (Nr(e), e.lookahead === 0)) {
+      if (r === Ur)
+        return xe;
+      break;
+    }
+    if (e.match_length = 0, s = Ze._tr_tally(e, 0, e.window[e.strstart]), e.lookahead--, e.strstart++, s && (Re(e, !1), e.strm.avail_out === 0))
+      return xe;
+  }
+  return e.insert = 0, r === $r ? (Re(e, !0), e.strm.avail_out === 0 ? Lr : at) : e.last_lit && (Re(e, !1), e.strm.avail_out === 0) ? xe : $t;
+}
+function nr(e, r, s, n, o) {
+  this.good_length = e, this.max_lazy = r, this.nice_length = s, this.max_chain = n, this.func = o;
+}
+var Qr;
+Qr = [
+  /*      good lazy nice chain */
+  new nr(0, 0, 0, 0, df),
+  /* 0 store only */
+  new nr(4, 4, 8, 4, xs),
+  /* 1 max speed, no lazy matches */
+  new nr(4, 5, 16, 8, xs),
+  /* 2 */
+  new nr(4, 6, 32, 32, xs),
+  /* 3 */
+  new nr(4, 4, 16, 16, Vr),
+  /* 4 lazy matches */
+  new nr(8, 16, 32, 32, Vr),
+  /* 5 */
+  new nr(8, 16, 128, 128, Vr),
+  /* 6 */
+  new nr(8, 32, 128, 256, Vr),
+  /* 7 */
+  new nr(32, 128, 258, 1024, Vr),
+  /* 8 */
+  new nr(32, 258, 258, 4096, Vr)
+  /* 9 max compression */
+];
+function mf(e) {
+  e.window_size = 2 * e.w_size, Or(e.head), e.max_lazy_match = Qr[e.level].max_lazy, e.good_match = Qr[e.level].good_length, e.nice_match = Qr[e.level].nice_length, e.max_chain_length = Qr[e.level].max_chain, e.strstart = 0, e.block_start = 0, e.lookahead = 0, e.insert = 0, e.match_length = e.prev_length = oe - 1, e.match_available = 0, e.ins_h = 0;
+}
+function gf() {
+  this.strm = null, this.status = 0, this.pending_buf = null, this.pending_buf_size = 0, this.pending_out = 0, this.pending = 0, this.wrap = 0, this.gzhead = null, this.gzindex = 0, this.method = fs, this.last_flush = -1, this.w_size = 0, this.w_bits = 0, this.w_mask = 0, this.window = null, this.window_size = 0, this.prev = null, this.head = null, this.ins_h = 0, this.hash_size = 0, this.hash_bits = 0, this.hash_mask = 0, this.hash_shift = 0, this.block_start = 0, this.match_length = 0, this.prev_match = 0, this.match_available = 0, this.strstart = 0, this.match_start = 0, this.lookahead = 0, this.prev_length = 0, this.max_chain_length = 0, this.max_lazy_match = 0, this.level = 0, this.strategy = 0, this.good_match = 0, this.nice_match = 0, this.dyn_ltree = new Ie.Buf16(pf * 2), this.dyn_dtree = new Ie.Buf16((2 * af + 1) * 2), this.bl_tree = new Ie.Buf16((2 * of + 1) * 2), Or(this.dyn_ltree), Or(this.dyn_dtree), Or(this.bl_tree), this.l_desc = null, this.d_desc = null, this.bl_desc = null, this.bl_count = new Ie.Buf16(ff + 1), this.heap = new Ie.Buf16(2 * Zs + 1), Or(this.heap), this.heap_len = 0, this.heap_max = 0, this.depth = new Ie.Buf16(2 * Zs + 1), Or(this.depth), this.l_buf = 0, this.lit_bufsize = 0, this.last_lit = 0, this.d_buf = 0, this.opt_len = 0, this.static_len = 0, this.matches = 0, this.insert = 0, this.bi_buf = 0, this.bi_valid = 0;
+}
+function ca(e) {
+  var r;
+  return !e || !e.state ? Tr(e, Ge) : (e.total_in = e.total_out = 0, e.data_type = Jp, r = e.state, r.pending = 0, r.pending_out = 0, r.wrap < 0 && (r.wrap = -r.wrap), r.status = r.wrap ? ls : jr, e.adler = r.wrap === 2 ? 0 : 1, r.last_flush = Ur, Ze._tr_init(r), fr);
+}
+function da(e) {
+  var r = ca(e);
+  return r === fr && mf(e.state), r;
+}
+function wf(e, r) {
+  return !e || !e.state || e.state.wrap !== 2 ? Ge : (e.state.gzhead = r, fr);
+}
+function ha(e, r, s, n, o, i) {
+  if (!e)
+    return Ge;
+  var t = 1;
+  if (r === Vp && (r = 6), n < 0 ? (t = 0, n = -n) : n > 15 && (t = 2, n -= 16), o < 1 || o > ef || s !== fs || n < 8 || n > 15 || r < 0 || r > 9 || i < 0 || i > Xp)
+    return Tr(e, Ge);
+  n === 8 && (n = 9);
+  var p = new gf();
+  return e.state = p, p.strm = e, p.wrap = t, p.gzhead = null, p.w_bits = n, p.w_size = 1 << p.w_bits, p.w_mask = p.w_size - 1, p.hash_bits = o + 7, p.hash_size = 1 << p.hash_bits, p.hash_mask = p.hash_size - 1, p.hash_shift = ~~((p.hash_bits + oe - 1) / oe), p.window = new Ie.Buf8(p.w_size * 2), p.head = new Ie.Buf16(p.hash_size), p.prev = new Ie.Buf16(p.w_size), p.lit_bufsize = 1 << o + 6, p.pending_buf_size = p.lit_bufsize * 4, p.pending_buf = new Ie.Buf8(p.pending_buf_size), p.d_buf = 1 * p.lit_bufsize, p.l_buf = (1 + 2) * p.lit_bufsize, p.level = r, p.strategy = i, p.method = s, da(e);
+}
+function bf(e, r) {
+  return ha(e, r, fs, rf, tf, Qp);
+}
+function _f(e, r) {
+  var s, n, o, i;
+  if (!e || !e.state || r > Ni || r < 0)
+    return e ? Tr(e, Ge) : Ge;
+  if (n = e.state, !e.output || !e.input && e.avail_in !== 0 || n.status === lt && r !== $r)
+    return Tr(e, e.avail_out === 0 ? Os : Ge);
+  if (n.strm = e, s = n.last_flush, n.last_flush = r, n.status === ls)
+    if (n.wrap === 2)
+      e.adler = 0, fe(n, 31), fe(n, 139), fe(n, 8), n.gzhead ? (fe(
+        n,
+        (n.gzhead.text ? 1 : 0) + (n.gzhead.hcrc ? 2 : 0) + (n.gzhead.extra ? 4 : 0) + (n.gzhead.name ? 8 : 0) + (n.gzhead.comment ? 16 : 0)
+      ), fe(n, n.gzhead.time & 255), fe(n, n.gzhead.time >> 8 & 255), fe(n, n.gzhead.time >> 16 & 255), fe(n, n.gzhead.time >> 24 & 255), fe(n, n.level === 9 ? 2 : n.strategy >= It || n.level < 2 ? 4 : 0), fe(n, n.gzhead.os & 255), n.gzhead.extra && n.gzhead.extra.length && (fe(n, n.gzhead.extra.length & 255), fe(n, n.gzhead.extra.length >> 8 & 255)), n.gzhead.hcrc && (e.adler = kr(e.adler, n.pending_buf, n.pending, 0)), n.gzindex = 0, n.status = Gs) : (fe(n, 0), fe(n, 0), fe(n, 0), fe(n, 0), fe(n, 0), fe(n, n.level === 9 ? 2 : n.strategy >= It || n.level < 2 ? 4 : 0), fe(n, uf), n.status = jr);
+    else {
+      var t = fs + (n.w_bits - 8 << 4) << 8, p = -1;
+      n.strategy >= It || n.level < 2 ? p = 0 : n.level < 6 ? p = 1 : n.level === 6 ? p = 2 : p = 3, t |= p << 6, n.strstart !== 0 && (t |= lf), t += 31 - t % 31, n.status = jr, ft(n, t), n.strstart !== 0 && (ft(n, e.adler >>> 16), ft(n, e.adler & 65535)), e.adler = 1;
+    }
+  if (n.status === Gs)
+    if (n.gzhead.extra) {
+      for (o = n.pending; n.gzindex < (n.gzhead.extra.length & 65535) && !(n.pending === n.pending_buf_size && (n.gzhead.hcrc && n.pending > o && (e.adler = kr(e.adler, n.pending_buf, n.pending - o, o)), Er(e), o = n.pending, n.pending === n.pending_buf_size)); )
+        fe(n, n.gzhead.extra[n.gzindex] & 255), n.gzindex++;
+      n.gzhead.hcrc && n.pending > o && (e.adler = kr(e.adler, n.pending_buf, n.pending - o, o)), n.gzindex === n.gzhead.extra.length && (n.gzindex = 0, n.status = Mt);
+    } else
+      n.status = Mt;
+  if (n.status === Mt)
+    if (n.gzhead.name) {
+      o = n.pending;
+      do {
+        if (n.pending === n.pending_buf_size && (n.gzhead.hcrc && n.pending > o && (e.adler = kr(e.adler, n.pending_buf, n.pending - o, o)), Er(e), o = n.pending, n.pending === n.pending_buf_size)) {
+          i = 1;
+          break;
+        }
+        n.gzindex < n.gzhead.name.length ? i = n.gzhead.name.charCodeAt(n.gzindex++) & 255 : i = 0, fe(n, i);
+      } while (i !== 0);
+      n.gzhead.hcrc && n.pending > o && (e.adler = kr(e.adler, n.pending_buf, n.pending - o, o)), i === 0 && (n.gzindex = 0, n.status = Wt);
+    } else
+      n.status = Wt;
+  if (n.status === Wt)
+    if (n.gzhead.comment) {
+      o = n.pending;
+      do {
+        if (n.pending === n.pending_buf_size && (n.gzhead.hcrc && n.pending > o && (e.adler = kr(e.adler, n.pending_buf, n.pending - o, o)), Er(e), o = n.pending, n.pending === n.pending_buf_size)) {
+          i = 1;
+          break;
+        }
+        n.gzindex < n.gzhead.comment.length ? i = n.gzhead.comment.charCodeAt(n.gzindex++) & 255 : i = 0, fe(n, i);
+      } while (i !== 0);
+      n.gzhead.hcrc && n.pending > o && (e.adler = kr(e.adler, n.pending_buf, n.pending - o, o)), i === 0 && (n.status = Ht);
+    } else
+      n.status = Ht;
+  if (n.status === Ht && (n.gzhead.hcrc ? (n.pending + 2 > n.pending_buf_size && Er(e), n.pending + 2 <= n.pending_buf_size && (fe(n, e.adler & 255), fe(n, e.adler >> 8 & 255), e.adler = 0, n.status = jr)) : n.status = jr), n.pending !== 0) {
+    if (Er(e), e.avail_out === 0)
+      return n.last_flush = -1, fr;
+  } else if (e.avail_in === 0 && Di(r) <= Di(s) && r !== $r)
+    return Tr(e, Os);
+  if (n.status === lt && e.avail_in !== 0)
+    return Tr(e, Os);
+  if (e.avail_in !== 0 || n.lookahead !== 0 || r !== Ur && n.status !== lt) {
+    var y = n.strategy === It ? yf(n, r) : n.strategy === Kp ? hf(n, r) : Qr[n.level].func(n, r);
+    if ((y === Lr || y === at) && (n.status = lt), y === xe || y === Lr)
+      return e.avail_out === 0 && (n.last_flush = -1), fr;
+    if (y === $t && (r === Hp ? Ze._tr_align(n) : r !== Ni && (Ze._tr_stored_block(n, 0, 0, !1), r === Zp && (Or(n.head), n.lookahead === 0 && (n.strstart = 0, n.block_start = 0, n.insert = 0))), Er(e), e.avail_out === 0))
+      return n.last_flush = -1, fr;
+  }
+  return r !== $r ? fr : n.wrap <= 0 ? Ci : (n.wrap === 2 ? (fe(n, e.adler & 255), fe(n, e.adler >> 8 & 255), fe(n, e.adler >> 16 & 255), fe(n, e.adler >> 24 & 255), fe(n, e.total_in & 255), fe(n, e.total_in >> 8 & 255), fe(n, e.total_in >> 16 & 255), fe(n, e.total_in >> 24 & 255)) : (ft(n, e.adler >>> 16), ft(n, e.adler & 65535)), Er(e), n.wrap > 0 && (n.wrap = -n.wrap), n.pending !== 0 ? fr : Ci);
+}
+function vf(e) {
+  var r;
+  return !e || !e.state ? Ge : (r = e.state.status, r !== ls && r !== Gs && r !== Mt && r !== Wt && r !== Ht && r !== jr && r !== lt ? Tr(e, Ge) : (e.state = null, r === jr ? Tr(e, Gp) : fr));
+}
+function Pf(e, r) {
+  var s = r.length, n, o, i, t, p, y, u, d;
+  if (!e || !e.state || (n = e.state, t = n.wrap, t === 2 || t === 1 && n.status !== ls || n.lookahead))
+    return Ge;
+  for (t === 1 && (e.adler = la(e.adler, r, s, 0)), n.wrap = 0, s >= n.w_size && (t === 0 && (Or(n.head), n.strstart = 0, n.block_start = 0, n.insert = 0), d = new Ie.Buf8(n.w_size), Ie.arraySet(d, r, s - n.w_size, n.w_size, 0), r = d, s = n.w_size), p = e.avail_in, y = e.next_in, u = e.input, e.avail_in = s, e.next_in = 0, e.input = r, Nr(n); n.lookahead >= oe; ) {
+    o = n.strstart, i = n.lookahead - (oe - 1);
+    do
+      n.ins_h = (n.ins_h << n.hash_shift ^ n.window[o + oe - 1]) & n.hash_mask, n.prev[o & n.w_mask] = n.head[n.ins_h], n.head[n.ins_h] = o, o++;
+    while (--i);
+    n.strstart = o, n.lookahead = oe - 1, Nr(n);
+  }
+  return n.strstart += n.lookahead, n.block_start = n.strstart, n.insert = n.lookahead, n.lookahead = 0, n.match_length = n.prev_length = oe - 1, n.match_available = 0, e.next_in = y, e.input = u, e.avail_in = p, n.wrap = t, fr;
+}
+ur.deflateInit = bf;
+ur.deflateInit2 = ha;
+ur.deflateReset = da;
+ur.deflateResetKeep = ca;
+ur.deflateSetHeader = wf;
+ur.deflate = _f;
+ur.deflateEnd = vf;
+ur.deflateSetDictionary = Pf;
+ur.deflateInfo = "pako deflate (from Nodeca project)";
+var zr = {}, us = br, ya = !0, ma = !0;
+try {
+  String.fromCharCode.apply(null, [0]);
+} catch {
+  ya = !1;
+}
+try {
+  String.fromCharCode.apply(null, new Uint8Array(1));
+} catch {
+  ma = !1;
+}
+var Pt = new us.Buf8(256);
+for (var Pr = 0; Pr < 256; Pr++)
+  Pt[Pr] = Pr >= 252 ? 6 : Pr >= 248 ? 5 : Pr >= 240 ? 4 : Pr >= 224 ? 3 : Pr >= 192 ? 2 : 1;
+Pt[254] = Pt[254] = 1;
+zr.string2buf = function(e) {
+  var r, s, n, o, i, t = e.length, p = 0;
+  for (o = 0; o < t; o++)
+    s = e.charCodeAt(o), (s & 64512) === 55296 && o + 1 < t && (n = e.charCodeAt(o + 1), (n & 64512) === 56320 && (s = 65536 + (s - 55296 << 10) + (n - 56320), o++)), p += s < 128 ? 1 : s < 2048 ? 2 : s < 65536 ? 3 : 4;
+  for (r = new us.Buf8(p), i = 0, o = 0; i < p; o++)
+    s = e.charCodeAt(o), (s & 64512) === 55296 && o + 1 < t && (n = e.charCodeAt(o + 1), (n & 64512) === 56320 && (s = 65536 + (s - 55296 << 10) + (n - 56320), o++)), s < 128 ? r[i++] = s : s < 2048 ? (r[i++] = 192 | s >>> 6, r[i++] = 128 | s & 63) : s < 65536 ? (r[i++] = 224 | s >>> 12, r[i++] = 128 | s >>> 6 & 63, r[i++] = 128 | s & 63) : (r[i++] = 240 | s >>> 18, r[i++] = 128 | s >>> 12 & 63, r[i++] = 128 | s >>> 6 & 63, r[i++] = 128 | s & 63);
+  return r;
+};
+function ga(e, r) {
+  if (r < 65534 && (e.subarray && ma || !e.subarray && ya))
+    return String.fromCharCode.apply(null, us.shrinkBuf(e, r));
+  for (var s = "", n = 0; n < r; n++)
+    s += String.fromCharCode(e[n]);
+  return s;
+}
+zr.buf2binstring = function(e) {
+  return ga(e, e.length);
+};
+zr.binstring2buf = function(e) {
+  for (var r = new us.Buf8(e.length), s = 0, n = r.length; s < n; s++)
+    r[s] = e.charCodeAt(s);
+  return r;
+};
+zr.buf2string = function(e, r) {
+  var s, n, o, i, t = r || e.length, p = new Array(t * 2);
+  for (n = 0, s = 0; s < t; ) {
+    if (o = e[s++], o < 128) {
+      p[n++] = o;
+      continue;
+    }
+    if (i = Pt[o], i > 4) {
+      p[n++] = 65533, s += i - 1;
+      continue;
+    }
+    for (o &= i === 2 ? 31 : i === 3 ? 15 : 7; i > 1 && s < t; )
+      o = o << 6 | e[s++] & 63, i--;
+    if (i > 1) {
+      p[n++] = 65533;
+      continue;
+    }
+    o < 65536 ? p[n++] = o : (o -= 65536, p[n++] = 55296 | o >> 10 & 1023, p[n++] = 56320 | o & 1023);
+  }
+  return ga(p, n);
+};
+zr.utf8border = function(e, r) {
+  var s;
+  for (r = r || e.length, r > e.length && (r = e.length), s = r - 1; s >= 0 && (e[s] & 192) === 128; )
+    s--;
+  return s < 0 || s === 0 ? r : s + Pt[e[s]] > r ? s : r;
+};
+function kf() {
+  this.input = null, this.next_in = 0, this.avail_in = 0, this.total_in = 0, this.output = null, this.next_out = 0, this.avail_out = 0, this.total_out = 0, this.msg = "", this.state = null, this.data_type = 2, this.adler = 0;
+}
+var wa = kf, dt = ur, ht = br, Vs = zr, Ys = ci, Ef = wa, ba = Object.prototype.toString, Of = 0, Ts = 4, rt = 0, qi = 1, Ui = 2, xf = -1, Tf = 0, $f = 8;
+function Cr(e) {
+  if (!(this instanceof Cr))
+    return new Cr(e);
+  this.options = ht.assign({
+    level: xf,
+    method: $f,
+    chunkSize: 16384,
+    windowBits: 15,
+    memLevel: 8,
+    strategy: Tf,
+    to: ""
+  }, e || {});
+  var r = this.options;
+  r.raw && r.windowBits > 0 ? r.windowBits = -r.windowBits : r.gzip && r.windowBits > 0 && r.windowBits < 16 && (r.windowBits += 16), this.err = 0, this.msg = "", this.ended = !1, this.chunks = [], this.strm = new Ef(), this.strm.avail_out = 0;
+  var s = dt.deflateInit2(
+    this.strm,
+    r.level,
+    r.method,
+    r.windowBits,
+    r.memLevel,
+    r.strategy
+  );
+  if (s !== rt)
+    throw new Error(Ys[s]);
+  if (r.header && dt.deflateSetHeader(this.strm, r.header), r.dictionary) {
+    var n;
+    if (typeof r.dictionary == "string" ? n = Vs.string2buf(r.dictionary) : ba.call(r.dictionary) === "[object ArrayBuffer]" ? n = new Uint8Array(r.dictionary) : n = r.dictionary, s = dt.deflateSetDictionary(this.strm, n), s !== rt)
+      throw new Error(Ys[s]);
+    this._dict_set = !0;
+  }
+}
+Cr.prototype.push = function(e, r) {
+  var s = this.strm, n = this.options.chunkSize, o, i;
+  if (this.ended)
+    return !1;
+  i = r === ~~r ? r : r === !0 ? Ts : Of, typeof e == "string" ? s.input = Vs.string2buf(e) : ba.call(e) === "[object ArrayBuffer]" ? s.input = new Uint8Array(e) : s.input = e, s.next_in = 0, s.avail_in = s.input.length;
+  do {
+    if (s.avail_out === 0 && (s.output = new ht.Buf8(n), s.next_out = 0, s.avail_out = n), o = dt.deflate(s, i), o !== qi && o !== rt)
+      return this.onEnd(o), this.ended = !0, !1;
+    (s.avail_out === 0 || s.avail_in === 0 && (i === Ts || i === Ui)) && (this.options.to === "string" ? this.onData(Vs.buf2binstring(ht.shrinkBuf(s.output, s.next_out))) : this.onData(ht.shrinkBuf(s.output, s.next_out)));
+  } while ((s.avail_in > 0 || s.avail_out === 0) && o !== qi);
+  return i === Ts ? (o = dt.deflateEnd(this.strm), this.onEnd(o), this.ended = !0, o === rt) : (i === Ui && (this.onEnd(rt), s.avail_out = 0), !0);
+};
+Cr.prototype.onData = function(e) {
+  this.chunks.push(e);
+};
+Cr.prototype.onEnd = function(e) {
+  e === rt && (this.options.to === "string" ? this.result = this.chunks.join("") : this.result = ht.flattenChunks(this.chunks)), this.chunks = [], this.err = e, this.msg = this.strm.msg;
+};
+function di(e, r) {
+  var s = new Cr(r);
+  if (s.push(e, !0), s.err)
+    throw s.msg || Ys[s.err];
+  return s.result;
+}
+function Af(e, r) {
+  return r = r || {}, r.raw = !0, di(e, r);
+}
+function Sf(e, r) {
+  return r = r || {}, r.gzip = !0, di(e, r);
+}
+xt.Deflate = Cr;
+xt.deflate = di;
+xt.deflateRaw = Af;
+xt.gzip = Sf;
+var At = {}, rr = {}, Lt = 30, Rf = 12, Ff = function(r, s) {
+  var n, o, i, t, p, y, u, d, w, _, b, j, P, q, D, M, B, U, A, x, N, S, T, E, O;
+  n = r.state, o = r.next_in, E = r.input, i = o + (r.avail_in - 5), t = r.next_out, O = r.output, p = t - (s - r.avail_out), y = t + (r.avail_out - 257), u = n.dmax, d = n.wsize, w = n.whave, _ = n.wnext, b = n.window, j = n.hold, P = n.bits, q = n.lencode, D = n.distcode, M = (1 << n.lenbits) - 1, B = (1 << n.distbits) - 1;
+  e:
+    do {
+      P < 15 && (j += E[o++] << P, P += 8, j += E[o++] << P, P += 8), U = q[j & M];
+      r:
+        for (; ; ) {
+          if (A = U >>> 24, j >>>= A, P -= A, A = U >>> 16 & 255, A === 0)
+            O[t++] = U & 65535;
+          else if (A & 16) {
+            x = U & 65535, A &= 15, A && (P < A && (j += E[o++] << P, P += 8), x += j & (1 << A) - 1, j >>>= A, P -= A), P < 15 && (j += E[o++] << P, P += 8, j += E[o++] << P, P += 8), U = D[j & B];
+            t:
+              for (; ; ) {
+                if (A = U >>> 24, j >>>= A, P -= A, A = U >>> 16 & 255, A & 16) {
+                  if (N = U & 65535, A &= 15, P < A && (j += E[o++] << P, P += 8, P < A && (j += E[o++] << P, P += 8)), N += j & (1 << A) - 1, N > u) {
+                    r.msg = "invalid distance too far back", n.mode = Lt;
+                    break e;
+                  }
+                  if (j >>>= A, P -= A, A = t - p, N > A) {
+                    if (A = N - A, A > w && n.sane) {
+                      r.msg = "invalid distance too far back", n.mode = Lt;
+                      break e;
+                    }
+                    if (S = 0, T = b, _ === 0) {
+                      if (S += d - A, A < x) {
+                        x -= A;
+                        do
+                          O[t++] = b[S++];
+                        while (--A);
+                        S = t - N, T = O;
+                      }
+                    } else if (_ < A) {
+                      if (S += d + _ - A, A -= _, A < x) {
+                        x -= A;
+                        do
+                          O[t++] = b[S++];
+                        while (--A);
+                        if (S = 0, _ < x) {
+                          A = _, x -= A;
+                          do
+                            O[t++] = b[S++];
+                          while (--A);
+                          S = t - N, T = O;
+                        }
+                      }
+                    } else if (S += _ - A, A < x) {
+                      x -= A;
+                      do
+                        O[t++] = b[S++];
+                      while (--A);
+                      S = t - N, T = O;
+                    }
+                    for (; x > 2; )
+                      O[t++] = T[S++], O[t++] = T[S++], O[t++] = T[S++], x -= 3;
+                    x && (O[t++] = T[S++], x > 1 && (O[t++] = T[S++]));
+                  } else {
+                    S = t - N;
+                    do
+                      O[t++] = O[S++], O[t++] = O[S++], O[t++] = O[S++], x -= 3;
+                    while (x > 2);
+                    x && (O[t++] = O[S++], x > 1 && (O[t++] = O[S++]));
+                  }
+                } else if (A & 64) {
+                  r.msg = "invalid distance code", n.mode = Lt;
+                  break e;
+                } else {
+                  U = D[(U & 65535) + (j & (1 << A) - 1)];
+                  continue t;
+                }
+                break;
+              }
+          } else if (A & 64)
+            if (A & 32) {
+              n.mode = Rf;
+              break e;
+            } else {
+              r.msg = "invalid literal/length code", n.mode = Lt;
+              break e;
+            }
+          else {
+            U = q[(U & 65535) + (j & (1 << A) - 1)];
+            continue r;
+          }
+          break;
+        }
+    } while (o < i && t < y);
+  x = P >> 3, o -= x, P -= x << 3, j &= (1 << P) - 1, r.next_in = o, r.next_out = t, r.avail_in = o < i ? 5 + (i - o) : 5 - (o - i), r.avail_out = t < y ? 257 + (y - t) : 257 - (t - y), n.hold = j, n.bits = P;
+}, zi = br, Yr = 15, Mi = 852, Wi = 592, Hi = 0, $s = 1, Zi = 2, jf = [
+  /* Length codes 257..285 base */
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  13,
+  15,
+  17,
+  19,
+  23,
+  27,
+  31,
+  35,
+  43,
+  51,
+  59,
+  67,
+  83,
+  99,
+  115,
+  131,
+  163,
+  195,
+  227,
+  258,
+  0,
+  0
+], Bf = [
+  /* Length codes 257..285 extra */
+  16,
+  16,
+  16,
+  16,
+  16,
+  16,
+  16,
+  16,
+  17,
+  17,
+  17,
+  17,
+  18,
+  18,
+  18,
+  18,
+  19,
+  19,
+  19,
+  19,
+  20,
+  20,
+  20,
+  20,
+  21,
+  21,
+  21,
+  21,
+  16,
+  72,
+  78
+], If = [
+  /* Distance codes 0..29 base */
+  1,
+  2,
+  3,
+  4,
+  5,
+  7,
+  9,
+  13,
+  17,
+  25,
+  33,
+  49,
+  65,
+  97,
+  129,
+  193,
+  257,
+  385,
+  513,
+  769,
+  1025,
+  1537,
+  2049,
+  3073,
+  4097,
+  6145,
+  8193,
+  12289,
+  16385,
+  24577,
+  0,
+  0
+], Lf = [
+  /* Distance codes 0..29 extra */
+  16,
+  16,
+  16,
+  16,
+  17,
+  17,
+  18,
+  18,
+  19,
+  19,
+  20,
+  20,
+  21,
+  21,
+  22,
+  22,
+  23,
+  23,
+  24,
+  24,
+  25,
+  25,
+  26,
+  26,
+  27,
+  27,
+  28,
+  28,
+  29,
+  29,
+  64,
+  64
+], Nf = function(r, s, n, o, i, t, p, y) {
+  var u = y.bits, d = 0, w = 0, _ = 0, b = 0, j = 0, P = 0, q = 0, D = 0, M = 0, B = 0, U, A, x, N, S, T = null, E = 0, O, C = new zi.Buf16(Yr + 1), L = new zi.Buf16(Yr + 1), F = null, Y = 0, Z, H, K;
+  for (d = 0; d <= Yr; d++)
+    C[d] = 0;
+  for (w = 0; w < o; w++)
+    C[s[n + w]]++;
+  for (j = u, b = Yr; b >= 1 && C[b] === 0; b--)
+    ;
+  if (j > b && (j = b), b === 0)
+    return i[t++] = 1 << 24 | 64 << 16 | 0, i[t++] = 1 << 24 | 64 << 16 | 0, y.bits = 1, 0;
+  for (_ = 1; _ < b && C[_] === 0; _++)
+    ;
+  for (j < _ && (j = _), D = 1, d = 1; d <= Yr; d++)
+    if (D <<= 1, D -= C[d], D < 0)
+      return -1;
+  if (D > 0 && (r === Hi || b !== 1))
+    return -1;
+  for (L[1] = 0, d = 1; d < Yr; d++)
+    L[d + 1] = L[d] + C[d];
+  for (w = 0; w < o; w++)
+    s[n + w] !== 0 && (p[L[s[n + w]]++] = w);
+  if (r === Hi ? (T = F = p, O = 19) : r === $s ? (T = jf, E -= 257, F = Bf, Y -= 257, O = 256) : (T = If, F = Lf, O = -1), B = 0, w = 0, d = _, S = t, P = j, q = 0, x = -1, M = 1 << j, N = M - 1, r === $s && M > Mi || r === Zi && M > Wi)
+    return 1;
+  for (; ; ) {
+    Z = d - q, p[w] < O ? (H = 0, K = p[w]) : p[w] > O ? (H = F[Y + p[w]], K = T[E + p[w]]) : (H = 32 + 64, K = 0), U = 1 << d - q, A = 1 << P, _ = A;
+    do
+      A -= U, i[S + (B >> q) + A] = Z << 24 | H << 16 | K | 0;
+    while (A !== 0);
+    for (U = 1 << d - 1; B & U; )
+      U >>= 1;
+    if (U !== 0 ? (B &= U - 1, B += U) : B = 0, w++, --C[d] === 0) {
+      if (d === b)
+        break;
+      d = s[n + p[w]];
+    }
+    if (d > j && (B & N) !== x) {
+      for (q === 0 && (q = j), S += _, P = d - q, D = 1 << P; P + q < b && (D -= C[P + q], !(D <= 0)); )
+        P++, D <<= 1;
+      if (M += 1 << P, r === $s && M > Mi || r === Zi && M > Wi)
+        return 1;
+      x = B & N, i[x] = j << 24 | P << 16 | S - t | 0;
+    }
+  }
+  return B !== 0 && (i[S + B] = d - q << 24 | 64 << 16 | 0), y.bits = j, 0;
+}, ze = br, Ks = pa, ar = fa, Cf = Ff, yt = Nf, Df = 0, _a = 1, va = 2, Gi = 4, qf = 5, Nt = 6, Dr = 0, Uf = 1, zf = 2, Ve = -2, Pa = -3, ka = -4, Mf = -5, Vi = 8, Ea = 1, Yi = 2, Ki = 3, Xi = 4, Qi = 5, Ji = 6, en = 7, rn = 8, tn = 9, sn = 10, es = 11, hr = 12, As = 13, nn = 14, Ss = 15, an = 16, on = 17, pn = 18, fn = 19, Ct = 20, Dt = 21, ln = 22, un = 23, cn = 24, dn = 25, hn = 26, Rs = 27, yn = 28, mn = 29, be = 30, Oa = 31, Wf = 32, Hf = 852, Zf = 592, Gf = 15, Vf = Gf;
+function gn(e) {
+  return (e >>> 24 & 255) + (e >>> 8 & 65280) + ((e & 65280) << 8) + ((e & 255) << 24);
+}
+function Yf() {
+  this.mode = 0, this.last = !1, this.wrap = 0, this.havedict = !1, this.flags = 0, this.dmax = 0, this.check = 0, this.total = 0, this.head = null, this.wbits = 0, this.wsize = 0, this.whave = 0, this.wnext = 0, this.window = null, this.hold = 0, this.bits = 0, this.length = 0, this.offset = 0, this.extra = 0, this.lencode = null, this.distcode = null, this.lenbits = 0, this.distbits = 0, this.ncode = 0, this.nlen = 0, this.ndist = 0, this.have = 0, this.next = null, this.lens = new ze.Buf16(320), this.work = new ze.Buf16(288), this.lendyn = null, this.distdyn = null, this.sane = 0, this.back = 0, this.was = 0;
+}
+function xa(e) {
+  var r;
+  return !e || !e.state ? Ve : (r = e.state, e.total_in = e.total_out = r.total = 0, e.msg = "", r.wrap && (e.adler = r.wrap & 1), r.mode = Ea, r.last = 0, r.havedict = 0, r.dmax = 32768, r.head = null, r.hold = 0, r.bits = 0, r.lencode = r.lendyn = new ze.Buf32(Hf), r.distcode = r.distdyn = new ze.Buf32(Zf), r.sane = 1, r.back = -1, Dr);
+}
+function Ta(e) {
+  var r;
+  return !e || !e.state ? Ve : (r = e.state, r.wsize = 0, r.whave = 0, r.wnext = 0, xa(e));
+}
+function $a(e, r) {
+  var s, n;
+  return !e || !e.state || (n = e.state, r < 0 ? (s = 0, r = -r) : (s = (r >> 4) + 1, r < 48 && (r &= 15)), r && (r < 8 || r > 15)) ? Ve : (n.window !== null && n.wbits !== r && (n.window = null), n.wrap = s, n.wbits = r, Ta(e));
+}
+function Aa(e, r) {
+  var s, n;
+  return e ? (n = new Yf(), e.state = n, n.window = null, s = $a(e, r), s !== Dr && (e.state = null), s) : Ve;
+}
+function Kf(e) {
+  return Aa(e, Vf);
+}
+var wn = !0, Fs, js;
+function Xf(e) {
+  if (wn) {
+    var r;
+    for (Fs = new ze.Buf32(512), js = new ze.Buf32(32), r = 0; r < 144; )
+      e.lens[r++] = 8;
+    for (; r < 256; )
+      e.lens[r++] = 9;
+    for (; r < 280; )
+      e.lens[r++] = 7;
+    for (; r < 288; )
+      e.lens[r++] = 8;
+    for (yt(_a, e.lens, 0, 288, Fs, 0, e.work, { bits: 9 }), r = 0; r < 32; )
+      e.lens[r++] = 5;
+    yt(va, e.lens, 0, 32, js, 0, e.work, { bits: 5 }), wn = !1;
+  }
+  e.lencode = Fs, e.lenbits = 9, e.distcode = js, e.distbits = 5;
+}
+function Sa(e, r, s, n) {
+  var o, i = e.state;
+  return i.window === null && (i.wsize = 1 << i.wbits, i.wnext = 0, i.whave = 0, i.window = new ze.Buf8(i.wsize)), n >= i.wsize ? (ze.arraySet(i.window, r, s - i.wsize, i.wsize, 0), i.wnext = 0, i.whave = i.wsize) : (o = i.wsize - i.wnext, o > n && (o = n), ze.arraySet(i.window, r, s - n, o, i.wnext), n -= o, n ? (ze.arraySet(i.window, r, s - n, n, 0), i.wnext = n, i.whave = i.wsize) : (i.wnext += o, i.wnext === i.wsize && (i.wnext = 0), i.whave < i.wsize && (i.whave += o))), 0;
+}
+function Qf(e, r) {
+  var s, n, o, i, t, p, y, u, d, w, _, b, j, P, q = 0, D, M, B, U, A, x, N, S, T = new ze.Buf8(4), E, O, C = (
+    /* permutation of code lengths */
+    [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]
+  );
+  if (!e || !e.state || !e.output || !e.input && e.avail_in !== 0)
+    return Ve;
+  s = e.state, s.mode === hr && (s.mode = As), t = e.next_out, o = e.output, y = e.avail_out, i = e.next_in, n = e.input, p = e.avail_in, u = s.hold, d = s.bits, w = p, _ = y, S = Dr;
+  e:
+    for (; ; )
+      switch (s.mode) {
+        case Ea:
+          if (s.wrap === 0) {
+            s.mode = As;
+            break;
+          }
+          for (; d < 16; ) {
+            if (p === 0)
+              break e;
+            p--, u += n[i++] << d, d += 8;
+          }
+          if (s.wrap & 2 && u === 35615) {
+            s.check = 0, T[0] = u & 255, T[1] = u >>> 8 & 255, s.check = ar(s.check, T, 2, 0), u = 0, d = 0, s.mode = Yi;
+            break;
+          }
+          if (s.flags = 0, s.head && (s.head.done = !1), !(s.wrap & 1) || /* check if zlib header allowed */
+          (((u & 255) << 8) + (u >> 8)) % 31) {
+            e.msg = "incorrect header check", s.mode = be;
+            break;
+          }
+          if ((u & 15) !== Vi) {
+            e.msg = "unknown compression method", s.mode = be;
+            break;
+          }
+          if (u >>>= 4, d -= 4, N = (u & 15) + 8, s.wbits === 0)
+            s.wbits = N;
+          else if (N > s.wbits) {
+            e.msg = "invalid window size", s.mode = be;
+            break;
+          }
+          s.dmax = 1 << N, e.adler = s.check = 1, s.mode = u & 512 ? sn : hr, u = 0, d = 0;
+          break;
+        case Yi:
+          for (; d < 16; ) {
+            if (p === 0)
+              break e;
+            p--, u += n[i++] << d, d += 8;
+          }
+          if (s.flags = u, (s.flags & 255) !== Vi) {
+            e.msg = "unknown compression method", s.mode = be;
+            break;
+          }
+          if (s.flags & 57344) {
+            e.msg = "unknown header flags set", s.mode = be;
+            break;
+          }
+          s.head && (s.head.text = u >> 8 & 1), s.flags & 512 && (T[0] = u & 255, T[1] = u >>> 8 & 255, s.check = ar(s.check, T, 2, 0)), u = 0, d = 0, s.mode = Ki;
+        case Ki:
+          for (; d < 32; ) {
+            if (p === 0)
+              break e;
+            p--, u += n[i++] << d, d += 8;
+          }
+          s.head && (s.head.time = u), s.flags & 512 && (T[0] = u & 255, T[1] = u >>> 8 & 255, T[2] = u >>> 16 & 255, T[3] = u >>> 24 & 255, s.check = ar(s.check, T, 4, 0)), u = 0, d = 0, s.mode = Xi;
+        case Xi:
+          for (; d < 16; ) {
+            if (p === 0)
+              break e;
+            p--, u += n[i++] << d, d += 8;
+          }
+          s.head && (s.head.xflags = u & 255, s.head.os = u >> 8), s.flags & 512 && (T[0] = u & 255, T[1] = u >>> 8 & 255, s.check = ar(s.check, T, 2, 0)), u = 0, d = 0, s.mode = Qi;
+        case Qi:
+          if (s.flags & 1024) {
+            for (; d < 16; ) {
+              if (p === 0)
+                break e;
+              p--, u += n[i++] << d, d += 8;
+            }
+            s.length = u, s.head && (s.head.extra_len = u), s.flags & 512 && (T[0] = u & 255, T[1] = u >>> 8 & 255, s.check = ar(s.check, T, 2, 0)), u = 0, d = 0;
+          } else
+            s.head && (s.head.extra = null);
+          s.mode = Ji;
+        case Ji:
+          if (s.flags & 1024 && (b = s.length, b > p && (b = p), b && (s.head && (N = s.head.extra_len - s.length, s.head.extra || (s.head.extra = new Array(s.head.extra_len)), ze.arraySet(
+            s.head.extra,
+            n,
+            i,
+            // extra field is limited to 65536 bytes
+            // - no need for additional size check
+            b,
+            /*len + copy > state.head.extra_max - len ? state.head.extra_max : copy,*/
+            N
+          )), s.flags & 512 && (s.check = ar(s.check, n, b, i)), p -= b, i += b, s.length -= b), s.length))
+            break e;
+          s.length = 0, s.mode = en;
+        case en:
+          if (s.flags & 2048) {
+            if (p === 0)
+              break e;
+            b = 0;
+            do
+              N = n[i + b++], s.head && N && s.length < 65536 && (s.head.name += String.fromCharCode(N));
+            while (N && b < p);
+            if (s.flags & 512 && (s.check = ar(s.check, n, b, i)), p -= b, i += b, N)
+              break e;
+          } else
+            s.head && (s.head.name = null);
+          s.length = 0, s.mode = rn;
+        case rn:
+          if (s.flags & 4096) {
+            if (p === 0)
+              break e;
+            b = 0;
+            do
+              N = n[i + b++], s.head && N && s.length < 65536 && (s.head.comment += String.fromCharCode(N));
+            while (N && b < p);
+            if (s.flags & 512 && (s.check = ar(s.check, n, b, i)), p -= b, i += b, N)
+              break e;
+          } else
+            s.head && (s.head.comment = null);
+          s.mode = tn;
+        case tn:
+          if (s.flags & 512) {
+            for (; d < 16; ) {
+              if (p === 0)
+                break e;
+              p--, u += n[i++] << d, d += 8;
+            }
+            if (u !== (s.check & 65535)) {
+              e.msg = "header crc mismatch", s.mode = be;
+              break;
+            }
+            u = 0, d = 0;
+          }
+          s.head && (s.head.hcrc = s.flags >> 9 & 1, s.head.done = !0), e.adler = s.check = 0, s.mode = hr;
+          break;
+        case sn:
+          for (; d < 32; ) {
+            if (p === 0)
+              break e;
+            p--, u += n[i++] << d, d += 8;
+          }
+          e.adler = s.check = gn(u), u = 0, d = 0, s.mode = es;
+        case es:
+          if (s.havedict === 0)
+            return e.next_out = t, e.avail_out = y, e.next_in = i, e.avail_in = p, s.hold = u, s.bits = d, zf;
+          e.adler = s.check = 1, s.mode = hr;
+        case hr:
+          if (r === qf || r === Nt)
+            break e;
+        case As:
+          if (s.last) {
+            u >>>= d & 7, d -= d & 7, s.mode = Rs;
+            break;
+          }
+          for (; d < 3; ) {
+            if (p === 0)
+              break e;
+            p--, u += n[i++] << d, d += 8;
+          }
+          switch (s.last = u & 1, u >>>= 1, d -= 1, u & 3) {
+            case 0:
+              s.mode = nn;
+              break;
+            case 1:
+              if (Xf(s), s.mode = Ct, r === Nt) {
+                u >>>= 2, d -= 2;
+                break e;
+              }
+              break;
+            case 2:
+              s.mode = on;
+              break;
+            case 3:
+              e.msg = "invalid block type", s.mode = be;
+          }
+          u >>>= 2, d -= 2;
+          break;
+        case nn:
+          for (u >>>= d & 7, d -= d & 7; d < 32; ) {
+            if (p === 0)
+              break e;
+            p--, u += n[i++] << d, d += 8;
+          }
+          if ((u & 65535) !== (u >>> 16 ^ 65535)) {
+            e.msg = "invalid stored block lengths", s.mode = be;
+            break;
+          }
+          if (s.length = u & 65535, u = 0, d = 0, s.mode = Ss, r === Nt)
+            break e;
+        case Ss:
+          s.mode = an;
+        case an:
+          if (b = s.length, b) {
+            if (b > p && (b = p), b > y && (b = y), b === 0)
+              break e;
+            ze.arraySet(o, n, i, b, t), p -= b, i += b, y -= b, t += b, s.length -= b;
+            break;
+          }
+          s.mode = hr;
+          break;
+        case on:
+          for (; d < 14; ) {
+            if (p === 0)
+              break e;
+            p--, u += n[i++] << d, d += 8;
+          }
+          if (s.nlen = (u & 31) + 257, u >>>= 5, d -= 5, s.ndist = (u & 31) + 1, u >>>= 5, d -= 5, s.ncode = (u & 15) + 4, u >>>= 4, d -= 4, s.nlen > 286 || s.ndist > 30) {
+            e.msg = "too many length or distance symbols", s.mode = be;
+            break;
+          }
+          s.have = 0, s.mode = pn;
+        case pn:
+          for (; s.have < s.ncode; ) {
+            for (; d < 3; ) {
+              if (p === 0)
+                break e;
+              p--, u += n[i++] << d, d += 8;
+            }
+            s.lens[C[s.have++]] = u & 7, u >>>= 3, d -= 3;
+          }
+          for (; s.have < 19; )
+            s.lens[C[s.have++]] = 0;
+          if (s.lencode = s.lendyn, s.lenbits = 7, E = { bits: s.lenbits }, S = yt(Df, s.lens, 0, 19, s.lencode, 0, s.work, E), s.lenbits = E.bits, S) {
+            e.msg = "invalid code lengths set", s.mode = be;
+            break;
+          }
+          s.have = 0, s.mode = fn;
+        case fn:
+          for (; s.have < s.nlen + s.ndist; ) {
+            for (; q = s.lencode[u & (1 << s.lenbits) - 1], D = q >>> 24, M = q >>> 16 & 255, B = q & 65535, !(D <= d); ) {
+              if (p === 0)
+                break e;
+              p--, u += n[i++] << d, d += 8;
+            }
+            if (B < 16)
+              u >>>= D, d -= D, s.lens[s.have++] = B;
+            else {
+              if (B === 16) {
+                for (O = D + 2; d < O; ) {
+                  if (p === 0)
+                    break e;
+                  p--, u += n[i++] << d, d += 8;
+                }
+                if (u >>>= D, d -= D, s.have === 0) {
+                  e.msg = "invalid bit length repeat", s.mode = be;
+                  break;
+                }
+                N = s.lens[s.have - 1], b = 3 + (u & 3), u >>>= 2, d -= 2;
+              } else if (B === 17) {
+                for (O = D + 3; d < O; ) {
+                  if (p === 0)
+                    break e;
+                  p--, u += n[i++] << d, d += 8;
+                }
+                u >>>= D, d -= D, N = 0, b = 3 + (u & 7), u >>>= 3, d -= 3;
+              } else {
+                for (O = D + 7; d < O; ) {
+                  if (p === 0)
+                    break e;
+                  p--, u += n[i++] << d, d += 8;
+                }
+                u >>>= D, d -= D, N = 0, b = 11 + (u & 127), u >>>= 7, d -= 7;
+              }
+              if (s.have + b > s.nlen + s.ndist) {
+                e.msg = "invalid bit length repeat", s.mode = be;
+                break;
+              }
+              for (; b--; )
+                s.lens[s.have++] = N;
+            }
+          }
+          if (s.mode === be)
+            break;
+          if (s.lens[256] === 0) {
+            e.msg = "invalid code -- missing end-of-block", s.mode = be;
+            break;
+          }
+          if (s.lenbits = 9, E = { bits: s.lenbits }, S = yt(_a, s.lens, 0, s.nlen, s.lencode, 0, s.work, E), s.lenbits = E.bits, S) {
+            e.msg = "invalid literal/lengths set", s.mode = be;
+            break;
+          }
+          if (s.distbits = 6, s.distcode = s.distdyn, E = { bits: s.distbits }, S = yt(va, s.lens, s.nlen, s.ndist, s.distcode, 0, s.work, E), s.distbits = E.bits, S) {
+            e.msg = "invalid distances set", s.mode = be;
+            break;
+          }
+          if (s.mode = Ct, r === Nt)
+            break e;
+        case Ct:
+          s.mode = Dt;
+        case Dt:
+          if (p >= 6 && y >= 258) {
+            e.next_out = t, e.avail_out = y, e.next_in = i, e.avail_in = p, s.hold = u, s.bits = d, Cf(e, _), t = e.next_out, o = e.output, y = e.avail_out, i = e.next_in, n = e.input, p = e.avail_in, u = s.hold, d = s.bits, s.mode === hr && (s.back = -1);
+            break;
+          }
+          for (s.back = 0; q = s.lencode[u & (1 << s.lenbits) - 1], D = q >>> 24, M = q >>> 16 & 255, B = q & 65535, !(D <= d); ) {
+            if (p === 0)
+              break e;
+            p--, u += n[i++] << d, d += 8;
+          }
+          if (M && !(M & 240)) {
+            for (U = D, A = M, x = B; q = s.lencode[x + ((u & (1 << U + A) - 1) >> U)], D = q >>> 24, M = q >>> 16 & 255, B = q & 65535, !(U + D <= d); ) {
+              if (p === 0)
+                break e;
+              p--, u += n[i++] << d, d += 8;
+            }
+            u >>>= U, d -= U, s.back += U;
+          }
+          if (u >>>= D, d -= D, s.back += D, s.length = B, M === 0) {
+            s.mode = hn;
+            break;
+          }
+          if (M & 32) {
+            s.back = -1, s.mode = hr;
+            break;
+          }
+          if (M & 64) {
+            e.msg = "invalid literal/length code", s.mode = be;
+            break;
+          }
+          s.extra = M & 15, s.mode = ln;
+        case ln:
+          if (s.extra) {
+            for (O = s.extra; d < O; ) {
+              if (p === 0)
+                break e;
+              p--, u += n[i++] << d, d += 8;
+            }
+            s.length += u & (1 << s.extra) - 1, u >>>= s.extra, d -= s.extra, s.back += s.extra;
+          }
+          s.was = s.length, s.mode = un;
+        case un:
+          for (; q = s.distcode[u & (1 << s.distbits) - 1], D = q >>> 24, M = q >>> 16 & 255, B = q & 65535, !(D <= d); ) {
+            if (p === 0)
+              break e;
+            p--, u += n[i++] << d, d += 8;
+          }
+          if (!(M & 240)) {
+            for (U = D, A = M, x = B; q = s.distcode[x + ((u & (1 << U + A) - 1) >> U)], D = q >>> 24, M = q >>> 16 & 255, B = q & 65535, !(U + D <= d); ) {
+              if (p === 0)
+                break e;
+              p--, u += n[i++] << d, d += 8;
+            }
+            u >>>= U, d -= U, s.back += U;
+          }
+          if (u >>>= D, d -= D, s.back += D, M & 64) {
+            e.msg = "invalid distance code", s.mode = be;
+            break;
+          }
+          s.offset = B, s.extra = M & 15, s.mode = cn;
+        case cn:
+          if (s.extra) {
+            for (O = s.extra; d < O; ) {
+              if (p === 0)
+                break e;
+              p--, u += n[i++] << d, d += 8;
+            }
+            s.offset += u & (1 << s.extra) - 1, u >>>= s.extra, d -= s.extra, s.back += s.extra;
+          }
+          if (s.offset > s.dmax) {
+            e.msg = "invalid distance too far back", s.mode = be;
+            break;
+          }
+          s.mode = dn;
+        case dn:
+          if (y === 0)
+            break e;
+          if (b = _ - y, s.offset > b) {
+            if (b = s.offset - b, b > s.whave && s.sane) {
+              e.msg = "invalid distance too far back", s.mode = be;
+              break;
+            }
+            b > s.wnext ? (b -= s.wnext, j = s.wsize - b) : j = s.wnext - b, b > s.length && (b = s.length), P = s.window;
+          } else
+            P = o, j = t - s.offset, b = s.length;
+          b > y && (b = y), y -= b, s.length -= b;
+          do
+            o[t++] = P[j++];
+          while (--b);
+          s.length === 0 && (s.mode = Dt);
+          break;
+        case hn:
+          if (y === 0)
+            break e;
+          o[t++] = s.length, y--, s.mode = Dt;
+          break;
+        case Rs:
+          if (s.wrap) {
+            for (; d < 32; ) {
+              if (p === 0)
+                break e;
+              p--, u |= n[i++] << d, d += 8;
+            }
+            if (_ -= y, e.total_out += _, s.total += _, _ && (e.adler = s.check = /*UPDATE(state.check, put - _out, _out);*/
+            s.flags ? ar(s.check, o, _, t - _) : Ks(s.check, o, _, t - _)), _ = y, (s.flags ? u : gn(u)) !== s.check) {
+              e.msg = "incorrect data check", s.mode = be;
+              break;
+            }
+            u = 0, d = 0;
+          }
+          s.mode = yn;
+        case yn:
+          if (s.wrap && s.flags) {
+            for (; d < 32; ) {
+              if (p === 0)
+                break e;
+              p--, u += n[i++] << d, d += 8;
+            }
+            if (u !== (s.total & 4294967295)) {
+              e.msg = "incorrect length check", s.mode = be;
+              break;
+            }
+            u = 0, d = 0;
+          }
+          s.mode = mn;
+        case mn:
+          S = Uf;
+          break e;
+        case be:
+          S = Pa;
+          break e;
+        case Oa:
+          return ka;
+        case Wf:
+        default:
+          return Ve;
+      }
+  return e.next_out = t, e.avail_out = y, e.next_in = i, e.avail_in = p, s.hold = u, s.bits = d, (s.wsize || _ !== e.avail_out && s.mode < be && (s.mode < Rs || r !== Gi)) && Sa(e, e.output, e.next_out, _ - e.avail_out), w -= e.avail_in, _ -= e.avail_out, e.total_in += w, e.total_out += _, s.total += _, s.wrap && _ && (e.adler = s.check = /*UPDATE(state.check, strm.next_out - _out, _out);*/
+  s.flags ? ar(s.check, o, _, e.next_out - _) : Ks(s.check, o, _, e.next_out - _)), e.data_type = s.bits + (s.last ? 64 : 0) + (s.mode === hr ? 128 : 0) + (s.mode === Ct || s.mode === Ss ? 256 : 0), (w === 0 && _ === 0 || r === Gi) && S === Dr && (S = Mf), S;
+}
+function Jf(e) {
+  if (!e || !e.state)
+    return Ve;
+  var r = e.state;
+  return r.window && (r.window = null), e.state = null, Dr;
+}
+function el(e, r) {
+  var s;
+  return !e || !e.state || (s = e.state, !(s.wrap & 2)) ? Ve : (s.head = r, r.done = !1, Dr);
+}
+function rl(e, r) {
+  var s = r.length, n, o, i;
+  return !e || !e.state || (n = e.state, n.wrap !== 0 && n.mode !== es) ? Ve : n.mode === es && (o = 1, o = Ks(o, r, s, 0), o !== n.check) ? Pa : (i = Sa(e, r, s, s), i ? (n.mode = Oa, ka) : (n.havedict = 1, Dr));
+}
+rr.inflateReset = Ta;
+rr.inflateReset2 = $a;
+rr.inflateResetKeep = xa;
+rr.inflateInit = Kf;
+rr.inflateInit2 = Aa;
+rr.inflate = Qf;
+rr.inflateEnd = Jf;
+rr.inflateGetHeader = el;
+rr.inflateSetDictionary = rl;
+rr.inflateInfo = "pako inflate (from Nodeca project)";
+var Ra = {
+  /* Allowed flush values; see deflate() and inflate() below for details */
+  Z_NO_FLUSH: 0,
+  Z_PARTIAL_FLUSH: 1,
+  Z_SYNC_FLUSH: 2,
+  Z_FULL_FLUSH: 3,
+  Z_FINISH: 4,
+  Z_BLOCK: 5,
+  Z_TREES: 6,
+  /* Return codes for the compression/decompression functions. Negative values
+  * are errors, positive values are used for special but normal events.
+  */
+  Z_OK: 0,
+  Z_STREAM_END: 1,
+  Z_NEED_DICT: 2,
+  Z_ERRNO: -1,
+  Z_STREAM_ERROR: -2,
+  Z_DATA_ERROR: -3,
+  //Z_MEM_ERROR:     -4,
+  Z_BUF_ERROR: -5,
+  //Z_VERSION_ERROR: -6,
+  /* compression levels */
+  Z_NO_COMPRESSION: 0,
+  Z_BEST_SPEED: 1,
+  Z_BEST_COMPRESSION: 9,
+  Z_DEFAULT_COMPRESSION: -1,
+  Z_FILTERED: 1,
+  Z_HUFFMAN_ONLY: 2,
+  Z_RLE: 3,
+  Z_FIXED: 4,
+  Z_DEFAULT_STRATEGY: 0,
+  /* Possible values of the data_type field (though see inflate()) */
+  Z_BINARY: 0,
+  Z_TEXT: 1,
+  //Z_ASCII:                1, // = Z_TEXT (deprecated)
+  Z_UNKNOWN: 2,
+  /* The deflate compression method */
+  Z_DEFLATED: 8
+  //Z_NULL:                 null // Use -1 or null inline, depending on var type
+};
+function tl() {
+  this.text = 0, this.time = 0, this.xflags = 0, this.os = 0, this.extra = null, this.extra_len = 0, this.name = "", this.comment = "", this.hcrc = 0, this.done = !1;
+}
+var sl = tl, tt = rr, mt = br, Zt = zr, ke = Ra, Xs = ci, il = wa, nl = sl, Fa = Object.prototype.toString;
+function qr(e) {
+  if (!(this instanceof qr))
+    return new qr(e);
+  this.options = mt.assign({
+    chunkSize: 16384,
+    windowBits: 0,
+    to: ""
+  }, e || {});
+  var r = this.options;
+  r.raw && r.windowBits >= 0 && r.windowBits < 16 && (r.windowBits = -r.windowBits, r.windowBits === 0 && (r.windowBits = -15)), r.windowBits >= 0 && r.windowBits < 16 && !(e && e.windowBits) && (r.windowBits += 32), r.windowBits > 15 && r.windowBits < 48 && (r.windowBits & 15 || (r.windowBits |= 15)), this.err = 0, this.msg = "", this.ended = !1, this.chunks = [], this.strm = new il(), this.strm.avail_out = 0;
+  var s = tt.inflateInit2(
+    this.strm,
+    r.windowBits
+  );
+  if (s !== ke.Z_OK)
+    throw new Error(Xs[s]);
+  if (this.header = new nl(), tt.inflateGetHeader(this.strm, this.header), r.dictionary && (typeof r.dictionary == "string" ? r.dictionary = Zt.string2buf(r.dictionary) : Fa.call(r.dictionary) === "[object ArrayBuffer]" && (r.dictionary = new Uint8Array(r.dictionary)), r.raw && (s = tt.inflateSetDictionary(this.strm, r.dictionary), s !== ke.Z_OK)))
+    throw new Error(Xs[s]);
+}
+qr.prototype.push = function(e, r) {
+  var s = this.strm, n = this.options.chunkSize, o = this.options.dictionary, i, t, p, y, u, d = !1;
+  if (this.ended)
+    return !1;
+  t = r === ~~r ? r : r === !0 ? ke.Z_FINISH : ke.Z_NO_FLUSH, typeof e == "string" ? s.input = Zt.binstring2buf(e) : Fa.call(e) === "[object ArrayBuffer]" ? s.input = new Uint8Array(e) : s.input = e, s.next_in = 0, s.avail_in = s.input.length;
+  do {
+    if (s.avail_out === 0 && (s.output = new mt.Buf8(n), s.next_out = 0, s.avail_out = n), i = tt.inflate(s, ke.Z_NO_FLUSH), i === ke.Z_NEED_DICT && o && (i = tt.inflateSetDictionary(this.strm, o)), i === ke.Z_BUF_ERROR && d === !0 && (i = ke.Z_OK, d = !1), i !== ke.Z_STREAM_END && i !== ke.Z_OK)
+      return this.onEnd(i), this.ended = !0, !1;
+    s.next_out && (s.avail_out === 0 || i === ke.Z_STREAM_END || s.avail_in === 0 && (t === ke.Z_FINISH || t === ke.Z_SYNC_FLUSH)) && (this.options.to === "string" ? (p = Zt.utf8border(s.output, s.next_out), y = s.next_out - p, u = Zt.buf2string(s.output, p), s.next_out = y, s.avail_out = n - y, y && mt.arraySet(s.output, s.output, p, y, 0), this.onData(u)) : this.onData(mt.shrinkBuf(s.output, s.next_out))), s.avail_in === 0 && s.avail_out === 0 && (d = !0);
+  } while ((s.avail_in > 0 || s.avail_out === 0) && i !== ke.Z_STREAM_END);
+  return i === ke.Z_STREAM_END && (t = ke.Z_FINISH), t === ke.Z_FINISH ? (i = tt.inflateEnd(this.strm), this.onEnd(i), this.ended = !0, i === ke.Z_OK) : (t === ke.Z_SYNC_FLUSH && (this.onEnd(ke.Z_OK), s.avail_out = 0), !0);
+};
+qr.prototype.onData = function(e) {
+  this.chunks.push(e);
+};
+qr.prototype.onEnd = function(e) {
+  e === ke.Z_OK && (this.options.to === "string" ? this.result = this.chunks.join("") : this.result = mt.flattenChunks(this.chunks)), this.chunks = [], this.err = e, this.msg = this.strm.msg;
+};
+function hi(e, r) {
+  var s = new qr(r);
+  if (s.push(e, !0), s.err)
+    throw s.msg || Xs[s.err];
+  return s.result;
+}
+function al(e, r) {
+  return r = r || {}, r.raw = !0, hi(e, r);
+}
+At.Inflate = qr;
+At.inflate = hi;
+At.inflateRaw = al;
+At.ungzip = hi;
+var ol = br.assign, pl = xt, fl = At, ll = Ra, ja = {};
+ol(ja, pl, fl, ll);
+var ul = ja;
+const Ba = /* @__PURE__ */ ii(ul);
+async function cl(e, r) {
+  const s = new Mn(e);
+  let n = await s.read(4);
+  if (n = n.toString("utf8"), n !== "PACK")
+    throw new _e(`Invalid PACK header '${n}'`);
+  let o = await s.read(4);
+  if (o = o.readUInt32BE(0), o !== 2)
+    throw new _e(`Invalid packfile version: ${o}`);
+  let i = await s.read(4);
+  if (i = i.readUInt32BE(0), !(i < 1))
+    for (; !s.eof() && i--; ) {
+      const t = s.tell(), { type: p, length: y, ofs: u, reference: d } = await dl(s), w = new Ba.Inflate();
+      for (; !w.result; ) {
+        const _ = await s.chunk();
+        if (!_)
+          break;
+        if (w.push(_, !1), w.err)
+          throw new _e(`Pako error: ${w.msg}`);
+        if (w.result) {
+          if (w.result.length !== y)
+            throw new _e(
+              "Inflated object size is different from that stated in packfile."
+            );
+          await s.undo(), await s.read(_.length - w.strm.avail_in);
+          const b = s.tell();
+          await r({
+            data: w.result,
+            type: p,
+            num: i,
+            offset: t,
+            end: b,
+            reference: d,
+            ofs: u
+          });
+        }
+      }
+    }
+}
+async function dl(e) {
+  let r = await e.byte();
+  const s = r >> 4 & 7;
+  let n = r & 15;
+  if (r & 128) {
+    let t = 4;
+    do
+      r = await e.byte(), n |= (r & 127) << t, t += 7;
+    while (r & 128);
+  }
+  let o, i;
+  if (s === 6) {
+    let t = 0;
+    o = 0;
+    const p = [];
+    do
+      r = await e.byte(), o |= (r & 127) << t, t += 7, p.push(r);
+    while (r & 128);
+    i = Buffer.from(p);
+  }
+  return s === 7 && (i = await e.read(20)), { type: s, length: n, ofs: o, reference: i };
+}
+let hl = !1;
+async function yl(e) {
+  return hl ? ml(e) : Ba.inflate(e);
+}
+async function ml(e) {
+  const r = new DecompressionStream("deflate"), s = new Blob([e]).stream().pipeThrough(r);
+  return new Uint8Array(await new Response(s).arrayBuffer());
+}
+var Qs = { exports: {} };
+typeof Object.create == "function" ? Qs.exports = function(r, s) {
+  s && (r.super_ = s, r.prototype = Object.create(s.prototype, {
+    constructor: {
+      value: r,
+      enumerable: !1,
+      writable: !0,
+      configurable: !0
+    }
+  }));
+} : Qs.exports = function(r, s) {
+  if (s) {
+    r.super_ = s;
+    var n = function() {
+    };
+    n.prototype = s.prototype, r.prototype = new n(), r.prototype.constructor = r;
+  }
+};
+var gl = Qs.exports, Js = { exports: {} }, wr = {}, cs = {};
+cs.byteLength = _l;
+cs.toByteArray = Pl;
+cs.fromByteArray = Ol;
+var lr = [], He = [], wl = typeof Uint8Array < "u" ? Uint8Array : Array, Bs = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+for (var Kr = 0, bl = Bs.length; Kr < bl; ++Kr)
+  lr[Kr] = Bs[Kr], He[Bs.charCodeAt(Kr)] = Kr;
+He["-".charCodeAt(0)] = 62;
+He["_".charCodeAt(0)] = 63;
+function Ia(e) {
+  var r = e.length;
+  if (r % 4 > 0)
+    throw new Error("Invalid string. Length must be a multiple of 4");
+  var s = e.indexOf("=");
+  s === -1 && (s = r);
+  var n = s === r ? 0 : 4 - s % 4;
+  return [s, n];
+}
+function _l(e) {
+  var r = Ia(e), s = r[0], n = r[1];
+  return (s + n) * 3 / 4 - n;
+}
+function vl(e, r, s) {
+  return (r + s) * 3 / 4 - s;
+}
+function Pl(e) {
+  var r, s = Ia(e), n = s[0], o = s[1], i = new wl(vl(e, n, o)), t = 0, p = o > 0 ? n - 4 : n, y;
+  for (y = 0; y < p; y += 4)
+    r = He[e.charCodeAt(y)] << 18 | He[e.charCodeAt(y + 1)] << 12 | He[e.charCodeAt(y + 2)] << 6 | He[e.charCodeAt(y + 3)], i[t++] = r >> 16 & 255, i[t++] = r >> 8 & 255, i[t++] = r & 255;
+  return o === 2 && (r = He[e.charCodeAt(y)] << 2 | He[e.charCodeAt(y + 1)] >> 4, i[t++] = r & 255), o === 1 && (r = He[e.charCodeAt(y)] << 10 | He[e.charCodeAt(y + 1)] << 4 | He[e.charCodeAt(y + 2)] >> 2, i[t++] = r >> 8 & 255, i[t++] = r & 255), i;
+}
+function kl(e) {
+  return lr[e >> 18 & 63] + lr[e >> 12 & 63] + lr[e >> 6 & 63] + lr[e & 63];
+}
+function El(e, r, s) {
+  for (var n, o = [], i = r; i < s; i += 3)
+    n = (e[i] << 16 & 16711680) + (e[i + 1] << 8 & 65280) + (e[i + 2] & 255), o.push(kl(n));
+  return o.join("");
+}
+function Ol(e) {
+  for (var r, s = e.length, n = s % 3, o = [], i = 16383, t = 0, p = s - n; t < p; t += i)
+    o.push(El(e, t, t + i > p ? p : t + i));
+  return n === 1 ? (r = e[s - 1], o.push(
+    lr[r >> 2] + lr[r << 4 & 63] + "=="
+  )) : n === 2 && (r = (e[s - 2] << 8) + e[s - 1], o.push(
+    lr[r >> 10] + lr[r >> 4 & 63] + lr[r << 2 & 63] + "="
+  )), o.join("");
+}
+var yi = {};
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+yi.read = function(e, r, s, n, o) {
+  var i, t, p = o * 8 - n - 1, y = (1 << p) - 1, u = y >> 1, d = -7, w = s ? o - 1 : 0, _ = s ? -1 : 1, b = e[r + w];
+  for (w += _, i = b & (1 << -d) - 1, b >>= -d, d += p; d > 0; i = i * 256 + e[r + w], w += _, d -= 8)
+    ;
+  for (t = i & (1 << -d) - 1, i >>= -d, d += n; d > 0; t = t * 256 + e[r + w], w += _, d -= 8)
+    ;
+  if (i === 0)
+    i = 1 - u;
+  else {
+    if (i === y)
+      return t ? NaN : (b ? -1 : 1) * (1 / 0);
+    t = t + Math.pow(2, n), i = i - u;
+  }
+  return (b ? -1 : 1) * t * Math.pow(2, i - n);
+};
+yi.write = function(e, r, s, n, o, i) {
+  var t, p, y, u = i * 8 - o - 1, d = (1 << u) - 1, w = d >> 1, _ = o === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0, b = n ? 0 : i - 1, j = n ? 1 : -1, P = r < 0 || r === 0 && 1 / r < 0 ? 1 : 0;
+  for (r = Math.abs(r), isNaN(r) || r === 1 / 0 ? (p = isNaN(r) ? 1 : 0, t = d) : (t = Math.floor(Math.log(r) / Math.LN2), r * (y = Math.pow(2, -t)) < 1 && (t--, y *= 2), t + w >= 1 ? r += _ / y : r += _ * Math.pow(2, 1 - w), r * y >= 2 && (t++, y /= 2), t + w >= d ? (p = 0, t = d) : t + w >= 1 ? (p = (r * y - 1) * Math.pow(2, o), t = t + w) : (p = r * Math.pow(2, w - 1) * Math.pow(2, o), t = 0)); o >= 8; e[s + b] = p & 255, b += j, p /= 256, o -= 8)
+    ;
+  for (t = t << o | p, u += o; u > 0; e[s + b] = t & 255, b += j, t /= 256, u -= 8)
+    ;
+  e[s + b - j] |= P * 128;
+};
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+(function(e) {
+  const r = cs, s = yi, n = typeof Symbol == "function" && typeof Symbol.for == "function" ? Symbol.for("nodejs.util.inspect.custom") : null;
+  e.Buffer = p, e.SlowBuffer = M, e.INSPECT_MAX_BYTES = 50;
+  const o = 2147483647;
+  e.kMaxLength = o, p.TYPED_ARRAY_SUPPORT = i(), !p.TYPED_ARRAY_SUPPORT && typeof console < "u" && typeof console.error == "function" && console.error(
+    "This browser lacks typed array (Uint8Array) support which is required by `buffer` v5.x. Use `buffer` v4.x if you require old browser support."
+  );
+  function i() {
+    try {
+      const c = new Uint8Array(1), f = { foo: function() {
+        return 42;
+      } };
+      return Object.setPrototypeOf(f, Uint8Array.prototype), Object.setPrototypeOf(c, f), c.foo() === 42;
+    } catch {
+      return !1;
+    }
+  }
+  Object.defineProperty(p.prototype, "parent", {
+    enumerable: !0,
+    get: function() {
+      if (p.isBuffer(this))
+        return this.buffer;
+    }
+  }), Object.defineProperty(p.prototype, "offset", {
+    enumerable: !0,
+    get: function() {
+      if (p.isBuffer(this))
+        return this.byteOffset;
+    }
+  });
+  function t(c) {
+    if (c > o)
+      throw new RangeError('The value "' + c + '" is invalid for option "size"');
+    const f = new Uint8Array(c);
+    return Object.setPrototypeOf(f, p.prototype), f;
+  }
+  function p(c, f, l) {
+    if (typeof c == "number") {
+      if (typeof f == "string")
+        throw new TypeError(
+          'The "string" argument must be of type string. Received type number'
+        );
+      return w(c);
+    }
+    return y(c, f, l);
+  }
+  p.poolSize = 8192;
+  function y(c, f, l) {
+    if (typeof c == "string")
+      return _(c, f);
+    if (ArrayBuffer.isView(c))
+      return j(c);
+    if (c == null)
+      throw new TypeError(
+        "The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof c
+      );
+    if (je(c, ArrayBuffer) || c && je(c.buffer, ArrayBuffer) || typeof SharedArrayBuffer < "u" && (je(c, SharedArrayBuffer) || c && je(c.buffer, SharedArrayBuffer)))
+      return P(c, f, l);
+    if (typeof c == "number")
+      throw new TypeError(
+        'The "value" argument must not be of type number. Received type number'
+      );
+    const g = c.valueOf && c.valueOf();
+    if (g != null && g !== c)
+      return p.from(g, f, l);
+    const v = q(c);
+    if (v)
+      return v;
+    if (typeof Symbol < "u" && Symbol.toPrimitive != null && typeof c[Symbol.toPrimitive] == "function")
+      return p.from(c[Symbol.toPrimitive]("string"), f, l);
+    throw new TypeError(
+      "The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof c
+    );
+  }
+  p.from = function(c, f, l) {
+    return y(c, f, l);
+  }, Object.setPrototypeOf(p.prototype, Uint8Array.prototype), Object.setPrototypeOf(p, Uint8Array);
+  function u(c) {
+    if (typeof c != "number")
+      throw new TypeError('"size" argument must be of type number');
+    if (c < 0)
+      throw new RangeError('The value "' + c + '" is invalid for option "size"');
+  }
+  function d(c, f, l) {
+    return u(c), c <= 0 ? t(c) : f !== void 0 ? typeof l == "string" ? t(c).fill(f, l) : t(c).fill(f) : t(c);
+  }
+  p.alloc = function(c, f, l) {
+    return d(c, f, l);
+  };
+  function w(c) {
+    return u(c), t(c < 0 ? 0 : D(c) | 0);
+  }
+  p.allocUnsafe = function(c) {
+    return w(c);
+  }, p.allocUnsafeSlow = function(c) {
+    return w(c);
+  };
+  function _(c, f) {
+    if ((typeof f != "string" || f === "") && (f = "utf8"), !p.isEncoding(f))
+      throw new TypeError("Unknown encoding: " + f);
+    const l = B(c, f) | 0;
+    let g = t(l);
+    const v = g.write(c, f);
+    return v !== l && (g = g.slice(0, v)), g;
+  }
+  function b(c) {
+    const f = c.length < 0 ? 0 : D(c.length) | 0, l = t(f);
+    for (let g = 0; g < f; g += 1)
+      l[g] = c[g] & 255;
+    return l;
+  }
+  function j(c) {
+    if (je(c, Uint8Array)) {
+      const f = new Uint8Array(c);
+      return P(f.buffer, f.byteOffset, f.byteLength);
+    }
+    return b(c);
+  }
+  function P(c, f, l) {
+    if (f < 0 || c.byteLength < f)
+      throw new RangeError('"offset" is outside of buffer bounds');
+    if (c.byteLength < f + (l || 0))
+      throw new RangeError('"length" is outside of buffer bounds');
+    let g;
+    return f === void 0 && l === void 0 ? g = new Uint8Array(c) : l === void 0 ? g = new Uint8Array(c, f) : g = new Uint8Array(c, f, l), Object.setPrototypeOf(g, p.prototype), g;
+  }
+  function q(c) {
+    if (p.isBuffer(c)) {
+      const f = D(c.length) | 0, l = t(f);
+      return l.length === 0 || c.copy(l, 0, 0, f), l;
+    }
+    if (c.length !== void 0)
+      return typeof c.length != "number" || Ae(c.length) ? t(0) : b(c);
+    if (c.type === "Buffer" && Array.isArray(c.data))
+      return b(c.data);
+  }
+  function D(c) {
+    if (c >= o)
+      throw new RangeError("Attempt to allocate Buffer larger than maximum size: 0x" + o.toString(16) + " bytes");
+    return c | 0;
+  }
+  function M(c) {
+    return +c != c && (c = 0), p.alloc(+c);
+  }
+  p.isBuffer = function(f) {
+    return f != null && f._isBuffer === !0 && f !== p.prototype;
+  }, p.compare = function(f, l) {
+    if (je(f, Uint8Array) && (f = p.from(f, f.offset, f.byteLength)), je(l, Uint8Array) && (l = p.from(l, l.offset, l.byteLength)), !p.isBuffer(f) || !p.isBuffer(l))
+      throw new TypeError(
+        'The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array'
+      );
+    if (f === l)
+      return 0;
+    let g = f.length, v = l.length;
+    for (let $ = 0, I = Math.min(g, v); $ < I; ++$)
+      if (f[$] !== l[$]) {
+        g = f[$], v = l[$];
+        break;
+      }
+    return g < v ? -1 : v < g ? 1 : 0;
+  }, p.isEncoding = function(f) {
+    switch (String(f).toLowerCase()) {
+      case "hex":
+      case "utf8":
+      case "utf-8":
+      case "ascii":
+      case "latin1":
+      case "binary":
+      case "base64":
+      case "ucs2":
+      case "ucs-2":
+      case "utf16le":
+      case "utf-16le":
+        return !0;
+      default:
+        return !1;
+    }
+  }, p.concat = function(f, l) {
+    if (!Array.isArray(f))
+      throw new TypeError('"list" argument must be an Array of Buffers');
+    if (f.length === 0)
+      return p.alloc(0);
+    let g;
+    if (l === void 0)
+      for (l = 0, g = 0; g < f.length; ++g)
+        l += f[g].length;
+    const v = p.allocUnsafe(l);
+    let $ = 0;
+    for (g = 0; g < f.length; ++g) {
+      let I = f[g];
+      if (je(I, Uint8Array))
+        $ + I.length > v.length ? (p.isBuffer(I) || (I = p.from(I)), I.copy(v, $)) : Uint8Array.prototype.set.call(
+          v,
+          I,
+          $
+        );
+      else if (p.isBuffer(I))
+        I.copy(v, $);
+      else
+        throw new TypeError('"list" argument must be an Array of Buffers');
+      $ += I.length;
+    }
+    return v;
+  };
+  function B(c, f) {
+    if (p.isBuffer(c))
+      return c.length;
+    if (ArrayBuffer.isView(c) || je(c, ArrayBuffer))
+      return c.byteLength;
+    if (typeof c != "string")
+      throw new TypeError(
+        'The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type ' + typeof c
+      );
+    const l = c.length, g = arguments.length > 2 && arguments[2] === !0;
+    if (!g && l === 0)
+      return 0;
+    let v = !1;
+    for (; ; )
+      switch (f) {
+        case "ascii":
+        case "latin1":
+        case "binary":
+          return l;
+        case "utf8":
+        case "utf-8":
+          return vr(c).length;
+        case "ucs2":
+        case "ucs-2":
+        case "utf16le":
+        case "utf-16le":
+          return l * 2;
+        case "hex":
+          return l >>> 1;
+        case "base64":
+          return Ar(c).length;
+        default:
+          if (v)
+            return g ? -1 : vr(c).length;
+          f = ("" + f).toLowerCase(), v = !0;
+      }
+  }
+  p.byteLength = B;
+  function U(c, f, l) {
+    let g = !1;
+    if ((f === void 0 || f < 0) && (f = 0), f > this.length || ((l === void 0 || l > this.length) && (l = this.length), l <= 0) || (l >>>= 0, f >>>= 0, l <= f))
+      return "";
+    for (c || (c = "utf8"); ; )
+      switch (c) {
+        case "hex":
+          return G(this, f, l);
+        case "utf8":
+        case "utf-8":
+          return F(this, f, l);
+        case "ascii":
+          return H(this, f, l);
+        case "latin1":
+        case "binary":
+          return K(this, f, l);
+        case "base64":
+          return L(this, f, l);
+        case "ucs2":
+        case "ucs-2":
+        case "utf16le":
+        case "utf-16le":
+          return se(this, f, l);
+        default:
+          if (g)
+            throw new TypeError("Unknown encoding: " + c);
+          c = (c + "").toLowerCase(), g = !0;
+      }
+  }
+  p.prototype._isBuffer = !0;
+  function A(c, f, l) {
+    const g = c[f];
+    c[f] = c[l], c[l] = g;
+  }
+  p.prototype.swap16 = function() {
+    const f = this.length;
+    if (f % 2 !== 0)
+      throw new RangeError("Buffer size must be a multiple of 16-bits");
+    for (let l = 0; l < f; l += 2)
+      A(this, l, l + 1);
+    return this;
+  }, p.prototype.swap32 = function() {
+    const f = this.length;
+    if (f % 4 !== 0)
+      throw new RangeError("Buffer size must be a multiple of 32-bits");
+    for (let l = 0; l < f; l += 4)
+      A(this, l, l + 3), A(this, l + 1, l + 2);
+    return this;
+  }, p.prototype.swap64 = function() {
+    const f = this.length;
+    if (f % 8 !== 0)
+      throw new RangeError("Buffer size must be a multiple of 64-bits");
+    for (let l = 0; l < f; l += 8)
+      A(this, l, l + 7), A(this, l + 1, l + 6), A(this, l + 2, l + 5), A(this, l + 3, l + 4);
+    return this;
+  }, p.prototype.toString = function() {
+    const f = this.length;
+    return f === 0 ? "" : arguments.length === 0 ? F(this, 0, f) : U.apply(this, arguments);
+  }, p.prototype.toLocaleString = p.prototype.toString, p.prototype.equals = function(f) {
+    if (!p.isBuffer(f))
+      throw new TypeError("Argument must be a Buffer");
+    return this === f ? !0 : p.compare(this, f) === 0;
+  }, p.prototype.inspect = function() {
+    let f = "";
+    const l = e.INSPECT_MAX_BYTES;
+    return f = this.toString("hex", 0, l).replace(/(.{2})/g, "$1 ").trim(), this.length > l && (f += " ... "), "<Buffer " + f + ">";
+  }, n && (p.prototype[n] = p.prototype.inspect), p.prototype.compare = function(f, l, g, v, $) {
+    if (je(f, Uint8Array) && (f = p.from(f, f.offset, f.byteLength)), !p.isBuffer(f))
+      throw new TypeError(
+        'The "target" argument must be one of type Buffer or Uint8Array. Received type ' + typeof f
+      );
+    if (l === void 0 && (l = 0), g === void 0 && (g = f ? f.length : 0), v === void 0 && (v = 0), $ === void 0 && ($ = this.length), l < 0 || g > f.length || v < 0 || $ > this.length)
+      throw new RangeError("out of range index");
+    if (v >= $ && l >= g)
+      return 0;
+    if (v >= $)
+      return -1;
+    if (l >= g)
+      return 1;
+    if (l >>>= 0, g >>>= 0, v >>>= 0, $ >>>= 0, this === f)
+      return 0;
+    let I = $ - v, J = g - l;
+    const ye = Math.min(I, J), de = this.slice(v, $), he = f.slice(l, g);
+    for (let ae = 0; ae < ye; ++ae)
+      if (de[ae] !== he[ae]) {
+        I = de[ae], J = he[ae];
+        break;
+      }
+    return I < J ? -1 : J < I ? 1 : 0;
+  };
+  function x(c, f, l, g, v) {
+    if (c.length === 0)
+      return -1;
+    if (typeof l == "string" ? (g = l, l = 0) : l > 2147483647 ? l = 2147483647 : l < -2147483648 && (l = -2147483648), l = +l, Ae(l) && (l = v ? 0 : c.length - 1), l < 0 && (l = c.length + l), l >= c.length) {
+      if (v)
+        return -1;
+      l = c.length - 1;
+    } else if (l < 0)
+      if (v)
+        l = 0;
+      else
+        return -1;
+    if (typeof f == "string" && (f = p.from(f, g)), p.isBuffer(f))
+      return f.length === 0 ? -1 : N(c, f, l, g, v);
+    if (typeof f == "number")
+      return f = f & 255, typeof Uint8Array.prototype.indexOf == "function" ? v ? Uint8Array.prototype.indexOf.call(c, f, l) : Uint8Array.prototype.lastIndexOf.call(c, f, l) : N(c, [f], l, g, v);
+    throw new TypeError("val must be string, number or Buffer");
+  }
+  function N(c, f, l, g, v) {
+    let $ = 1, I = c.length, J = f.length;
+    if (g !== void 0 && (g = String(g).toLowerCase(), g === "ucs2" || g === "ucs-2" || g === "utf16le" || g === "utf-16le")) {
+      if (c.length < 2 || f.length < 2)
+        return -1;
+      $ = 2, I /= 2, J /= 2, l /= 2;
+    }
+    function ye(he, ae) {
+      return $ === 1 ? he[ae] : he.readUInt16BE(ae * $);
+    }
+    let de;
+    if (v) {
+      let he = -1;
+      for (de = l; de < I; de++)
+        if (ye(c, de) === ye(f, he === -1 ? 0 : de - he)) {
+          if (he === -1 && (he = de), de - he + 1 === J)
+            return he * $;
+        } else
+          he !== -1 && (de -= de - he), he = -1;
+    } else
+      for (l + J > I && (l = I - J), de = l; de >= 0; de--) {
+        let he = !0;
+        for (let ae = 0; ae < J; ae++)
+          if (ye(c, de + ae) !== ye(f, ae)) {
+            he = !1;
+            break;
+          }
+        if (he)
+          return de;
+      }
+    return -1;
+  }
+  p.prototype.includes = function(f, l, g) {
+    return this.indexOf(f, l, g) !== -1;
+  }, p.prototype.indexOf = function(f, l, g) {
+    return x(this, f, l, g, !0);
+  }, p.prototype.lastIndexOf = function(f, l, g) {
+    return x(this, f, l, g, !1);
+  };
+  function S(c, f, l, g) {
+    l = Number(l) || 0;
+    const v = c.length - l;
+    g ? (g = Number(g), g > v && (g = v)) : g = v;
+    const $ = f.length;
+    g > $ / 2 && (g = $ / 2);
+    let I;
+    for (I = 0; I < g; ++I) {
+      const J = parseInt(f.substr(I * 2, 2), 16);
+      if (Ae(J))
+        return I;
+      c[l + I] = J;
+    }
+    return I;
+  }
+  function T(c, f, l, g) {
+    return Me(vr(f, c.length - l), c, l, g);
+  }
+  function E(c, f, l, g) {
+    return Me(Hr(f), c, l, g);
+  }
+  function O(c, f, l, g) {
+    return Me(Ar(f), c, l, g);
+  }
+  function C(c, f, l, g) {
+    return Me(dr(f, c.length - l), c, l, g);
+  }
+  p.prototype.write = function(f, l, g, v) {
+    if (l === void 0)
+      v = "utf8", g = this.length, l = 0;
+    else if (g === void 0 && typeof l == "string")
+      v = l, g = this.length, l = 0;
+    else if (isFinite(l))
+      l = l >>> 0, isFinite(g) ? (g = g >>> 0, v === void 0 && (v = "utf8")) : (v = g, g = void 0);
+    else
+      throw new Error(
+        "Buffer.write(string, encoding, offset[, length]) is no longer supported"
+      );
+    const $ = this.length - l;
+    if ((g === void 0 || g > $) && (g = $), f.length > 0 && (g < 0 || l < 0) || l > this.length)
+      throw new RangeError("Attempt to write outside buffer bounds");
+    v || (v = "utf8");
+    let I = !1;
+    for (; ; )
+      switch (v) {
+        case "hex":
+          return S(this, f, l, g);
+        case "utf8":
+        case "utf-8":
+          return T(this, f, l, g);
+        case "ascii":
+        case "latin1":
+        case "binary":
+          return E(this, f, l, g);
+        case "base64":
+          return O(this, f, l, g);
+        case "ucs2":
+        case "ucs-2":
+        case "utf16le":
+        case "utf-16le":
+          return C(this, f, l, g);
+        default:
+          if (I)
+            throw new TypeError("Unknown encoding: " + v);
+          v = ("" + v).toLowerCase(), I = !0;
+      }
+  }, p.prototype.toJSON = function() {
+    return {
+      type: "Buffer",
+      data: Array.prototype.slice.call(this._arr || this, 0)
+    };
+  };
+  function L(c, f, l) {
+    return f === 0 && l === c.length ? r.fromByteArray(c) : r.fromByteArray(c.slice(f, l));
+  }
+  function F(c, f, l) {
+    l = Math.min(c.length, l);
+    const g = [];
+    let v = f;
+    for (; v < l; ) {
+      const $ = c[v];
+      let I = null, J = $ > 239 ? 4 : $ > 223 ? 3 : $ > 191 ? 2 : 1;
+      if (v + J <= l) {
+        let ye, de, he, ae;
+        switch (J) {
+          case 1:
+            $ < 128 && (I = $);
+            break;
+          case 2:
+            ye = c[v + 1], (ye & 192) === 128 && (ae = ($ & 31) << 6 | ye & 63, ae > 127 && (I = ae));
+            break;
+          case 3:
+            ye = c[v + 1], de = c[v + 2], (ye & 192) === 128 && (de & 192) === 128 && (ae = ($ & 15) << 12 | (ye & 63) << 6 | de & 63, ae > 2047 && (ae < 55296 || ae > 57343) && (I = ae));
+            break;
+          case 4:
+            ye = c[v + 1], de = c[v + 2], he = c[v + 3], (ye & 192) === 128 && (de & 192) === 128 && (he & 192) === 128 && (ae = ($ & 15) << 18 | (ye & 63) << 12 | (de & 63) << 6 | he & 63, ae > 65535 && ae < 1114112 && (I = ae));
+        }
+      }
+      I === null ? (I = 65533, J = 1) : I > 65535 && (I -= 65536, g.push(I >>> 10 & 1023 | 55296), I = 56320 | I & 1023), g.push(I), v += J;
+    }
+    return Z(g);
+  }
+  const Y = 4096;
+  function Z(c) {
+    const f = c.length;
+    if (f <= Y)
+      return String.fromCharCode.apply(String, c);
+    let l = "", g = 0;
+    for (; g < f; )
+      l += String.fromCharCode.apply(
+        String,
+        c.slice(g, g += Y)
+      );
+    return l;
+  }
+  function H(c, f, l) {
+    let g = "";
+    l = Math.min(c.length, l);
+    for (let v = f; v < l; ++v)
+      g += String.fromCharCode(c[v] & 127);
+    return g;
+  }
+  function K(c, f, l) {
+    let g = "";
+    l = Math.min(c.length, l);
+    for (let v = f; v < l; ++v)
+      g += String.fromCharCode(c[v]);
+    return g;
+  }
+  function G(c, f, l) {
+    const g = c.length;
+    (!f || f < 0) && (f = 0), (!l || l < 0 || l > g) && (l = g);
+    let v = "";
+    for (let $ = f; $ < l; ++$)
+      v += Zr[c[$]];
+    return v;
+  }
+  function se(c, f, l) {
+    const g = c.slice(f, l);
+    let v = "";
+    for (let $ = 0; $ < g.length - 1; $ += 2)
+      v += String.fromCharCode(g[$] + g[$ + 1] * 256);
+    return v;
+  }
+  p.prototype.slice = function(f, l) {
+    const g = this.length;
+    f = ~~f, l = l === void 0 ? g : ~~l, f < 0 ? (f += g, f < 0 && (f = 0)) : f > g && (f = g), l < 0 ? (l += g, l < 0 && (l = 0)) : l > g && (l = g), l < f && (l = f);
+    const v = this.subarray(f, l);
+    return Object.setPrototypeOf(v, p.prototype), v;
+  };
+  function ee(c, f, l) {
+    if (c % 1 !== 0 || c < 0)
+      throw new RangeError("offset is not uint");
+    if (c + f > l)
+      throw new RangeError("Trying to access beyond buffer length");
+  }
+  p.prototype.readUintLE = p.prototype.readUIntLE = function(f, l, g) {
+    f = f >>> 0, l = l >>> 0, g || ee(f, l, this.length);
+    let v = this[f], $ = 1, I = 0;
+    for (; ++I < l && ($ *= 256); )
+      v += this[f + I] * $;
+    return v;
+  }, p.prototype.readUintBE = p.prototype.readUIntBE = function(f, l, g) {
+    f = f >>> 0, l = l >>> 0, g || ee(f, l, this.length);
+    let v = this[f + --l], $ = 1;
+    for (; l > 0 && ($ *= 256); )
+      v += this[f + --l] * $;
+    return v;
+  }, p.prototype.readUint8 = p.prototype.readUInt8 = function(f, l) {
+    return f = f >>> 0, l || ee(f, 1, this.length), this[f];
+  }, p.prototype.readUint16LE = p.prototype.readUInt16LE = function(f, l) {
+    return f = f >>> 0, l || ee(f, 2, this.length), this[f] | this[f + 1] << 8;
+  }, p.prototype.readUint16BE = p.prototype.readUInt16BE = function(f, l) {
+    return f = f >>> 0, l || ee(f, 2, this.length), this[f] << 8 | this[f + 1];
+  }, p.prototype.readUint32LE = p.prototype.readUInt32LE = function(f, l) {
+    return f = f >>> 0, l || ee(f, 4, this.length), (this[f] | this[f + 1] << 8 | this[f + 2] << 16) + this[f + 3] * 16777216;
+  }, p.prototype.readUint32BE = p.prototype.readUInt32BE = function(f, l) {
+    return f = f >>> 0, l || ee(f, 4, this.length), this[f] * 16777216 + (this[f + 1] << 16 | this[f + 2] << 8 | this[f + 3]);
+  }, p.prototype.readBigUInt64LE = Ee(function(f) {
+    f = f >>> 0, Qe(f, "offset");
+    const l = this[f], g = this[f + 7];
+    (l === void 0 || g === void 0) && Ce(f, this.length - 8);
+    const v = l + this[++f] * 2 ** 8 + this[++f] * 2 ** 16 + this[++f] * 2 ** 24, $ = this[++f] + this[++f] * 2 ** 8 + this[++f] * 2 ** 16 + g * 2 ** 24;
+    return BigInt(v) + (BigInt($) << BigInt(32));
+  }), p.prototype.readBigUInt64BE = Ee(function(f) {
+    f = f >>> 0, Qe(f, "offset");
+    const l = this[f], g = this[f + 7];
+    (l === void 0 || g === void 0) && Ce(f, this.length - 8);
+    const v = l * 2 ** 24 + this[++f] * 2 ** 16 + this[++f] * 2 ** 8 + this[++f], $ = this[++f] * 2 ** 24 + this[++f] * 2 ** 16 + this[++f] * 2 ** 8 + g;
+    return (BigInt(v) << BigInt(32)) + BigInt($);
+  }), p.prototype.readIntLE = function(f, l, g) {
+    f = f >>> 0, l = l >>> 0, g || ee(f, l, this.length);
+    let v = this[f], $ = 1, I = 0;
+    for (; ++I < l && ($ *= 256); )
+      v += this[f + I] * $;
+    return $ *= 128, v >= $ && (v -= Math.pow(2, 8 * l)), v;
+  }, p.prototype.readIntBE = function(f, l, g) {
+    f = f >>> 0, l = l >>> 0, g || ee(f, l, this.length);
+    let v = l, $ = 1, I = this[f + --v];
+    for (; v > 0 && ($ *= 256); )
+      I += this[f + --v] * $;
+    return $ *= 128, I >= $ && (I -= Math.pow(2, 8 * l)), I;
+  }, p.prototype.readInt8 = function(f, l) {
+    return f = f >>> 0, l || ee(f, 1, this.length), this[f] & 128 ? (255 - this[f] + 1) * -1 : this[f];
+  }, p.prototype.readInt16LE = function(f, l) {
+    f = f >>> 0, l || ee(f, 2, this.length);
+    const g = this[f] | this[f + 1] << 8;
+    return g & 32768 ? g | 4294901760 : g;
+  }, p.prototype.readInt16BE = function(f, l) {
+    f = f >>> 0, l || ee(f, 2, this.length);
+    const g = this[f + 1] | this[f] << 8;
+    return g & 32768 ? g | 4294901760 : g;
+  }, p.prototype.readInt32LE = function(f, l) {
+    return f = f >>> 0, l || ee(f, 4, this.length), this[f] | this[f + 1] << 8 | this[f + 2] << 16 | this[f + 3] << 24;
+  }, p.prototype.readInt32BE = function(f, l) {
+    return f = f >>> 0, l || ee(f, 4, this.length), this[f] << 24 | this[f + 1] << 16 | this[f + 2] << 8 | this[f + 3];
+  }, p.prototype.readBigInt64LE = Ee(function(f) {
+    f = f >>> 0, Qe(f, "offset");
+    const l = this[f], g = this[f + 7];
+    (l === void 0 || g === void 0) && Ce(f, this.length - 8);
+    const v = this[f + 4] + this[f + 5] * 2 ** 8 + this[f + 6] * 2 ** 16 + (g << 24);
+    return (BigInt(v) << BigInt(32)) + BigInt(l + this[++f] * 2 ** 8 + this[++f] * 2 ** 16 + this[++f] * 2 ** 24);
+  }), p.prototype.readBigInt64BE = Ee(function(f) {
+    f = f >>> 0, Qe(f, "offset");
+    const l = this[f], g = this[f + 7];
+    (l === void 0 || g === void 0) && Ce(f, this.length - 8);
+    const v = (l << 24) + // Overflow
+    this[++f] * 2 ** 16 + this[++f] * 2 ** 8 + this[++f];
+    return (BigInt(v) << BigInt(32)) + BigInt(this[++f] * 2 ** 24 + this[++f] * 2 ** 16 + this[++f] * 2 ** 8 + g);
+  }), p.prototype.readFloatLE = function(f, l) {
+    return f = f >>> 0, l || ee(f, 4, this.length), s.read(this, f, !0, 23, 4);
+  }, p.prototype.readFloatBE = function(f, l) {
+    return f = f >>> 0, l || ee(f, 4, this.length), s.read(this, f, !1, 23, 4);
+  }, p.prototype.readDoubleLE = function(f, l) {
+    return f = f >>> 0, l || ee(f, 8, this.length), s.read(this, f, !0, 52, 8);
+  }, p.prototype.readDoubleBE = function(f, l) {
+    return f = f >>> 0, l || ee(f, 8, this.length), s.read(this, f, !1, 52, 8);
+  };
+  function X(c, f, l, g, v, $) {
+    if (!p.isBuffer(c))
+      throw new TypeError('"buffer" argument must be a Buffer instance');
+    if (f > v || f < $)
+      throw new RangeError('"value" argument is out of bounds');
+    if (l + g > c.length)
+      throw new RangeError("Index out of range");
+  }
+  p.prototype.writeUintLE = p.prototype.writeUIntLE = function(f, l, g, v) {
+    if (f = +f, l = l >>> 0, g = g >>> 0, !v) {
+      const J = Math.pow(2, 8 * g) - 1;
+      X(this, f, l, g, J, 0);
+    }
+    let $ = 1, I = 0;
+    for (this[l] = f & 255; ++I < g && ($ *= 256); )
+      this[l + I] = f / $ & 255;
+    return l + g;
+  }, p.prototype.writeUintBE = p.prototype.writeUIntBE = function(f, l, g, v) {
+    if (f = +f, l = l >>> 0, g = g >>> 0, !v) {
+      const J = Math.pow(2, 8 * g) - 1;
+      X(this, f, l, g, J, 0);
+    }
+    let $ = g - 1, I = 1;
+    for (this[l + $] = f & 255; --$ >= 0 && (I *= 256); )
+      this[l + $] = f / I & 255;
+    return l + g;
+  }, p.prototype.writeUint8 = p.prototype.writeUInt8 = function(f, l, g) {
+    return f = +f, l = l >>> 0, g || X(this, f, l, 1, 255, 0), this[l] = f & 255, l + 1;
+  }, p.prototype.writeUint16LE = p.prototype.writeUInt16LE = function(f, l, g) {
+    return f = +f, l = l >>> 0, g || X(this, f, l, 2, 65535, 0), this[l] = f & 255, this[l + 1] = f >>> 8, l + 2;
+  }, p.prototype.writeUint16BE = p.prototype.writeUInt16BE = function(f, l, g) {
+    return f = +f, l = l >>> 0, g || X(this, f, l, 2, 65535, 0), this[l] = f >>> 8, this[l + 1] = f & 255, l + 2;
+  }, p.prototype.writeUint32LE = p.prototype.writeUInt32LE = function(f, l, g) {
+    return f = +f, l = l >>> 0, g || X(this, f, l, 4, 4294967295, 0), this[l + 3] = f >>> 24, this[l + 2] = f >>> 16, this[l + 1] = f >>> 8, this[l] = f & 255, l + 4;
+  }, p.prototype.writeUint32BE = p.prototype.writeUInt32BE = function(f, l, g) {
+    return f = +f, l = l >>> 0, g || X(this, f, l, 4, 4294967295, 0), this[l] = f >>> 24, this[l + 1] = f >>> 16, this[l + 2] = f >>> 8, this[l + 3] = f & 255, l + 4;
+  };
+  function Q(c, f, l, g, v) {
+    sr(f, g, v, c, l, 7);
+    let $ = Number(f & BigInt(4294967295));
+    c[l++] = $, $ = $ >> 8, c[l++] = $, $ = $ >> 8, c[l++] = $, $ = $ >> 8, c[l++] = $;
+    let I = Number(f >> BigInt(32) & BigInt(4294967295));
+    return c[l++] = I, I = I >> 8, c[l++] = I, I = I >> 8, c[l++] = I, I = I >> 8, c[l++] = I, l;
+  }
+  function re(c, f, l, g, v) {
+    sr(f, g, v, c, l, 7);
+    let $ = Number(f & BigInt(4294967295));
+    c[l + 7] = $, $ = $ >> 8, c[l + 6] = $, $ = $ >> 8, c[l + 5] = $, $ = $ >> 8, c[l + 4] = $;
+    let I = Number(f >> BigInt(32) & BigInt(4294967295));
+    return c[l + 3] = I, I = I >> 8, c[l + 2] = I, I = I >> 8, c[l + 1] = I, I = I >> 8, c[l] = I, l + 8;
+  }
+  p.prototype.writeBigUInt64LE = Ee(function(f, l = 0) {
+    return Q(this, f, l, BigInt(0), BigInt("0xffffffffffffffff"));
+  }), p.prototype.writeBigUInt64BE = Ee(function(f, l = 0) {
+    return re(this, f, l, BigInt(0), BigInt("0xffffffffffffffff"));
+  }), p.prototype.writeIntLE = function(f, l, g, v) {
+    if (f = +f, l = l >>> 0, !v) {
+      const ye = Math.pow(2, 8 * g - 1);
+      X(this, f, l, g, ye - 1, -ye);
+    }
+    let $ = 0, I = 1, J = 0;
+    for (this[l] = f & 255; ++$ < g && (I *= 256); )
+      f < 0 && J === 0 && this[l + $ - 1] !== 0 && (J = 1), this[l + $] = (f / I >> 0) - J & 255;
+    return l + g;
+  }, p.prototype.writeIntBE = function(f, l, g, v) {
+    if (f = +f, l = l >>> 0, !v) {
+      const ye = Math.pow(2, 8 * g - 1);
+      X(this, f, l, g, ye - 1, -ye);
+    }
+    let $ = g - 1, I = 1, J = 0;
+    for (this[l + $] = f & 255; --$ >= 0 && (I *= 256); )
+      f < 0 && J === 0 && this[l + $ + 1] !== 0 && (J = 1), this[l + $] = (f / I >> 0) - J & 255;
+    return l + g;
+  }, p.prototype.writeInt8 = function(f, l, g) {
+    return f = +f, l = l >>> 0, g || X(this, f, l, 1, 127, -128), f < 0 && (f = 255 + f + 1), this[l] = f & 255, l + 1;
+  }, p.prototype.writeInt16LE = function(f, l, g) {
+    return f = +f, l = l >>> 0, g || X(this, f, l, 2, 32767, -32768), this[l] = f & 255, this[l + 1] = f >>> 8, l + 2;
+  }, p.prototype.writeInt16BE = function(f, l, g) {
+    return f = +f, l = l >>> 0, g || X(this, f, l, 2, 32767, -32768), this[l] = f >>> 8, this[l + 1] = f & 255, l + 2;
+  }, p.prototype.writeInt32LE = function(f, l, g) {
+    return f = +f, l = l >>> 0, g || X(this, f, l, 4, 2147483647, -2147483648), this[l] = f & 255, this[l + 1] = f >>> 8, this[l + 2] = f >>> 16, this[l + 3] = f >>> 24, l + 4;
+  }, p.prototype.writeInt32BE = function(f, l, g) {
+    return f = +f, l = l >>> 0, g || X(this, f, l, 4, 2147483647, -2147483648), f < 0 && (f = 4294967295 + f + 1), this[l] = f >>> 24, this[l + 1] = f >>> 16, this[l + 2] = f >>> 8, this[l + 3] = f & 255, l + 4;
+  }, p.prototype.writeBigInt64LE = Ee(function(f, l = 0) {
+    return Q(this, f, l, -BigInt("0x8000000000000000"), BigInt("0x7fffffffffffffff"));
+  }), p.prototype.writeBigInt64BE = Ee(function(f, l = 0) {
+    return re(this, f, l, -BigInt("0x8000000000000000"), BigInt("0x7fffffffffffffff"));
+  });
+  function ne(c, f, l, g, v, $) {
+    if (l + g > c.length)
+      throw new RangeError("Index out of range");
+    if (l < 0)
+      throw new RangeError("Index out of range");
+  }
+  function te(c, f, l, g, v) {
+    return f = +f, l = l >>> 0, v || ne(c, f, l, 4), s.write(c, f, l, g, 23, 4), l + 4;
+  }
+  p.prototype.writeFloatLE = function(f, l, g) {
+    return te(this, f, l, !0, g);
+  }, p.prototype.writeFloatBE = function(f, l, g) {
+    return te(this, f, l, !1, g);
+  };
+  function we(c, f, l, g, v) {
+    return f = +f, l = l >>> 0, v || ne(c, f, l, 8), s.write(c, f, l, g, 52, 8), l + 8;
+  }
+  p.prototype.writeDoubleLE = function(f, l, g) {
+    return we(this, f, l, !0, g);
+  }, p.prototype.writeDoubleBE = function(f, l, g) {
+    return we(this, f, l, !1, g);
+  }, p.prototype.copy = function(f, l, g, v) {
+    if (!p.isBuffer(f))
+      throw new TypeError("argument should be a Buffer");
+    if (g || (g = 0), !v && v !== 0 && (v = this.length), l >= f.length && (l = f.length), l || (l = 0), v > 0 && v < g && (v = g), v === g || f.length === 0 || this.length === 0)
+      return 0;
+    if (l < 0)
+      throw new RangeError("targetStart out of bounds");
+    if (g < 0 || g >= this.length)
+      throw new RangeError("Index out of range");
+    if (v < 0)
+      throw new RangeError("sourceEnd out of bounds");
+    v > this.length && (v = this.length), f.length - l < v - g && (v = f.length - l + g);
+    const $ = v - g;
+    return this === f && typeof Uint8Array.prototype.copyWithin == "function" ? this.copyWithin(l, g, v) : Uint8Array.prototype.set.call(
+      f,
+      this.subarray(g, v),
+      l
+    ), $;
+  }, p.prototype.fill = function(f, l, g, v) {
+    if (typeof f == "string") {
+      if (typeof l == "string" ? (v = l, l = 0, g = this.length) : typeof g == "string" && (v = g, g = this.length), v !== void 0 && typeof v != "string")
+        throw new TypeError("encoding must be a string");
+      if (typeof v == "string" && !p.isEncoding(v))
+        throw new TypeError("Unknown encoding: " + v);
+      if (f.length === 1) {
+        const I = f.charCodeAt(0);
+        (v === "utf8" && I < 128 || v === "latin1") && (f = I);
+      }
+    } else
+      typeof f == "number" ? f = f & 255 : typeof f == "boolean" && (f = Number(f));
+    if (l < 0 || this.length < l || this.length < g)
+      throw new RangeError("Out of range index");
+    if (g <= l)
+      return this;
+    l = l >>> 0, g = g === void 0 ? this.length : g >>> 0, f || (f = 0);
+    let $;
+    if (typeof f == "number")
+      for ($ = l; $ < g; ++$)
+        this[$] = f;
+    else {
+      const I = p.isBuffer(f) ? f : p.from(f, v), J = I.length;
+      if (J === 0)
+        throw new TypeError('The value "' + f + '" is invalid for argument "value"');
+      for ($ = 0; $ < g - l; ++$)
+        this[$ + l] = I[$ % J];
+    }
+    return this;
+  };
+  const ve = {};
+  function Le(c, f, l) {
+    ve[c] = class extends l {
+      constructor() {
+        super(), Object.defineProperty(this, "message", {
+          value: f.apply(this, arguments),
+          writable: !0,
+          configurable: !0
+        }), this.name = `${this.name} [${c}]`, this.stack, delete this.name;
+      }
+      get code() {
+        return c;
+      }
+      set code(v) {
+        Object.defineProperty(this, "code", {
+          configurable: !0,
+          enumerable: !0,
+          value: v,
+          writable: !0
+        });
+      }
+      toString() {
+        return `${this.name} [${c}]: ${this.message}`;
+      }
+    };
+  }
+  Le(
+    "ERR_BUFFER_OUT_OF_BOUNDS",
+    function(c) {
+      return c ? `${c} is outside of buffer bounds` : "Attempt to access memory outside buffer bounds";
+    },
+    RangeError
+  ), Le(
+    "ERR_INVALID_ARG_TYPE",
+    function(c, f) {
+      return `The "${c}" argument must be of type number. Received type ${typeof f}`;
+    },
+    TypeError
+  ), Le(
+    "ERR_OUT_OF_RANGE",
+    function(c, f, l) {
+      let g = `The value of "${c}" is out of range.`, v = l;
+      return Number.isInteger(l) && Math.abs(l) > 2 ** 32 ? v = tr(String(l)) : typeof l == "bigint" && (v = String(l), (l > BigInt(2) ** BigInt(32) || l < -(BigInt(2) ** BigInt(32))) && (v = tr(v)), v += "n"), g += ` It must be ${f}. Received ${v}`, g;
+    },
+    RangeError
+  );
+  function tr(c) {
+    let f = "", l = c.length;
+    const g = c[0] === "-" ? 1 : 0;
+    for (; l >= g + 4; l -= 3)
+      f = `_${c.slice(l - 3, l)}${f}`;
+    return `${c.slice(0, l)}${f}`;
+  }
+  function Mr(c, f, l) {
+    Qe(f, "offset"), (c[f] === void 0 || c[f + l] === void 0) && Ce(f, c.length - (l + 1));
+  }
+  function sr(c, f, l, g, v, $) {
+    if (c > l || c < f) {
+      const I = typeof f == "bigint" ? "n" : "";
+      let J;
+      throw $ > 3 ? f === 0 || f === BigInt(0) ? J = `>= 0${I} and < 2${I} ** ${($ + 1) * 8}${I}` : J = `>= -(2${I} ** ${($ + 1) * 8 - 1}${I}) and < 2 ** ${($ + 1) * 8 - 1}${I}` : J = `>= ${f}${I} and <= ${l}${I}`, new ve.ERR_OUT_OF_RANGE("value", J, c);
+    }
+    Mr(g, v, $);
+  }
+  function Qe(c, f) {
+    if (typeof c != "number")
+      throw new ve.ERR_INVALID_ARG_TYPE(f, "number", c);
+  }
+  function Ce(c, f, l) {
+    throw Math.floor(c) !== c ? (Qe(c, l), new ve.ERR_OUT_OF_RANGE(l || "offset", "an integer", c)) : f < 0 ? new ve.ERR_BUFFER_OUT_OF_BOUNDS() : new ve.ERR_OUT_OF_RANGE(
+      l || "offset",
+      `>= ${l ? 1 : 0} and <= ${f}`,
+      c
+    );
+  }
+  const Wr = /[^+/0-9A-Za-z-_]/g;
+  function cr(c) {
+    if (c = c.split("=")[0], c = c.trim().replace(Wr, ""), c.length < 2)
+      return "";
+    for (; c.length % 4 !== 0; )
+      c = c + "=";
+    return c;
+  }
+  function vr(c, f) {
+    f = f || 1 / 0;
+    let l;
+    const g = c.length;
+    let v = null;
+    const $ = [];
+    for (let I = 0; I < g; ++I) {
+      if (l = c.charCodeAt(I), l > 55295 && l < 57344) {
+        if (!v) {
+          if (l > 56319) {
+            (f -= 3) > -1 && $.push(239, 191, 189);
+            continue;
+          } else if (I + 1 === g) {
+            (f -= 3) > -1 && $.push(239, 191, 189);
+            continue;
+          }
+          v = l;
+          continue;
+        }
+        if (l < 56320) {
+          (f -= 3) > -1 && $.push(239, 191, 189), v = l;
+          continue;
+        }
+        l = (v - 55296 << 10 | l - 56320) + 65536;
+      } else
+        v && (f -= 3) > -1 && $.push(239, 191, 189);
+      if (v = null, l < 128) {
+        if ((f -= 1) < 0)
+          break;
+        $.push(l);
+      } else if (l < 2048) {
+        if ((f -= 2) < 0)
+          break;
+        $.push(
+          l >> 6 | 192,
+          l & 63 | 128
+        );
+      } else if (l < 65536) {
+        if ((f -= 3) < 0)
+          break;
+        $.push(
+          l >> 12 | 224,
+          l >> 6 & 63 | 128,
+          l & 63 | 128
+        );
+      } else if (l < 1114112) {
+        if ((f -= 4) < 0)
+          break;
+        $.push(
+          l >> 18 | 240,
+          l >> 12 & 63 | 128,
+          l >> 6 & 63 | 128,
+          l & 63 | 128
+        );
+      } else
+        throw new Error("Invalid code point");
+    }
+    return $;
+  }
+  function Hr(c) {
+    const f = [];
+    for (let l = 0; l < c.length; ++l)
+      f.push(c.charCodeAt(l) & 255);
+    return f;
+  }
+  function dr(c, f) {
+    let l, g, v;
+    const $ = [];
+    for (let I = 0; I < c.length && !((f -= 2) < 0); ++I)
+      l = c.charCodeAt(I), g = l >> 8, v = l % 256, $.push(v), $.push(g);
+    return $;
+  }
+  function Ar(c) {
+    return r.toByteArray(cr(c));
+  }
+  function Me(c, f, l, g) {
+    let v;
+    for (v = 0; v < g && !(v + l >= f.length || v >= c.length); ++v)
+      f[v + l] = c[v];
+    return v;
+  }
+  function je(c, f) {
+    return c instanceof f || c != null && c.constructor != null && c.constructor.name != null && c.constructor.name === f.name;
+  }
+  function Ae(c) {
+    return c !== c;
+  }
+  const Zr = function() {
+    const c = "0123456789abcdef", f = new Array(256);
+    for (let l = 0; l < 16; ++l) {
+      const g = l * 16;
+      for (let v = 0; v < 16; ++v)
+        f[g + v] = c[l] + c[v];
+    }
+    return f;
+  }();
+  function Ee(c) {
+    return typeof BigInt > "u" ? Gr : c;
+  }
+  function Gr() {
+    throw new Error("BigInt not supported");
+  }
+})(wr);
+/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
+(function(e, r) {
+  var s = wr, n = s.Buffer;
+  function o(t, p) {
+    for (var y in t)
+      p[y] = t[y];
+  }
+  n.from && n.alloc && n.allocUnsafe && n.allocUnsafeSlow ? e.exports = s : (o(s, r), r.Buffer = i);
+  function i(t, p, y) {
+    return n(t, p, y);
+  }
+  i.prototype = Object.create(n.prototype), o(n, i), i.from = function(t, p, y) {
+    if (typeof t == "number")
+      throw new TypeError("Argument must not be a number");
+    return n(t, p, y);
+  }, i.alloc = function(t, p, y) {
+    if (typeof t != "number")
+      throw new TypeError("Argument must be a number");
+    var u = n(t);
+    return p !== void 0 ? typeof y == "string" ? u.fill(p, y) : u.fill(p) : u.fill(0), u;
+  }, i.allocUnsafe = function(t) {
+    if (typeof t != "number")
+      throw new TypeError("Argument must be a number");
+    return n(t);
+  }, i.allocUnsafeSlow = function(t) {
+    if (typeof t != "number")
+      throw new TypeError("Argument must be a number");
+    return s.SlowBuffer(t);
+  };
+})(Js, Js.exports);
+var La = Js.exports, Na = La.Buffer;
+function ds(e, r) {
+  this._block = Na.alloc(e), this._finalSize = r, this._blockSize = e, this._len = 0;
+}
+ds.prototype.update = function(e, r) {
+  typeof e == "string" && (r = r || "utf8", e = Na.from(e, r));
+  for (var s = this._block, n = this._blockSize, o = e.length, i = this._len, t = 0; t < o; ) {
+    for (var p = i % n, y = Math.min(o - t, n - p), u = 0; u < y; u++)
+      s[p + u] = e[t + u];
+    i += y, t += y, i % n === 0 && this._update(s);
+  }
+  return this._len += o, this;
+};
+ds.prototype.digest = function(e) {
+  var r = this._len % this._blockSize;
+  this._block[r] = 128, this._block.fill(0, r + 1), r >= this._finalSize && (this._update(this._block), this._block.fill(0));
+  var s = this._len * 8;
+  if (s <= 4294967295)
+    this._block.writeUInt32BE(s, this._blockSize - 4);
+  else {
+    var n = (s & 4294967295) >>> 0, o = (s - n) / 4294967296;
+    this._block.writeUInt32BE(o, this._blockSize - 8), this._block.writeUInt32BE(n, this._blockSize - 4);
+  }
+  this._update(this._block);
+  var i = this._hash();
+  return e ? i.toString(e) : i;
+};
+ds.prototype._update = function() {
+  throw new Error("_update must be implemented by subclass");
+};
+var xl = ds, Tl = gl, Ca = xl, $l = La.Buffer, Al = [
+  1518500249,
+  1859775393,
+  -1894007588,
+  -899497514
+], Sl = new Array(80);
+function St() {
+  this.init(), this._w = Sl, Ca.call(this, 64, 56);
+}
+Tl(St, Ca);
+St.prototype.init = function() {
+  return this._a = 1732584193, this._b = 4023233417, this._c = 2562383102, this._d = 271733878, this._e = 3285377520, this;
+};
+function Rl(e) {
+  return e << 1 | e >>> 31;
+}
+function Fl(e) {
+  return e << 5 | e >>> 27;
+}
+function jl(e) {
+  return e << 30 | e >>> 2;
+}
+function Bl(e, r, s, n) {
+  return e === 0 ? r & s | ~r & n : e === 2 ? r & s | r & n | s & n : r ^ s ^ n;
+}
+St.prototype._update = function(e) {
+  for (var r = this._w, s = this._a | 0, n = this._b | 0, o = this._c | 0, i = this._d | 0, t = this._e | 0, p = 0; p < 16; ++p)
+    r[p] = e.readInt32BE(p * 4);
+  for (; p < 80; ++p)
+    r[p] = Rl(r[p - 3] ^ r[p - 8] ^ r[p - 14] ^ r[p - 16]);
+  for (var y = 0; y < 80; ++y) {
+    var u = ~~(y / 20), d = Fl(s) + Bl(u, n, o, i) + t + r[y] + Al[u] | 0;
+    t = i, i = o, o = jl(n), n = s, s = d;
+  }
+  this._a = s + this._a | 0, this._b = n + this._b | 0, this._c = o + this._c | 0, this._d = i + this._d | 0, this._e = t + this._e | 0;
+};
+St.prototype._hash = function() {
+  var e = $l.allocUnsafe(20);
+  return e.writeInt32BE(this._a | 0, 0), e.writeInt32BE(this._b | 0, 4), e.writeInt32BE(this._c | 0, 8), e.writeInt32BE(this._d | 0, 12), e.writeInt32BE(this._e | 0, 16), e;
+};
+var Il = St;
+const Ll = /* @__PURE__ */ ii(Il);
+function Nl(e) {
+  let r = "";
+  for (const s of new Uint8Array(e))
+    s < 16 && (r += "0"), r += s.toString(16);
+  return r;
+}
+let Is = null;
+async function bn(e) {
+  return Is === null && (Is = await Dl()), Is ? Da(e) : Cl(e);
+}
+function Cl(e) {
+  return new Ll().update(e).digest("hex");
+}
+async function Da(e) {
+  const r = await crypto.subtle.digest("SHA-1", e);
+  return Nl(r);
+}
+async function Dl() {
+  try {
+    if (await Da(new Uint8Array([])) === "da39a3ee5e6b4b0d3255bfef95601890afd80709")
+      return !0;
+  } catch {
+  }
+  return !1;
+}
+function ql(e) {
+  const r = [];
+  let s = 0, n = 0;
+  do {
+    s = e.readUInt8();
+    const o = s & 127;
+    r.push(o), n = s & 128;
+  } while (n);
+  return r.reduce((o, i) => o + 1 << 7 | i, -1);
+}
+function Ul(e, r) {
+  let s = r, n = 4, o = null;
+  do
+    o = e.readUInt8(), s |= (o & 127) << n, n += 7;
+  while (o & 128);
+  return s;
+}
+class kt {
+  constructor(r) {
+    Object.assign(this, r), this.offsetCache = {};
+  }
+  static async fromIdx({ idx: r, getExternalRefDelta: s }) {
+    const n = new Sr(r);
+    if (n.slice(4).toString("hex") !== "ff744f63")
+      return;
+    const i = n.readUInt32BE();
+    if (i !== 2)
+      throw new _e(
+        `Unable to read version ${i} packfile IDX. (Only version 2 supported)`
+      );
+    if (r.byteLength > 2048 * 1024 * 1024)
+      throw new _e(
+        "To keep implementation simple, I haven't implemented the layer 5 feature needed to support packfiles > 2GB in size."
+      );
+    n.seek(n.tell() + 4 * 255);
+    const t = n.readUInt32BE(), p = [];
+    for (let d = 0; d < t; d++) {
+      const w = n.slice(20).toString("hex");
+      p[d] = w;
+    }
+    n.seek(n.tell() + 4 * t);
+    const y = /* @__PURE__ */ new Map();
+    for (let d = 0; d < t; d++)
+      y.set(p[d], n.readUInt32BE());
+    const u = n.slice(20).toString("hex");
+    return new kt({
+      hashes: p,
+      crcs: {},
+      offsets: y,
+      packfileSha: u,
+      getExternalRefDelta: s
+    });
+  }
+  static async fromPack({ pack: r, getExternalRefDelta: s, onProgress: n }) {
+    const o = {
+      1: "commit",
+      2: "tree",
+      3: "blob",
+      4: "tag",
+      6: "ofs-delta",
+      7: "ref-delta"
+    }, i = {}, t = r.slice(-20).toString("hex"), p = [], y = {}, u = /* @__PURE__ */ new Map();
+    let d = null, w = null;
+    await cl([r], async ({ data: q, type: D, reference: M, offset: B, num: U }) => {
+      d === null && (d = U);
+      const A = Math.floor(
+        (d - U) * 100 / d
+      );
+      A !== w && n && await n({
+        phase: "Receiving objects",
+        loaded: d - U,
+        total: d
+      }), w = A, D = o[D], ["commit", "tree", "blob", "tag"].includes(D) ? i[B] = {
+        type: D,
+        offset: B
+      } : D === "ofs-delta" ? i[B] = {
+        type: D,
+        offset: B
+      } : D === "ref-delta" && (i[B] = {
+        type: D,
+        offset: B
+      });
+    });
+    const _ = Object.keys(i).map(Number);
+    for (const [q, D] of _.entries()) {
+      const M = q + 1 === _.length ? r.byteLength - 20 : _[q + 1], B = i[D], U = mp.buf(r.slice(D, M)) >>> 0;
+      B.end = M, B.crc = U;
+    }
+    const b = new kt({
+      pack: Promise.resolve(r),
+      packfileSha: t,
+      crcs: y,
+      hashes: p,
+      offsets: u,
+      getExternalRefDelta: s
+    });
+    w = null;
+    let j = 0;
+    const P = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    for (let q in i) {
+      q = Number(q);
+      const D = Math.floor(j * 100 / d);
+      D !== w && n && await n({
+        phase: "Resolving deltas",
+        loaded: j,
+        total: d
+      }), j++, w = D;
+      const M = i[q];
+      if (!M.oid)
+        try {
+          b.readDepth = 0, b.externalReadDepth = 0;
+          const { type: B, object: U } = await b.readSlice({ start: q });
+          P[b.readDepth] += 1;
+          const A = await bn(gp.wrap({ type: B, object: U }));
+          M.oid = A, p.push(A), u.set(A, q), y[A] = M.crc;
+        } catch {
+          continue;
+        }
+    }
+    return p.sort(), b;
+  }
+  async toBuffer() {
+    const r = [], s = (u, d) => {
+      r.push(Buffer.from(u, d));
+    };
+    s("ff744f63", "hex"), s("00000002", "hex");
+    const n = new Sr(Buffer.alloc(256 * 4));
+    for (let u = 0; u < 256; u++) {
+      let d = 0;
+      for (const w of this.hashes)
+        parseInt(w.slice(0, 2), 16) <= u && d++;
+      n.writeUInt32BE(d);
+    }
+    r.push(n.buffer);
+    for (const u of this.hashes)
+      s(u, "hex");
+    const o = new Sr(Buffer.alloc(this.hashes.length * 4));
+    for (const u of this.hashes)
+      o.writeUInt32BE(this.crcs[u]);
+    r.push(o.buffer);
+    const i = new Sr(Buffer.alloc(this.hashes.length * 4));
+    for (const u of this.hashes)
+      i.writeUInt32BE(this.offsets.get(u));
+    r.push(i.buffer), s(this.packfileSha, "hex");
+    const t = Buffer.concat(r), p = await bn(t), y = Buffer.alloc(20);
+    return y.write(p, "hex"), Buffer.concat([t, y]);
+  }
+  async load({ pack: r }) {
+    this.pack = r;
+  }
+  async unload() {
+    this.pack = null;
+  }
+  async read({ oid: r }) {
+    if (!this.offsets.get(r)) {
+      if (this.getExternalRefDelta)
+        return this.externalReadDepth++, this.getExternalRefDelta(r);
+      throw new _e(`Could not read object ${r} from packfile`);
+    }
+    const s = this.offsets.get(r);
+    return this.readSlice({ start: s });
+  }
+  async readSlice({ start: r }) {
+    if (this.offsetCache[r])
+      return Object.assign({}, this.offsetCache[r]);
+    this.readDepth++;
+    const s = {
+      16: "commit",
+      32: "tree",
+      48: "blob",
+      64: "tag",
+      96: "ofs_delta",
+      112: "ref_delta"
+    };
+    if (!this.pack)
+      throw new _e(
+        "Tried to read from a GitPackIndex with no packfile loaded into memory"
+      );
+    const n = (await this.pack).slice(r), o = new Sr(n), i = o.readUInt8(), t = i & 112;
+    let p = s[t];
+    if (p === void 0)
+      throw new _e("Unrecognized type: 0b" + t.toString(2));
+    const y = i & 15;
+    let u = y;
+    i & 128 && (u = Ul(o, y));
+    let w = null, _ = null;
+    if (p === "ofs_delta") {
+      const j = ql(o), P = r - j;
+      ({ object: w, type: p } = await this.readSlice({ start: P }));
+    }
+    if (p === "ref_delta") {
+      const j = o.slice(20).toString("hex");
+      ({ object: w, type: p } = await this.read({ oid: j }));
+    }
+    const b = n.slice(o.tell());
+    if (_ = Buffer.from(await yl(b)), _.byteLength !== u)
+      throw new _e(
+        `Packfile told us object would have length ${u} but it had length ${_.byteLength}`
+      );
+    return w && (_ = Buffer.from(wp(_, w))), this.readDepth > 3 && (this.offsetCache[r] = { type: p, object: _ }), { type: p, format: "content", object: _ };
+  }
+}
+class Et extends st {
+  /**
+   * @param {string} value
+   */
+  constructor(r) {
+    super(`Expected a 40-char hex object id but saw "${r}".`), this.code = this.name = Et.code, this.data = { value: r };
+  }
+}
+Et.code = "InvalidOidError";
+class hs extends st {
+  /**
+   * @param {string} oid
+   * @param {'blob'|'commit'|'tag'|'tree'} actual
+   * @param {'blob'|'commit'|'tag'|'tree'} expected
+   * @param {string} [filepath]
+   */
+  constructor(r, s, n, o) {
+    super(
+      `Object ${r} ${o ? `at ${o}` : ""}was anticipated to be a ${n} but it is a ${s}.`
+    ), this.code = this.name = hs.code, this.data = { oid: r, actual: s, expected: n, filepath: o };
+  }
+}
+hs.code = "ObjectTypeError";
+async function qa(e, r) {
+  const s = zn(e);
+  for (; ; ) {
+    const { value: n, done: o } = await s.next();
+    if (n && await r(n), o)
+      break;
+  }
+  s.return && s.return();
+}
+async function Ot(e) {
+  let r = 0;
+  const s = [];
+  await qa(e, (i) => {
+    s.push(i), r += i.byteLength;
+  });
+  const n = new Uint8Array(r);
+  let o = 0;
+  for (const i of s)
+    n.set(i, o), o += i.byteLength;
+  return n;
+}
+class Ls {
+  constructor() {
+    this._queue = [];
+  }
+  write(r) {
+    if (this._ended)
+      throw Error("You cannot write to a FIFO that has already been ended!");
+    if (this._waiting) {
+      const s = this._waiting;
+      this._waiting = null, s({ value: r });
+    } else
+      this._queue.push(r);
+  }
+  end() {
+    if (this._ended = !0, this._waiting) {
+      const r = this._waiting;
+      this._waiting = null, r({ done: !0 });
+    }
+  }
+  destroy(r) {
+    this.error = r, this.end();
+  }
+  async next() {
+    if (this._queue.length > 0)
+      return { value: this._queue.shift() };
+    if (this._ended)
+      return { done: !0 };
+    if (this._waiting)
+      throw Error(
+        "You cannot call read until the previous call to read has returned!"
+      );
+    return new Promise((r) => {
+      this._waiting = r;
+    });
+  }
+}
+class zl {
+  static demux(r) {
+    const s = $e.streamReader(r), n = new Ls(), o = new Ls(), i = new Ls(), t = async function() {
+      const p = await s();
+      if (p === null)
+        return t();
+      if (p === !0) {
+        n.end(), i.end(), r.error ? o.destroy(r.error) : o.end();
+        return;
+      }
+      switch (p[0]) {
+        case 1: {
+          o.write(p.slice(1));
+          break;
+        }
+        case 2: {
+          i.write(p.slice(1));
+          break;
+        }
+        case 3: {
+          const y = p.slice(1);
+          i.write(y), n.end(), i.end(), o.destroy(new Error(y.toString("utf8")));
+          return;
+        }
+        default:
+          n.write(p);
+      }
+      t();
+    };
+    return t(), {
+      packetlines: n,
+      packfile: o,
+      progress: i
+    };
+  }
+  // static mux ({
+  //   protocol, // 'side-band' or 'side-band-64k'
+  //   packetlines,
+  //   packfile,
+  //   progress,
+  //   error
+  // }) {
+  //   const MAX_PACKET_LENGTH = protocol === 'side-band-64k' ? 999 : 65519
+  //   let output = new PassThrough()
+  //   packetlines.on('data', data => {
+  //     if (data === null) {
+  //       output.write(GitPktLine.flush())
+  //     } else {
+  //       output.write(GitPktLine.encode(data))
+  //     }
+  //   })
+  //   let packfileWasEmpty = true
+  //   let packfileEnded = false
+  //   let progressEnded = false
+  //   let errorEnded = false
+  //   let goodbye = Buffer.concat([
+  //     GitPktLine.encode(Buffer.from('010A', 'hex')),
+  //     GitPktLine.flush()
+  //   ])
+  //   packfile
+  //     .on('data', data => {
+  //       packfileWasEmpty = false
+  //       const buffers = splitBuffer(data, MAX_PACKET_LENGTH)
+  //       for (const buffer of buffers) {
+  //         output.write(
+  //           GitPktLine.encode(Buffer.concat([Buffer.from('01', 'hex'), buffer]))
+  //         )
+  //       }
+  //     })
+  //     .on('end', () => {
+  //       packfileEnded = true
+  //       if (!packfileWasEmpty) output.write(goodbye)
+  //       if (progressEnded && errorEnded) output.end()
+  //     })
+  //   progress
+  //     .on('data', data => {
+  //       const buffers = splitBuffer(data, MAX_PACKET_LENGTH)
+  //       for (const buffer of buffers) {
+  //         output.write(
+  //           GitPktLine.encode(Buffer.concat([Buffer.from('02', 'hex'), buffer]))
+  //         )
+  //       }
+  //     })
+  //     .on('end', () => {
+  //       progressEnded = true
+  //       if (packfileEnded && errorEnded) output.end()
+  //     })
+  //   error
+  //     .on('data', data => {
+  //       const buffers = splitBuffer(data, MAX_PACKET_LENGTH)
+  //       for (const buffer of buffers) {
+  //         output.write(
+  //           GitPktLine.encode(Buffer.concat([Buffer.from('03', 'hex'), buffer]))
+  //         )
+  //       }
+  //     })
+  //     .on('end', () => {
+  //       errorEnded = true
+  //       if (progressEnded && packfileEnded) output.end()
+  //     })
+  //   return output
+  // }
+}
+async function Ua(e) {
+  const { packetlines: r, packfile: s, progress: n } = zl.demux(e), o = [], i = [], t = [];
+  let p = !1, y = !1;
+  return new Promise((u, d) => {
+    qa(r, (w) => {
+      const _ = w.toString("utf8").trim();
+      if (_.startsWith("shallow")) {
+        const b = _.slice(-41).trim();
+        b.length !== 40 && d(new Et(b)), o.push(b);
+      } else if (_.startsWith("unshallow")) {
+        const b = _.slice(-41).trim();
+        b.length !== 40 && d(new Et(b)), i.push(b);
+      } else if (_.startsWith("ACK")) {
+        const [, b, j] = _.split(" ");
+        t.push({ oid: b, status: j }), j || (y = !0);
+      } else
+        _.startsWith("NAK") ? (p = !0, y = !0) : (y = !0, p = !0);
+      y && (e.error ? d(e.error) : u({ shallows: o, unshallows: i, acks: t, nak: p, packfile: s, progress: n }));
+    }).finally(() => {
+      y || (e.error ? d(e.error) : u({ shallows: o, unshallows: i, acks: t, nak: p, packfile: s, progress: n }));
+    });
+  });
+}
+typeof window < "u" && (window.Buffer = wr.Buffer);
+async function Ml(e, r, s) {
+  const o = (await Ma(e, r))[r], i = await Wa(e, o), t = await Zl(i, o, s), p = await Gl(
+    e,
+    s.map((u) => t[u].oid)
+  ), y = {};
+  return await Promise.all(
+    s.map(async (u) => {
+      y[u] = await Ha(
+        p,
+        t[u].oid
+      );
+    })
+  ), y;
+}
+async function Wl(e, r) {
+  const s = await Ma(e, r);
+  if (!(r in s))
+    throw new Error(`Branch ${r} not found`);
+  const n = s[r], o = await Wa(e, n), i = await Hl(o, n);
+  return i != null && i.object ? za(i) : [];
+}
+function za(e) {
+  return e.object.map((r) => {
+    if (r.type === "blob")
+      return {
+        name: r.path,
+        type: "file"
+      };
+    if (r.type === "tree" && r.object)
+      return {
+        name: r.path,
+        type: "folder",
+        children: za(r)
+      };
+  }).filter((r) => !!(r != null && r.name));
+}
+async function Ma(e, r) {
+  const s = wr.Buffer.from(
+    await Ot([
+      $e.encode(`command=ls-refs
+`),
+      $e.encode(`agent=git/2.37.3
+`),
+      $e.encode(`object-format=sha1
+`),
+      $e.delim(),
+      $e.encode(`peel
+`),
+      $e.encode(`ref-prefix ${r}
+`),
+      $e.flush()
+    ])
+  ), n = await fetch(e + "/git-upload-pack", {
+    method: "POST",
+    headers: {
+      Accept: "application/x-git-upload-pack-advertisement",
+      "content-type": "application/x-git-upload-pack-request",
+      "Content-Length": `${s.length}`,
+      "Git-Protocol": "version=2"
+    },
+    body: s
+  }), o = {};
+  for await (const i of Vl(n)) {
+    const t = i.indexOf(" "), p = i.slice(0, t), y = i.slice(t + 1, i.length - 1);
+    o[y] = p;
+  }
+  return o;
+}
+async function Wa(e, r) {
+  const s = wr.Buffer.from(
+    await Ot([
+      $e.encode(
+        `want ${r} multi_ack_detailed no-done side-band-64k thin-pack ofs-delta agent=git/2.37.3 filter 
+`
+      ),
+      $e.encode(`filter blob:none
+`),
+      $e.encode(`shallow ${r}
+`),
+      $e.encode(`deepen 1
+`),
+      $e.flush(),
+      $e.encode(`done
+`),
+      $e.encode(`done
+`)
+    ])
+  ), n = await fetch(e + "/git-upload-pack", {
+    method: "POST",
+    headers: {
+      Accept: "application/x-git-upload-pack-advertisement",
+      "content-type": "application/x-git-upload-pack-request",
+      "Content-Length": `${s.length}`
+    },
+    body: s
+  }), o = Za(n.body), i = await Ua(o), t = wr.Buffer.from(await Ot(i.packfile)), p = await kt.fromPack({
+    pack: t
+  }), y = p.read;
+  return p.read = async function({ oid: u, ...d }) {
+    const w = await y.call(this, { oid: u, ...d });
+    return w.oid = u, w;
+  }, p;
+}
+async function Hl(e, r) {
+  const s = await e.read({
+    oid: r
+  });
+  Br(s);
+  const n = await e.read({ oid: s.object.tree }), o = [n];
+  for (; o.length > 0; ) {
+    const i = o.pop(), t = await e.read({ oid: i.oid });
+    if (Br(t), i.object = t.object, t.type === "tree")
+      for (const p of t.object)
+        p.type === "tree" && o.push(p);
+  }
+  return n;
+}
+async function Zl(e, r, s) {
+  const n = await e.read({
+    oid: r
+  });
+  Br(n);
+  const o = await e.read({ oid: n.object.tree });
+  Br(o);
+  const i = {};
+  for (const t of s) {
+    let p = o;
+    const y = t.split("/");
+    for (const u of y) {
+      if (p.type !== "tree")
+        throw new Error(`Path not found in the repo: ${t}`);
+      let d = !1;
+      for (const w of p.object)
+        if (w.path === u) {
+          try {
+            p = await e.read({ oid: w.oid }), Br(p);
+          } catch {
+            p = w;
+          }
+          d = !0;
+          break;
+        }
+      if (!d)
+        throw new Error(`Path not found in the repo: ${t}`);
+    }
+    i[t] = p;
+  }
+  return i;
+}
+async function Gl(e, r) {
+  const s = wr.Buffer.from(
+    await Ot([
+      ...r.map(
+        (p) => $e.encode(
+          `want ${p} multi_ack_detailed no-done side-band-64k thin-pack ofs-delta agent=git/2.37.3 
+`
+        )
+      ),
+      $e.flush(),
+      $e.encode(`done
+`)
+    ])
+  ), n = await fetch(e + "/git-upload-pack", {
+    method: "POST",
+    headers: {
+      Accept: "application/x-git-upload-pack-advertisement",
+      "content-type": "application/x-git-upload-pack-request",
+      "Content-Length": `${s.length}`
+    },
+    body: s
+  }), o = Za(n.body), i = await Ua(o), t = wr.Buffer.from(await Ot(i.packfile));
+  return await kt.fromPack({
+    pack: t
+  });
+}
+async function Ha(e, r) {
+  const s = await e.read({ oid: r });
+  if (Br(s), s.type === "blob")
+    return s.object;
+  const n = {};
+  for (const { path: o, oid: i, type: t } of s.object)
+    if (t === "blob") {
+      const p = await e.read({ oid: i });
+      Br(p), n[o] = p.object;
+    } else
+      t === "tree" && (n[o] = await Ha(e, i));
+  return n;
+}
+function Br(e) {
+  if (e.object instanceof wr.Buffer)
+    switch (e.type) {
+      case "commit":
+        e.object = qe.from(e.object).parse();
+        break;
+      case "tree":
+        e.object = oi.from(e.object).entries();
+        break;
+      case "blob":
+        e.object = new Uint8Array(e.object), e.format = "content";
+        break;
+      case "tag":
+        e.object = ut.from(e.object).parse();
+        break;
+      default:
+        throw new hs(
+          e.oid,
+          e.type,
+          "blob|commit|tag|tree"
+        );
+    }
+}
+async function* Vl(e) {
+  const r = await e.text();
+  let s = 0;
+  for (; s <= r.length; ) {
+    const n = parseInt(r.substring(s, s + 4), 16);
+    if (n === 0)
+      break;
+    yield r.substring(s + 4, s + n), s += n;
+  }
+}
+function Za(e) {
+  if (e[Symbol.asyncIterator])
+    return e;
+  const r = e.getReader();
+  return {
+    next() {
+      return r.read();
+    },
+    return() {
+      return r.releaseLock(), {};
+    },
+    [Symbol.asyncIterator]() {
+      return this;
+    }
+  };
+}
+function Yl(e, r) {
+  r = ri(r);
+  const s = ["", ".", "/"].includes(r);
+  let n = e;
+  if (s)
+    r = "";
+  else {
+    const t = r.split("/");
+    for (const p of t) {
+      const y = n == null ? void 0 : n.find(
+        (u) => u.name === p
+      );
+      if ((y == null ? void 0 : y.type) === "folder")
+        n = y.children;
+      else
+        return y ? [y.name] : [];
+    }
+  }
+  const o = [], i = [{ tree: n, path: r }];
+  for (; i.length > 0; ) {
+    const { tree: t, path: p } = i.pop();
+    for (const y of t) {
+      const u = `${p}${p ? "/" : ""}${y.name}`;
+      y.type === "folder" ? i.push({
+        tree: y.children,
+        path: u
+      }) : o.push(u);
+    }
+  }
+  return o;
+}
+const Kl = [
   "vfs",
   "literal",
   "wordpress.org/themes",
   "wordpress.org/plugins",
-  "url"
+  "url",
+  "git:directory"
 ];
-function ws(r) {
-  return r && typeof r == "object" && typeof r.resource == "string" && bs.includes(r.resource);
+function Xl(e) {
+  return e && typeof e == "object" && typeof e.resource == "string" && Kl.includes(e.resource);
 }
-class Le {
+class _r {
+  get progress() {
+    return this._progress;
+  }
+  set progress(r) {
+    this._progress = r;
+  }
+  setPlayground(r) {
+    this.playground = r;
+  }
+  /** Whether this Resource is loaded asynchronously */
+  get isAsync() {
+    return !1;
+  }
   /**
    * Creates a new Resource based on the given file reference
    *
@@ -2379,105 +6601,135 @@ class Le {
    * @param options Additional options for the Resource
    * @returns A new Resource instance
    */
-  static create(t, { semaphore: o, progress: p }) {
-    let l;
-    switch (t.resource) {
+  static create(r, {
+    semaphore: s,
+    progress: n,
+    corsProxy: o
+  }) {
+    let i;
+    switch (r.resource) {
       case "vfs":
-        l = new vs(t, p);
+        i = new Ql(r, n);
         break;
       case "literal":
-        l = new Ps(t, p);
+        i = new Jl(r, n);
         break;
       case "wordpress.org/themes":
-        l = new Os(t, p);
+        i = new iu(r, n);
         break;
       case "wordpress.org/plugins":
-        l = new Es(t, p);
+        i = new nu(r, n);
         break;
       case "url":
-        l = new ks(t, p);
+        i = new ru(r, n);
+        break;
+      case "git:directory":
+        i = new tu(r, n, {
+          corsProxy: o
+        });
+        break;
+      case "literal:directory":
+        i = new su(r, n);
         break;
       default:
-        throw new Error(`Invalid resource: ${t}`);
+        throw new Error(`Invalid resource: ${r}`);
     }
-    return l = new $s(l), o && (l = new Ts(l, o)), l;
-  }
-  setPlayground(t) {
-    this.playground = t;
-  }
-  /** Whether this Resource is loaded asynchronously */
-  get isAsync() {
-    return !1;
+    return i = new au(i), s && (i = new ou(i, s)), i;
   }
 }
-class vs extends Le {
+class Ga extends _r {
+  constructor(r) {
+    super(), this.resource = r;
+  }
+  /** @inheritDoc */
+  get progress() {
+    return this.resource.progress;
+  }
+  /** @inheritDoc */
+  set progress(r) {
+    this.resource.progress = r;
+  }
+  /** @inheritDoc */
+  get name() {
+    return this.resource.name;
+  }
+  /** @inheritDoc */
+  get isAsync() {
+    return this.resource.isAsync;
+  }
+  /** @inheritDoc */
+  setPlayground(r) {
+    this.resource.setPlayground(r);
+  }
+}
+class Ql extends _r {
   /**
    * Creates a new instance of `VFSResource`.
    * @param playground The playground client.
    * @param resource The VFS reference.
    * @param progress The progress tracker.
    */
-  constructor(t, o) {
-    super(), this.resource = t, this.progress = o;
+  constructor(r, s) {
+    super(), this.resource = r, this._progress = s;
   }
   /** @inheritDoc */
   async resolve() {
-    var o;
-    const t = await this.playground.readFileAsBuffer(
+    var s;
+    const r = await this.playground.readFileAsBuffer(
       this.resource.path
     );
-    return (o = this.progress) == null || o.set(100), new File([t], this.name);
+    return (s = this.progress) == null || s.set(100), new File([r], this.name);
   }
   /** @inheritDoc */
   get name() {
     return this.resource.path.split("/").pop() || "";
   }
 }
-class Ps extends Le {
+class Jl extends _r {
   /**
    * Creates a new instance of `LiteralResource`.
    * @param resource The literal reference.
    * @param progress The progress tracker.
    */
-  constructor(t, o) {
-    super(), this.resource = t, this.progress = o;
+  constructor(r, s) {
+    super(), this.resource = r, this._progress = s;
   }
   /** @inheritDoc */
   async resolve() {
-    var t;
-    return (t = this.progress) == null || t.set(100), new File([this.resource.contents], this.resource.name);
+    var r;
+    return (r = this.progress) == null || r.set(100), new File([this.resource.contents], this.resource.name);
   }
   /** @inheritDoc */
   get name() {
     return this.resource.name;
   }
 }
-class Ar extends Le {
+class mi extends _r {
   /**
    * Creates a new instance of `FetchResource`.
    * @param progress The progress tracker.
    */
-  constructor(t) {
-    super(), this.progress = t;
+  constructor(r) {
+    super(), this._progress = r;
   }
   /** @inheritDoc */
   async resolve() {
-    var o, p;
-    (o = this.progress) == null || o.setCaption(this.caption);
-    const t = this.getURL();
+    var s, n;
+    (s = this.progress) == null || s.setCaption(this.caption);
+    const r = this.getURL();
     try {
-      let l = await fetch(t);
-      if (!l.ok)
-        throw new Error(`Could not download "${t}"`);
-      if (l = await ds(
-        l,
-        ((p = this.progress) == null ? void 0 : p.loadingListener) ?? _s
-      ), l.status !== 200)
-        throw new Error(`Could not download "${t}"`);
-      return new File([await l.blob()], this.name);
-    } catch (l) {
+      let o = await fetch(r);
+      if (!o.ok)
+        throw new Error(`Could not download "${r}"`);
+      if (o = await rp(
+        o,
+        ((n = this.progress) == null ? void 0 : n.loadingListener) ?? eu
+      ), o.status !== 200)
+        throw new Error(`Could not download "${r}"`);
+      return new File([await o.blob()], this.name);
+    } catch (o) {
       throw new Error(
-        `Could not download "${t}".
+        `Could not download "${r}".
 				Check if the URL is correct and the server is reachable.
 				If it is reachable, the server might be blocking the request.
 				Check the browser console and network tabs for more information.
@@ -2501,7 +6753,7 @@ class Ar extends Le {
 				https://raw.githubusercontent.com/username/repository/branch/filename
 
 				Error:
-				${l}`
+				${o}`
       );
     }
   }
@@ -2525,16 +6777,24 @@ class Ar extends Le {
     return !0;
   }
 }
-const _s = () => {
+const eu = () => {
 };
-class ks extends Ar {
+class ru extends mi {
   /**
    * Creates a new instance of `UrlResource`.
    * @param resource The URL reference.
    * @param progress The progress tracker.
    */
-  constructor(t, o) {
-    super(o), this.resource = t;
+  constructor(r, s) {
+    if (super(s), this.resource = r, this.resource.url.startsWith("https://github.com/")) {
+      const n = this.resource.url.match(
+        /^https:\/\/github\.com\/(?<owner>[^/]+)\/(?<repo>[^/]+)\/blob\/(?<branch>[^/]+)\/(?<path>.+[^/])$/
+      );
+      n != null && n.groups && (this.resource = {
+        ...this.resource,
+        url: `https://raw.githubusercontent.com/${n.groups.owner}/${n.groups.repo}/${n.groups.branch}/${n.groups.path}`
+      });
+    }
   }
   /** @inheritDoc */
   getURL() {
@@ -2545,78 +6805,81 @@ class ks extends Ar {
     return this.resource.caption ?? super.caption;
   }
 }
-class Os extends Ar {
-  constructor(t, o) {
-    super(o), this.resource = t;
+class tu extends _r {
+  constructor(r, s, n) {
+    super(), this.reference = r, this._progress = s, this.options = n;
+  }
+  async resolve() {
+    var p;
+    const r = (p = this.options) != null && p.corsProxy ? `${this.options.corsProxy}?${this.reference.url}` : this.reference.url, s = ["", "HEAD"].includes(this.reference.ref) ? "HEAD" : `refs/heads/${this.reference.ref}`, n = await Wl(r, s), o = this.reference.path.replace(/^\/+/, ""), i = Yl(n, o);
+    let t = await Ml(r, s, i);
+    return t = Object.fromEntries(
+      Object.entries(t).map(([y, u]) => (y = y.substring(this.reference.path.length), y = y.replace(/^\/+/, ""), [y, u]))
+    ), {
+      name: gt(this.reference.path) || this.reference.url.replaceAll(/[^a-zA-Z0-9-.]/g, "-").replaceAll(/-+/g, "-"),
+      files: t
+    };
+  }
+  /** @inheritDoc */
+  get name() {
+    return this.reference.path.split("/").pop();
+  }
+}
+class su extends _r {
+  constructor(r, s) {
+    super(), this.reference = r, this._progress = s;
+  }
+  async resolve() {
+    return this.reference;
+  }
+  /** @inheritDoc */
+  get name() {
+    return this.reference.name;
+  }
+}
+class iu extends mi {
+  constructor(r, s) {
+    super(s), this.resource = r;
   }
   get name() {
-    return fr(this.resource.slug);
+    return as(this.resource.slug);
   }
   getURL() {
-    return `https://downloads.wordpress.org/theme/${ft(this.resource.slug)}`;
+    return `https://downloads.wordpress.org/theme/${Va(this.resource.slug)}`;
   }
 }
-class Es extends Ar {
-  constructor(t, o) {
-    super(o), this.resource = t;
+class nu extends mi {
+  constructor(r, s) {
+    super(s), this.resource = r;
   }
   /** @inheritDoc */
   get name() {
-    return fr(this.resource.slug);
+    return as(this.resource.slug);
   }
   /** @inheritDoc */
   getURL() {
-    return `https://downloads.wordpress.org/plugin/${ft(this.resource.slug)}`;
+    return `https://downloads.wordpress.org/plugin/${Va(this.resource.slug)}`;
   }
 }
-function ft(r) {
-  return !r || r.endsWith(".zip") ? r : r + ".latest-stable.zip";
+function Va(e) {
+  return !e || e.endsWith(".zip") ? e : e + ".latest-stable.zip";
 }
-class ut extends Le {
-  constructor(t) {
-    super(), this.resource = t;
+class au extends Ga {
+  /** @inheritDoc */
+  async resolve() {
+    return this.promise || (this.promise = this.resource.resolve()), this.promise;
+  }
+}
+class ou extends Ga {
+  constructor(r, s) {
+    super(r), this.semaphore = s;
   }
   /** @inheritDoc */
   async resolve() {
-    return this.resource.resolve();
-  }
-  /** @inheritDoc */
-  async setPlayground(t) {
-    return this.resource.setPlayground(t);
-  }
-  /** @inheritDoc */
-  get progress() {
-    return this.resource.progress;
-  }
-  /** @inheritDoc */
-  set progress(t) {
-    this.resource.progress = t;
-  }
-  /** @inheritDoc */
-  get name() {
-    return this.resource.name;
-  }
-  /** @inheritDoc */
-  get isAsync() {
-    return this.resource.isAsync;
+    return this.isAsync ? this.semaphore.run(() => this.resource.resolve()) : this.resource.resolve();
   }
 }
-class $s extends ut {
-  /** @inheritDoc */
-  async resolve() {
-    return this.promise || (this.promise = super.resolve()), this.promise;
-  }
-}
-class Ts extends ut {
-  constructor(t, o) {
-    super(t), this.semaphore = o;
-  }
-  /** @inheritDoc */
-  async resolve() {
-    return this.isAsync ? this.semaphore.run(() => super.resolve()) : super.resolve();
-  }
-}
-const js = {
+const pu = {
   type: "object",
   properties: {
     landingPage: {
@@ -2688,8 +6951,7 @@ const js = {
       description: "Extra libraries to preload into the Playground instance."
     },
     constants: {
-      type: "object",
-      additionalProperties: { type: "string" },
+      $ref: "#/definitions/PHPConstants",
       description: "PHP Constants to define on every request"
     },
     plugins: {
@@ -2726,9 +6988,7 @@ const js = {
       description: "User to log in as. If true, logs the user in as admin/password."
     },
     phpExtensionBundles: {
-      type: "array",
-      items: { $ref: "#/definitions/SupportedPHPExtensionBundle" },
-      description: "The PHP extensions to use."
+      deprecated: "No longer used. Feel free to remove it from your Blueprint."
     },
     steps: {
       type: "array",
@@ -2746,212 +7006,215 @@ const js = {
     $schema: { type: "string" }
   },
   additionalProperties: !1
-}, As = {
+}, fu = {
   type: "string",
   enum: ["8.3", "8.2", "8.1", "8.0", "7.4", "7.3", "7.2", "7.1", "7.0"]
-}, qs = { type: "string", enum: ["kitchen-sink", "light"] }, dt = Object.prototype.hasOwnProperty;
-function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, rootData: l = r } = {}) {
-  let i = null, e = 0;
-  const f = e;
-  let h = !1;
-  const b = e;
-  if (e === e)
-    if (r && typeof r == "object" && !Array.isArray(r)) {
-      let x;
-      if (r.resource === void 0 && (x = "resource") || r.path === void 0 && (x = "path")) {
-        const I = {
-          instancePath: t,
+}, lu = {
+  type: "object",
+  additionalProperties: { type: ["string", "boolean", "number"] }
+}, Ya = Object.prototype.hasOwnProperty;
+function le(e, { instancePath: r = "", parentData: s, parentDataProperty: n, rootData: o = e } = {}) {
+  let i = null, t = 0;
+  const p = t;
+  let y = !1;
+  const u = t;
+  if (t === t)
+    if (e && typeof e == "object" && !Array.isArray(e)) {
+      let U;
+      if (e.resource === void 0 && (U = "resource") || e.path === void 0 && (U = "path")) {
+        const A = {
+          instancePath: r,
           schemaPath: "#/definitions/VFSReference/required",
           keyword: "required",
-          params: { missingProperty: x },
-          message: "must have required property '" + x + "'"
+          params: { missingProperty: U },
+          message: "must have required property '" + U + "'"
         };
-        i === null ? i = [I] : i.push(I), e++;
+        i === null ? i = [A] : i.push(A), t++;
       } else {
-        const I = e;
-        for (const z in r)
-          if (!(z === "resource" || z === "path")) {
-            const c = {
-              instancePath: t,
+        const A = t;
+        for (const x in e)
+          if (!(x === "resource" || x === "path")) {
+            const N = {
+              instancePath: r,
               schemaPath: "#/definitions/VFSReference/additionalProperties",
               keyword: "additionalProperties",
-              params: { additionalProperty: z },
+              params: { additionalProperty: x },
               message: "must NOT have additional properties"
             };
-            i === null ? i = [c] : i.push(c), e++;
+            i === null ? i = [N] : i.push(N), t++;
             break;
           }
-        if (I === e) {
-          if (r.resource !== void 0) {
-            let z = r.resource;
-            const c = e;
-            if (typeof z != "string") {
-              const A = {
-                instancePath: t + "/resource",
+        if (A === t) {
+          if (e.resource !== void 0) {
+            let x = e.resource;
+            const N = t;
+            if (typeof x != "string") {
+              const S = {
+                instancePath: r + "/resource",
                 schemaPath: "#/definitions/VFSReference/properties/resource/type",
                 keyword: "type",
                 params: { type: "string" },
                 message: "must be string"
               };
-              i === null ? i = [A] : i.push(A), e++;
+              i === null ? i = [S] : i.push(S), t++;
             }
-            if (z !== "vfs") {
-              const A = {
-                instancePath: t + "/resource",
+            if (x !== "vfs") {
+              const S = {
+                instancePath: r + "/resource",
                 schemaPath: "#/definitions/VFSReference/properties/resource/const",
                 keyword: "const",
                 params: { allowedValue: "vfs" },
                 message: "must be equal to constant"
               };
-              i === null ? i = [A] : i.push(A), e++;
+              i === null ? i = [S] : i.push(S), t++;
             }
-            var m = c === e;
+            var w = N === t;
           } else
-            var m = !0;
-          if (m)
-            if (r.path !== void 0) {
-              const z = e;
-              if (typeof r.path != "string") {
-                const A = {
-                  instancePath: t + "/path",
+            var w = !0;
+          if (w)
+            if (e.path !== void 0) {
+              const x = t;
+              if (typeof e.path != "string") {
+                const S = {
+                  instancePath: r + "/path",
                   schemaPath: "#/definitions/VFSReference/properties/path/type",
                   keyword: "type",
                   params: { type: "string" },
                   message: "must be string"
                 };
-                i === null ? i = [A] : i.push(A), e++;
+                i === null ? i = [S] : i.push(S), t++;
               }
-              var m = z === e;
+              var w = x === t;
             } else
-              var m = !0;
+              var w = !0;
         }
       }
     } else {
-      const x = {
-        instancePath: t,
+      const U = {
+        instancePath: r,
         schemaPath: "#/definitions/VFSReference/type",
         keyword: "type",
         params: { type: "object" },
         message: "must be object"
       };
-      i === null ? i = [x] : i.push(x), e++;
+      i === null ? i = [U] : i.push(U), t++;
     }
-  var w = b === e;
-  if (h = h || w, !h) {
-    const x = e;
-    if (e === e)
-      if (r && typeof r == "object" && !Array.isArray(r)) {
-        let c;
-        if (r.resource === void 0 && (c = "resource") || r.name === void 0 && (c = "name") || r.contents === void 0 && (c = "contents")) {
-          const A = {
-            instancePath: t,
+  var _ = u === t;
+  if (y = y || _, !y) {
+    const U = t;
+    if (t === t)
+      if (e && typeof e == "object" && !Array.isArray(e)) {
+        let N;
+        if (e.resource === void 0 && (N = "resource") || e.name === void 0 && (N = "name") || e.contents === void 0 && (N = "contents")) {
+          const S = {
+            instancePath: r,
             schemaPath: "#/definitions/LiteralReference/required",
             keyword: "required",
-            params: { missingProperty: c },
-            message: "must have required property '" + c + "'"
+            params: { missingProperty: N },
+            message: "must have required property '" + N + "'"
           };
-          i === null ? i = [A] : i.push(A), e++;
+          i === null ? i = [S] : i.push(S), t++;
         } else {
-          const A = e;
-          for (const $ in r)
-            if (!($ === "resource" || $ === "name" || $ === "contents")) {
-              const T = {
-                instancePath: t,
+          const S = t;
+          for (const T in e)
+            if (!(T === "resource" || T === "name" || T === "contents")) {
+              const E = {
+                instancePath: r,
                 schemaPath: "#/definitions/LiteralReference/additionalProperties",
                 keyword: "additionalProperties",
-                params: { additionalProperty: $ },
+                params: { additionalProperty: T },
                 message: "must NOT have additional properties"
               };
-              i === null ? i = [T] : i.push(T), e++;
+              i === null ? i = [E] : i.push(E), t++;
               break;
             }
-          if (A === e) {
-            if (r.resource !== void 0) {
-              let $ = r.resource;
-              const T = e;
-              if (typeof $ != "string") {
-                const _ = {
-                  instancePath: t + "/resource",
+          if (S === t) {
+            if (e.resource !== void 0) {
+              let T = e.resource;
+              const E = t;
+              if (typeof T != "string") {
+                const O = {
+                  instancePath: r + "/resource",
                   schemaPath: "#/definitions/LiteralReference/properties/resource/type",
                   keyword: "type",
                   params: { type: "string" },
                   message: "must be string"
                 };
-                i === null ? i = [_] : i.push(_), e++;
+                i === null ? i = [O] : i.push(O), t++;
               }
-              if ($ !== "literal") {
-                const _ = {
-                  instancePath: t + "/resource",
+              if (T !== "literal") {
+                const O = {
+                  instancePath: r + "/resource",
                   schemaPath: "#/definitions/LiteralReference/properties/resource/const",
                   keyword: "const",
                   params: { allowedValue: "literal" },
                   message: "must be equal to constant"
                 };
-                i === null ? i = [_] : i.push(_), e++;
+                i === null ? i = [O] : i.push(O), t++;
               }
-              var S = T === e;
+              var b = E === t;
             } else
-              var S = !0;
-            if (S) {
-              if (r.name !== void 0) {
-                const $ = e;
-                if (typeof r.name != "string") {
-                  const _ = {
-                    instancePath: t + "/name",
+              var b = !0;
+            if (b) {
+              if (e.name !== void 0) {
+                const T = t;
+                if (typeof e.name != "string") {
+                  const O = {
+                    instancePath: r + "/name",
                     schemaPath: "#/definitions/LiteralReference/properties/name/type",
                     keyword: "type",
                     params: { type: "string" },
                     message: "must be string"
                   };
-                  i === null ? i = [_] : i.push(_), e++;
+                  i === null ? i = [O] : i.push(O), t++;
                 }
-                var S = $ === e;
+                var b = T === t;
               } else
-                var S = !0;
-              if (S)
-                if (r.contents !== void 0) {
-                  let $ = r.contents;
-                  const T = e, _ = e;
-                  let y = !1;
-                  const g = e;
-                  if (typeof $ != "string") {
-                    const O = {
-                      instancePath: t + "/contents",
+                var b = !0;
+              if (b)
+                if (e.contents !== void 0) {
+                  let T = e.contents;
+                  const E = t, O = t;
+                  let C = !1;
+                  const L = t;
+                  if (typeof T != "string") {
+                    const Y = {
+                      instancePath: r + "/contents",
                       schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/0/type",
                       keyword: "type",
                       params: { type: "string" },
                       message: "must be string"
                     };
-                    i === null ? i = [O] : i.push(O), e++;
+                    i === null ? i = [Y] : i.push(Y), t++;
                   }
-                  var D = g === e;
-                  if (y = y || D, !y) {
-                    const O = e;
-                    if (e === O)
-                      if ($ && typeof $ == "object" && !Array.isArray($)) {
-                        let q;
-                        if ($.BYTES_PER_ELEMENT === void 0 && (q = "BYTES_PER_ELEMENT") || $.buffer === void 0 && (q = "buffer") || $.byteLength === void 0 && (q = "byteLength") || $.byteOffset === void 0 && (q = "byteOffset") || $.length === void 0 && (q = "length")) {
-                          const W = {
-                            instancePath: t + "/contents",
+                  var j = L === t;
+                  if (C = C || j, !C) {
+                    const Y = t;
+                    if (t === Y)
+                      if (T && typeof T == "object" && !Array.isArray(T)) {
+                        let H;
+                        if (T.BYTES_PER_ELEMENT === void 0 && (H = "BYTES_PER_ELEMENT") || T.buffer === void 0 && (H = "buffer") || T.byteLength === void 0 && (H = "byteLength") || T.byteOffset === void 0 && (H = "byteOffset") || T.length === void 0 && (H = "length")) {
+                          const K = {
+                            instancePath: r + "/contents",
                             schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/1/required",
                             keyword: "required",
                             params: {
-                              missingProperty: q
+                              missingProperty: H
                             },
-                            message: "must have required property '" + q + "'"
+                            message: "must have required property '" + H + "'"
                           };
-                          i === null ? i = [W] : i.push(W), e++;
+                          i === null ? i = [K] : i.push(K), t++;
                         } else {
-                          const W = e;
-                          for (const R in $)
-                            if (!(R === "BYTES_PER_ELEMENT" || R === "buffer" || R === "byteLength" || R === "byteOffset" || R === "length")) {
-                              let V = $[R];
-                              const ee = e;
-                              if (!(typeof V == "number" && isFinite(
-                                V
+                          const K = t;
+                          for (const G in T)
+                            if (!(G === "BYTES_PER_ELEMENT" || G === "buffer" || G === "byteLength" || G === "byteOffset" || G === "length")) {
+                              let se = T[G];
+                              const ee = t;
+                              if (!(typeof se == "number" && isFinite(
+                                se
                               ))) {
-                                const J = {
-                                  instancePath: t + "/contents/" + R.replace(
+                                const X = {
+                                  instancePath: r + "/contents/" + G.replace(
                                     /~/g,
                                     "~0"
                                   ).replace(
@@ -2966,24 +7229,24 @@ function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                   message: "must be number"
                                 };
                                 i === null ? i = [
-                                  J
+                                  X
                                 ] : i.push(
-                                  J
-                                ), e++;
+                                  X
+                                ), t++;
                               }
-                              var P = ee === e;
+                              var P = ee === t;
                               if (!P)
                                 break;
                             }
-                          if (W === e) {
-                            if ($.BYTES_PER_ELEMENT !== void 0) {
-                              let R = $.BYTES_PER_ELEMENT;
-                              const V = e;
-                              if (!(typeof R == "number" && isFinite(
-                                R
+                          if (K === t) {
+                            if (T.BYTES_PER_ELEMENT !== void 0) {
+                              let G = T.BYTES_PER_ELEMENT;
+                              const se = t;
+                              if (!(typeof G == "number" && isFinite(
+                                G
                               ))) {
                                 const ee = {
-                                  instancePath: t + "/contents/BYTES_PER_ELEMENT",
+                                  instancePath: r + "/contents/BYTES_PER_ELEMENT",
                                   schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/1/properties/BYTES_PER_ELEMENT/type",
                                   keyword: "type",
                                   params: {
@@ -2995,62 +7258,62 @@ function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                   ee
                                 ] : i.push(
                                   ee
-                                ), e++;
+                                ), t++;
                               }
-                              var U = V === e;
+                              var q = se === t;
                             } else
-                              var U = !0;
-                            if (U) {
-                              if ($.buffer !== void 0) {
-                                let R = $.buffer;
-                                const V = e;
-                                if (e === V)
-                                  if (R && typeof R == "object" && !Array.isArray(
-                                    R
+                              var q = !0;
+                            if (q) {
+                              if (T.buffer !== void 0) {
+                                let G = T.buffer;
+                                const se = t;
+                                if (t === se)
+                                  if (G && typeof G == "object" && !Array.isArray(
+                                    G
                                   )) {
-                                    let J;
-                                    if (R.byteLength === void 0 && (J = "byteLength")) {
-                                      const C = {
-                                        instancePath: t + "/contents/buffer",
+                                    let X;
+                                    if (G.byteLength === void 0 && (X = "byteLength")) {
+                                      const Q = {
+                                        instancePath: r + "/contents/buffer",
                                         schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/1/properties/buffer/required",
                                         keyword: "required",
                                         params: {
-                                          missingProperty: J
+                                          missingProperty: X
                                         },
-                                        message: "must have required property '" + J + "'"
+                                        message: "must have required property '" + X + "'"
                                       };
                                       i === null ? i = [
-                                        C
+                                        Q
                                       ] : i.push(
-                                        C
-                                      ), e++;
+                                        Q
+                                      ), t++;
                                     } else {
-                                      const C = e;
-                                      for (const Q in R)
-                                        if (Q !== "byteLength") {
-                                          const M = {
-                                            instancePath: t + "/contents/buffer",
+                                      const Q = t;
+                                      for (const re in G)
+                                        if (re !== "byteLength") {
+                                          const ne = {
+                                            instancePath: r + "/contents/buffer",
                                             schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/1/properties/buffer/additionalProperties",
                                             keyword: "additionalProperties",
                                             params: {
-                                              additionalProperty: Q
+                                              additionalProperty: re
                                             },
                                             message: "must NOT have additional properties"
                                           };
                                           i === null ? i = [
-                                            M
+                                            ne
                                           ] : i.push(
-                                            M
-                                          ), e++;
+                                            ne
+                                          ), t++;
                                           break;
                                         }
-                                      if (C === e && R.byteLength !== void 0) {
-                                        let Q = R.byteLength;
-                                        if (!(typeof Q == "number" && isFinite(
-                                          Q
+                                      if (Q === t && G.byteLength !== void 0) {
+                                        let re = G.byteLength;
+                                        if (!(typeof re == "number" && isFinite(
+                                          re
                                         ))) {
-                                          const M = {
-                                            instancePath: t + "/contents/buffer/byteLength",
+                                          const ne = {
+                                            instancePath: r + "/contents/buffer/byteLength",
                                             schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/1/properties/buffer/properties/byteLength/type",
                                             keyword: "type",
                                             params: {
@@ -3059,16 +7322,16 @@ function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                             message: "must be number"
                                           };
                                           i === null ? i = [
-                                            M
+                                            ne
                                           ] : i.push(
-                                            M
-                                          ), e++;
+                                            ne
+                                          ), t++;
                                         }
                                       }
                                     }
                                   } else {
-                                    const J = {
-                                      instancePath: t + "/contents/buffer",
+                                    const X = {
+                                      instancePath: r + "/contents/buffer",
                                       schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/1/properties/buffer/type",
                                       keyword: "type",
                                       params: {
@@ -3077,23 +7340,23 @@ function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                       message: "must be object"
                                     };
                                     i === null ? i = [
-                                      J
+                                      X
                                     ] : i.push(
-                                      J
-                                    ), e++;
+                                      X
+                                    ), t++;
                                   }
-                                var U = V === e;
+                                var q = se === t;
                               } else
-                                var U = !0;
-                              if (U) {
-                                if ($.byteLength !== void 0) {
-                                  let R = $.byteLength;
-                                  const V = e;
-                                  if (!(typeof R == "number" && isFinite(
-                                    R
+                                var q = !0;
+                              if (q) {
+                                if (T.byteLength !== void 0) {
+                                  let G = T.byteLength;
+                                  const se = t;
+                                  if (!(typeof G == "number" && isFinite(
+                                    G
                                   ))) {
-                                    const J = {
-                                      instancePath: t + "/contents/byteLength",
+                                    const X = {
+                                      instancePath: r + "/contents/byteLength",
                                       schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/1/properties/byteLength/type",
                                       keyword: "type",
                                       params: {
@@ -3102,23 +7365,23 @@ function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                       message: "must be number"
                                     };
                                     i === null ? i = [
-                                      J
+                                      X
                                     ] : i.push(
-                                      J
-                                    ), e++;
+                                      X
+                                    ), t++;
                                   }
-                                  var U = V === e;
+                                  var q = se === t;
                                 } else
-                                  var U = !0;
-                                if (U) {
-                                  if ($.byteOffset !== void 0) {
-                                    let R = $.byteOffset;
-                                    const V = e;
-                                    if (!(typeof R == "number" && isFinite(
-                                      R
+                                  var q = !0;
+                                if (q) {
+                                  if (T.byteOffset !== void 0) {
+                                    let G = T.byteOffset;
+                                    const se = t;
+                                    if (!(typeof G == "number" && isFinite(
+                                      G
                                     ))) {
-                                      const J = {
-                                        instancePath: t + "/contents/byteOffset",
+                                      const X = {
+                                        instancePath: r + "/contents/byteOffset",
                                         schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/1/properties/byteOffset/type",
                                         keyword: "type",
                                         params: {
@@ -3127,23 +7390,23 @@ function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                         message: "must be number"
                                       };
                                       i === null ? i = [
-                                        J
+                                        X
                                       ] : i.push(
-                                        J
-                                      ), e++;
+                                        X
+                                      ), t++;
                                     }
-                                    var U = V === e;
+                                    var q = se === t;
                                   } else
-                                    var U = !0;
-                                  if (U)
-                                    if ($.length !== void 0) {
-                                      let R = $.length;
-                                      const V = e;
-                                      if (!(typeof R == "number" && isFinite(
-                                        R
+                                    var q = !0;
+                                  if (q)
+                                    if (T.length !== void 0) {
+                                      let G = T.length;
+                                      const se = t;
+                                      if (!(typeof G == "number" && isFinite(
+                                        G
                                       ))) {
-                                        const J = {
-                                          instancePath: t + "/contents/length",
+                                        const X = {
+                                          instancePath: r + "/contents/length",
                                           schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/1/properties/length/type",
                                           keyword: "type",
                                           params: {
@@ -3152,106 +7415,106 @@ function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                           message: "must be number"
                                         };
                                         i === null ? i = [
-                                          J
+                                          X
                                         ] : i.push(
-                                          J
-                                        ), e++;
+                                          X
+                                        ), t++;
                                       }
-                                      var U = V === e;
+                                      var q = se === t;
                                     } else
-                                      var U = !0;
+                                      var q = !0;
                                 }
                               }
                             }
                           }
                         }
                       } else {
-                        const q = {
-                          instancePath: t + "/contents",
+                        const H = {
+                          instancePath: r + "/contents",
                           schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf/1/type",
                           keyword: "type",
                           params: { type: "object" },
                           message: "must be object"
                         };
-                        i === null ? i = [q] : i.push(q), e++;
+                        i === null ? i = [H] : i.push(H), t++;
                       }
-                    var D = O === e;
-                    y = y || D;
+                    var j = Y === t;
+                    C = C || j;
                   }
-                  if (y)
-                    e = _, i !== null && (_ ? i.length = _ : i = null);
+                  if (C)
+                    t = O, i !== null && (O ? i.length = O : i = null);
                   else {
-                    const O = {
-                      instancePath: t + "/contents",
+                    const Y = {
+                      instancePath: r + "/contents",
                       schemaPath: "#/definitions/LiteralReference/properties/contents/anyOf",
                       keyword: "anyOf",
                       params: {},
                       message: "must match a schema in anyOf"
                     };
-                    i === null ? i = [O] : i.push(O), e++;
+                    i === null ? i = [Y] : i.push(Y), t++;
                   }
-                  var S = T === e;
+                  var b = E === t;
                 } else
-                  var S = !0;
+                  var b = !0;
             }
           }
         }
       } else {
-        const c = {
-          instancePath: t,
+        const N = {
+          instancePath: r,
           schemaPath: "#/definitions/LiteralReference/type",
           keyword: "type",
           params: { type: "object" },
           message: "must be object"
         };
-        i === null ? i = [c] : i.push(c), e++;
+        i === null ? i = [N] : i.push(N), t++;
       }
-    var w = x === e;
-    if (h = h || w, !h) {
-      const c = e;
-      if (e === e)
-        if (r && typeof r == "object" && !Array.isArray(r)) {
-          let T;
-          if (r.resource === void 0 && (T = "resource") || r.slug === void 0 && (T = "slug")) {
-            const _ = {
-              instancePath: t,
+    var _ = U === t;
+    if (y = y || _, !y) {
+      const N = t;
+      if (t === t)
+        if (e && typeof e == "object" && !Array.isArray(e)) {
+          let E;
+          if (e.resource === void 0 && (E = "resource") || e.slug === void 0 && (E = "slug")) {
+            const O = {
+              instancePath: r,
               schemaPath: "#/definitions/CoreThemeReference/required",
               keyword: "required",
-              params: { missingProperty: T },
-              message: "must have required property '" + T + "'"
+              params: { missingProperty: E },
+              message: "must have required property '" + E + "'"
             };
-            i === null ? i = [_] : i.push(_), e++;
+            i === null ? i = [O] : i.push(O), t++;
           } else {
-            const _ = e;
-            for (const y in r)
-              if (!(y === "resource" || y === "slug")) {
-                const g = {
-                  instancePath: t,
+            const O = t;
+            for (const C in e)
+              if (!(C === "resource" || C === "slug")) {
+                const L = {
+                  instancePath: r,
                   schemaPath: "#/definitions/CoreThemeReference/additionalProperties",
                   keyword: "additionalProperties",
-                  params: { additionalProperty: y },
+                  params: { additionalProperty: C },
                   message: "must NOT have additional properties"
                 };
-                i === null ? i = [g] : i.push(g), e++;
+                i === null ? i = [L] : i.push(L), t++;
                 break;
               }
-            if (_ === e) {
-              if (r.resource !== void 0) {
-                let y = r.resource;
-                const g = e;
-                if (typeof y != "string") {
-                  const v = {
-                    instancePath: t + "/resource",
+            if (O === t) {
+              if (e.resource !== void 0) {
+                let C = e.resource;
+                const L = t;
+                if (typeof C != "string") {
+                  const F = {
+                    instancePath: r + "/resource",
                     schemaPath: "#/definitions/CoreThemeReference/properties/resource/type",
                     keyword: "type",
                     params: { type: "string" },
                     message: "must be string"
                   };
-                  i === null ? i = [v] : i.push(v), e++;
+                  i === null ? i = [F] : i.push(F), t++;
                 }
-                if (y !== "wordpress.org/themes") {
-                  const v = {
-                    instancePath: t + "/resource",
+                if (C !== "wordpress.org/themes") {
+                  const F = {
+                    instancePath: r + "/resource",
                     schemaPath: "#/definitions/CoreThemeReference/properties/resource/const",
                     keyword: "const",
                     params: {
@@ -3259,85 +7522,85 @@ function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                     },
                     message: "must be equal to constant"
                   };
-                  i === null ? i = [v] : i.push(v), e++;
+                  i === null ? i = [F] : i.push(F), t++;
                 }
-                var te = g === e;
+                var D = L === t;
               } else
-                var te = !0;
-              if (te)
-                if (r.slug !== void 0) {
-                  const y = e;
-                  if (typeof r.slug != "string") {
-                    const v = {
-                      instancePath: t + "/slug",
+                var D = !0;
+              if (D)
+                if (e.slug !== void 0) {
+                  const C = t;
+                  if (typeof e.slug != "string") {
+                    const F = {
+                      instancePath: r + "/slug",
                       schemaPath: "#/definitions/CoreThemeReference/properties/slug/type",
                       keyword: "type",
                       params: { type: "string" },
                       message: "must be string"
                     };
-                    i === null ? i = [v] : i.push(v), e++;
+                    i === null ? i = [F] : i.push(F), t++;
                   }
-                  var te = y === e;
+                  var D = C === t;
                 } else
-                  var te = !0;
+                  var D = !0;
             }
           }
         } else {
-          const T = {
-            instancePath: t,
+          const E = {
+            instancePath: r,
             schemaPath: "#/definitions/CoreThemeReference/type",
             keyword: "type",
             params: { type: "object" },
             message: "must be object"
           };
-          i === null ? i = [T] : i.push(T), e++;
+          i === null ? i = [E] : i.push(E), t++;
         }
-      var w = c === e;
-      if (h = h || w, !h) {
-        const T = e;
-        if (e === e)
-          if (r && typeof r == "object" && !Array.isArray(r)) {
-            let g;
-            if (r.resource === void 0 && (g = "resource") || r.slug === void 0 && (g = "slug")) {
-              const v = {
-                instancePath: t,
+      var _ = N === t;
+      if (y = y || _, !y) {
+        const E = t;
+        if (t === t)
+          if (e && typeof e == "object" && !Array.isArray(e)) {
+            let L;
+            if (e.resource === void 0 && (L = "resource") || e.slug === void 0 && (L = "slug")) {
+              const F = {
+                instancePath: r,
                 schemaPath: "#/definitions/CorePluginReference/required",
                 keyword: "required",
-                params: { missingProperty: g },
-                message: "must have required property '" + g + "'"
+                params: { missingProperty: L },
+                message: "must have required property '" + L + "'"
               };
-              i === null ? i = [v] : i.push(v), e++;
+              i === null ? i = [F] : i.push(F), t++;
             } else {
-              const v = e;
-              for (const O in r)
-                if (!(O === "resource" || O === "slug")) {
-                  const N = {
-                    instancePath: t,
+              const F = t;
+              for (const Y in e)
+                if (!(Y === "resource" || Y === "slug")) {
+                  const Z = {
+                    instancePath: r,
                     schemaPath: "#/definitions/CorePluginReference/additionalProperties",
                     keyword: "additionalProperties",
-                    params: { additionalProperty: O },
+                    params: { additionalProperty: Y },
                     message: "must NOT have additional properties"
                   };
-                  i === null ? i = [N] : i.push(N), e++;
+                  i === null ? i = [Z] : i.push(Z), t++;
                   break;
                 }
-              if (v === e) {
-                if (r.resource !== void 0) {
-                  let O = r.resource;
-                  const N = e;
-                  if (typeof O != "string") {
-                    const q = {
-                      instancePath: t + "/resource",
+              if (F === t) {
+                if (e.resource !== void 0) {
+                  let Y = e.resource;
+                  const Z = t;
+                  if (typeof Y != "string") {
+                    const H = {
+                      instancePath: r + "/resource",
                       schemaPath: "#/definitions/CorePluginReference/properties/resource/type",
                       keyword: "type",
                       params: { type: "string" },
                       message: "must be string"
                     };
-                    i === null ? i = [q] : i.push(q), e++;
+                    i === null ? i = [H] : i.push(H), t++;
                   }
-                  if (O !== "wordpress.org/plugins") {
-                    const q = {
-                      instancePath: t + "/resource",
+                  if (Y !== "wordpress.org/plugins") {
+                    const H = {
+                      instancePath: r + "/resource",
                       schemaPath: "#/definitions/CorePluginReference/properties/resource/const",
                       keyword: "const",
                       params: {
@@ -3345,119 +7608,119 @@ function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                       },
                       message: "must be equal to constant"
                     };
-                    i === null ? i = [q] : i.push(q), e++;
+                    i === null ? i = [H] : i.push(H), t++;
                   }
-                  var H = N === e;
+                  var M = Z === t;
                 } else
-                  var H = !0;
-                if (H)
-                  if (r.slug !== void 0) {
-                    const O = e;
-                    if (typeof r.slug != "string") {
-                      const q = {
-                        instancePath: t + "/slug",
+                  var M = !0;
+                if (M)
+                  if (e.slug !== void 0) {
+                    const Y = t;
+                    if (typeof e.slug != "string") {
+                      const H = {
+                        instancePath: r + "/slug",
                         schemaPath: "#/definitions/CorePluginReference/properties/slug/type",
                         keyword: "type",
                         params: { type: "string" },
                         message: "must be string"
                       };
-                      i === null ? i = [q] : i.push(q), e++;
+                      i === null ? i = [H] : i.push(H), t++;
                     }
-                    var H = O === e;
+                    var M = Y === t;
                   } else
-                    var H = !0;
+                    var M = !0;
               }
             }
           } else {
-            const g = {
-              instancePath: t,
+            const L = {
+              instancePath: r,
               schemaPath: "#/definitions/CorePluginReference/type",
               keyword: "type",
               params: { type: "object" },
               message: "must be object"
             };
-            i === null ? i = [g] : i.push(g), e++;
+            i === null ? i = [L] : i.push(L), t++;
           }
-        var w = T === e;
-        if (h = h || w, !h) {
-          const g = e;
-          if (e === e)
-            if (r && typeof r == "object" && !Array.isArray(r)) {
-              let N;
-              if (r.resource === void 0 && (N = "resource") || r.url === void 0 && (N = "url")) {
-                const q = {
-                  instancePath: t,
+        var _ = E === t;
+        if (y = y || _, !y) {
+          const L = t;
+          if (t === t)
+            if (e && typeof e == "object" && !Array.isArray(e)) {
+              let Z;
+              if (e.resource === void 0 && (Z = "resource") || e.url === void 0 && (Z = "url")) {
+                const H = {
+                  instancePath: r,
                   schemaPath: "#/definitions/UrlReference/required",
                   keyword: "required",
-                  params: { missingProperty: N },
-                  message: "must have required property '" + N + "'"
+                  params: { missingProperty: Z },
+                  message: "must have required property '" + Z + "'"
                 };
-                i === null ? i = [q] : i.push(q), e++;
+                i === null ? i = [H] : i.push(H), t++;
               } else {
-                const q = e;
-                for (const W in r)
-                  if (!(W === "resource" || W === "url" || W === "caption")) {
-                    const R = {
-                      instancePath: t,
+                const H = t;
+                for (const K in e)
+                  if (!(K === "resource" || K === "url" || K === "caption")) {
+                    const G = {
+                      instancePath: r,
                       schemaPath: "#/definitions/UrlReference/additionalProperties",
                       keyword: "additionalProperties",
                       params: {
-                        additionalProperty: W
+                        additionalProperty: K
                       },
                       message: "must NOT have additional properties"
                     };
-                    i === null ? i = [R] : i.push(R), e++;
+                    i === null ? i = [G] : i.push(G), t++;
                     break;
                   }
-                if (q === e) {
-                  if (r.resource !== void 0) {
-                    let W = r.resource;
-                    const R = e;
-                    if (typeof W != "string") {
-                      const V = {
-                        instancePath: t + "/resource",
+                if (H === t) {
+                  if (e.resource !== void 0) {
+                    let K = e.resource;
+                    const G = t;
+                    if (typeof K != "string") {
+                      const se = {
+                        instancePath: r + "/resource",
                         schemaPath: "#/definitions/UrlReference/properties/resource/type",
                         keyword: "type",
                         params: { type: "string" },
                         message: "must be string"
                       };
-                      i === null ? i = [V] : i.push(V), e++;
+                      i === null ? i = [se] : i.push(se), t++;
                     }
-                    if (W !== "url") {
-                      const V = {
-                        instancePath: t + "/resource",
+                    if (K !== "url") {
+                      const se = {
+                        instancePath: r + "/resource",
                         schemaPath: "#/definitions/UrlReference/properties/resource/const",
                         keyword: "const",
                         params: { allowedValue: "url" },
                         message: "must be equal to constant"
                       };
-                      i === null ? i = [V] : i.push(V), e++;
+                      i === null ? i = [se] : i.push(se), t++;
                     }
-                    var E = R === e;
+                    var B = G === t;
                   } else
-                    var E = !0;
-                  if (E) {
-                    if (r.url !== void 0) {
-                      const W = e;
-                      if (typeof r.url != "string") {
-                        const V = {
-                          instancePath: t + "/url",
+                    var B = !0;
+                  if (B) {
+                    if (e.url !== void 0) {
+                      const K = t;
+                      if (typeof e.url != "string") {
+                        const se = {
+                          instancePath: r + "/url",
                           schemaPath: "#/definitions/UrlReference/properties/url/type",
                           keyword: "type",
                           params: { type: "string" },
                           message: "must be string"
                         };
-                        i === null ? i = [V] : i.push(V), e++;
+                        i === null ? i = [se] : i.push(se), t++;
                       }
-                      var E = W === e;
+                      var B = K === t;
                     } else
-                      var E = !0;
-                    if (E)
-                      if (r.caption !== void 0) {
-                        const W = e;
-                        if (typeof r.caption != "string") {
-                          const V = {
-                            instancePath: t + "/caption",
+                      var B = !0;
+                    if (B)
+                      if (e.caption !== void 0) {
+                        const K = t;
+                        if (typeof e.caption != "string") {
+                          const se = {
+                            instancePath: r + "/caption",
                             schemaPath: "#/definitions/UrlReference/properties/caption/type",
                             keyword: "type",
                             params: {
@@ -3465,45 +7728,45 @@ function re(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                             },
                             message: "must be string"
                           };
-                          i === null ? i = [V] : i.push(V), e++;
+                          i === null ? i = [se] : i.push(se), t++;
                         }
-                        var E = W === e;
+                        var B = K === t;
                       } else
-                        var E = !0;
+                        var B = !0;
                   }
                 }
               }
             } else {
-              const N = {
-                instancePath: t,
+              const Z = {
+                instancePath: r,
                 schemaPath: "#/definitions/UrlReference/type",
                 keyword: "type",
                 params: { type: "object" },
                 message: "must be object"
               };
-              i === null ? i = [N] : i.push(N), e++;
+              i === null ? i = [Z] : i.push(Z), t++;
             }
-          var w = g === e;
-          h = h || w;
+          var _ = L === t;
+          y = y || _;
         }
       }
     }
   }
-  if (h)
-    e = f, i !== null && (f ? i.length = f : i = null);
+  if (y)
+    t = p, i !== null && (p ? i.length = p : i = null);
   else {
-    const x = {
-      instancePath: t,
+    const U = {
+      instancePath: r,
       schemaPath: "#/anyOf",
       keyword: "anyOf",
       params: {},
       message: "must match a schema in anyOf"
     };
-    return i === null ? i = [x] : i.push(x), e++, re.errors = i, !1;
+    return i === null ? i = [U] : i.push(U), t++, le.errors = i, !1;
   }
-  return re.errors = i, e === 0;
+  return le.errors = i, t === 0;
 }
-const br = {
+const Ns = {
   type: "object",
   discriminator: { propertyName: "step" },
   required: ["step"],
@@ -3635,7 +7898,8 @@ for existing apps using this option.`
           },
           additionalProperties: !1
         },
-        step: { type: "string", const: "enableMultisite" }
+        step: { type: "string", const: "enableMultisite" },
+        wpCliPath: { type: "string", description: "wp-cli.phar path" }
       },
       required: ["step"]
     },
@@ -3729,16 +7993,23 @@ for existing apps using this option.`
           const: "installPlugin",
           description: "The step identifier."
         },
+        pluginData: {
+          anyOf: [
+            { $ref: "#/definitions/FileReference" },
+            { $ref: "#/definitions/DirectoryReference" }
+          ],
+          description: "The plugin files to install. It can be either a plugin zip file, or a directory containing all the plugin files at its root."
+        },
         pluginZipFile: {
           $ref: "#/definitions/FileReference",
-          description: "The plugin zip file to install."
+          deprecated: ". Use `pluginData` instead."
         },
         options: {
           $ref: "#/definitions/InstallPluginOptions",
           description: "Optional installation options."
         }
       },
-      required: ["pluginZipFile", "step"]
+      required: ["pluginData", "step"]
     },
     {
       type: "object",
@@ -3762,27 +8033,23 @@ for existing apps using this option.`
           const: "installTheme",
           description: "The step identifier."
         },
+        themeData: {
+          anyOf: [
+            { $ref: "#/definitions/FileReference" },
+            { $ref: "#/definitions/DirectoryReference" }
+          ],
+          description: "The theme files to install. It can be either a theme zip file, or a directory containing all the theme files at its root."
+        },
         themeZipFile: {
           $ref: "#/definitions/FileReference",
-          description: "The theme zip file to install."
+          deprecated: ". Use `themeData` instead."
         },
         options: {
-          type: "object",
-          properties: {
-            activate: {
-              type: "boolean",
-              description: "Whether to activate the theme after installing it."
-            },
-            importStarterContent: {
-              type: "boolean",
-              description: "Whether to import the theme's starter content after installing it."
-            }
-          },
-          additionalProperties: !1,
+          $ref: "#/definitions/InstallThemeOptions",
           description: "Optional installation options."
         }
       },
-      required: ["step", "themeZipFile"]
+      required: ["step", "themeData"]
     },
     {
       type: "object",
@@ -3803,7 +8070,8 @@ for existing apps using this option.`
         },
         password: {
           type: "string",
-          description: "The password to log in with. Defaults to 'password'."
+          deprecated: `The password field is deprecated and will be removed in a future version.
+Only the username field is required for user authentication.`
         }
       },
       required: ["step"]
@@ -4138,6 +8406,30 @@ for existing apps using this option.`
           },
           additionalProperties: !1
         },
+        step: { type: "string", const: "writeFiles" },
+        writeToPath: {
+          type: "string",
+          description: "The path of the file to write to"
+        },
+        filesTree: {
+          $ref: "#/definitions/DirectoryReference",
+          description: "The data to write"
+        }
+      },
+      required: ["filesTree", "step", "writeToPath"]
+    },
+    {
+      type: "object",
+      additionalProperties: !1,
+      properties: {
+        progress: {
+          type: "object",
+          properties: {
+            weight: { type: "number" },
+            caption: { type: "string" }
+          },
+          additionalProperties: !1
+        },
         step: {
           type: "string",
           const: "wp-cli",
@@ -4175,93 +8467,410 @@ for existing apps using this option.`
       required: ["language", "step"]
     }
   ]
-}, ct = {
-  type: "string",
-  enum: ["GET", "POST", "HEAD", "OPTIONS", "PATCH", "PUT", "DELETE"]
-};
-function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, rootData: l = r } = {}) {
-  let i = null, e = 0;
-  if (e === 0)
-    if (r && typeof r == "object" && !Array.isArray(r)) {
-      let te;
-      if (r.url === void 0 && (te = "url"))
-        return ye.errors = [
+}, uu = {
+  type: "object",
+  additionalProperties: {
+    anyOf: [
+      { $ref: "#/definitions/FileTree" },
+      { type: ["object", "string"] }
+    ]
+  },
+  properties: {}
+}, Cs = { validate: Ir };
+function Ir(e, { instancePath: r = "", parentData: s, parentDataProperty: n, rootData: o = e } = {}) {
+  let i = null, t = 0;
+  if (t === 0)
+    if (e && typeof e == "object" && !Array.isArray(e))
+      for (const u in e) {
+        let d = e[u];
+        const w = t, _ = t;
+        let b = !1;
+        const j = t;
+        Cs.validate(d, {
+          instancePath: r + "/" + u.replace(/~/g, "~0").replace(/\//g, "~1"),
+          parentData: e,
+          parentDataProperty: u,
+          rootData: o
+        }) || (i = i === null ? Cs.validate.errors : i.concat(Cs.validate.errors), t = i.length);
+        var p = j === t;
+        if (b = b || p, !b) {
+          const P = t;
+          if (!(d && typeof d == "object" && !Array.isArray(d)) && typeof d != "string") {
+            const D = {
+              instancePath: r + "/" + u.replace(/~/g, "~0").replace(/\//g, "~1"),
+              schemaPath: "#/additionalProperties/anyOf/1/type",
+              keyword: "type",
+              params: {
+                type: uu.additionalProperties.anyOf[1].type
+              },
+              message: "must be object,string"
+            };
+            i === null ? i = [D] : i.push(D), t++;
+          }
+          var p = P === t;
+          b = b || p;
+        }
+        if (b)
+          t = _, i !== null && (_ ? i.length = _ : i = null);
+        else {
+          const P = {
+            instancePath: r + "/" + u.replace(/~/g, "~0").replace(/\//g, "~1"),
+            schemaPath: "#/additionalProperties/anyOf",
+            keyword: "anyOf",
+            params: {},
+            message: "must match a schema in anyOf"
+          };
+          return i === null ? i = [P] : i.push(P), t++, Ir.errors = i, !1;
+        }
+        var y = w === t;
+        if (!y)
+          break;
+      }
+    else
+      return Ir.errors = [
+        {
+          instancePath: r,
+          schemaPath: "#/type",
+          keyword: "type",
+          params: { type: "object" },
+          message: "must be object"
+        }
+      ], !1;
+  return Ir.errors = i, t === 0;
+}
+function or(e, { instancePath: r = "", parentData: s, parentDataProperty: n, rootData: o = e } = {}) {
+  let i = null, t = 0;
+  if (t === 0)
+    if (e && typeof e == "object" && !Array.isArray(e)) {
+      let y;
+      if (e.files === void 0 && (y = "files") || e.name === void 0 && (y = "name") || e.resource === void 0 && (y = "resource"))
+        return or.errors = [
           {
-            instancePath: t,
+            instancePath: r,
             schemaPath: "#/required",
             keyword: "required",
-            params: { missingProperty: te },
-            message: "must have required property '" + te + "'"
+            params: { missingProperty: y },
+            message: "must have required property '" + y + "'"
           }
         ], !1;
       {
-        const H = e;
-        for (const E in r)
-          if (!(E === "method" || E === "url" || E === "headers" || E === "body"))
-            return ye.errors = [
+        const u = t;
+        for (const d in e)
+          if (!(d === "resource" || d === "files" || d === "name"))
+            return or.errors = [
               {
-                instancePath: t,
+                instancePath: r,
                 schemaPath: "#/additionalProperties",
                 keyword: "additionalProperties",
-                params: { additionalProperty: E },
+                params: { additionalProperty: d },
                 message: "must NOT have additional properties"
               }
             ], !1;
-        if (H === e) {
-          if (r.method !== void 0) {
-            let E = r.method;
-            const x = e;
-            if (typeof E != "string")
-              return ye.errors = [
+        if (u === t) {
+          if (e.resource !== void 0) {
+            let d = e.resource;
+            const w = t;
+            if (typeof d != "string")
+              return or.errors = [
                 {
-                  instancePath: t + "/method",
+                  instancePath: r + "/resource",
+                  schemaPath: "#/properties/resource/type",
+                  keyword: "type",
+                  params: { type: "string" },
+                  message: "must be string"
+                }
+              ], !1;
+            if (d !== "literal:directory")
+              return or.errors = [
+                {
+                  instancePath: r + "/resource",
+                  schemaPath: "#/properties/resource/const",
+                  keyword: "const",
+                  params: {
+                    allowedValue: "literal:directory"
+                  },
+                  message: "must be equal to constant"
+                }
+              ], !1;
+            var p = w === t;
+          } else
+            var p = !0;
+          if (p) {
+            if (e.files !== void 0) {
+              const d = t;
+              Ir(e.files, {
+                instancePath: r + "/files",
+                parentData: e,
+                parentDataProperty: "files",
+                rootData: o
+              }) || (i = i === null ? Ir.errors : i.concat(Ir.errors), t = i.length);
+              var p = d === t;
+            } else
+              var p = !0;
+            if (p)
+              if (e.name !== void 0) {
+                const d = t;
+                if (typeof e.name != "string")
+                  return or.errors = [
+                    {
+                      instancePath: r + "/name",
+                      schemaPath: "#/properties/name/type",
+                      keyword: "type",
+                      params: { type: "string" },
+                      message: "must be string"
+                    }
+                  ], !1;
+                var p = d === t;
+              } else
+                var p = !0;
+          }
+        }
+      }
+    } else
+      return or.errors = [
+        {
+          instancePath: r,
+          schemaPath: "#/type",
+          keyword: "type",
+          params: { type: "object" },
+          message: "must be object"
+        }
+      ], !1;
+  return or.errors = i, t === 0;
+}
+function Je(e, { instancePath: r = "", parentData: s, parentDataProperty: n, rootData: o = e } = {}) {
+  let i = null, t = 0;
+  const p = t;
+  let y = !1;
+  const u = t;
+  if (t === t)
+    if (e && typeof e == "object" && !Array.isArray(e)) {
+      let b;
+      if (e.resource === void 0 && (b = "resource") || e.url === void 0 && (b = "url") || e.ref === void 0 && (b = "ref") || e.path === void 0 && (b = "path")) {
+        const j = {
+          instancePath: r,
+          schemaPath: "#/definitions/GitDirectoryReference/required",
+          keyword: "required",
+          params: { missingProperty: b },
+          message: "must have required property '" + b + "'"
+        };
+        i === null ? i = [j] : i.push(j), t++;
+      } else {
+        const j = t;
+        for (const P in e)
+          if (!(P === "resource" || P === "url" || P === "ref" || P === "path")) {
+            const q = {
+              instancePath: r,
+              schemaPath: "#/definitions/GitDirectoryReference/additionalProperties",
+              keyword: "additionalProperties",
+              params: { additionalProperty: P },
+              message: "must NOT have additional properties"
+            };
+            i === null ? i = [q] : i.push(q), t++;
+            break;
+          }
+        if (j === t) {
+          if (e.resource !== void 0) {
+            let P = e.resource;
+            const q = t;
+            if (typeof P != "string") {
+              const D = {
+                instancePath: r + "/resource",
+                schemaPath: "#/definitions/GitDirectoryReference/properties/resource/type",
+                keyword: "type",
+                params: { type: "string" },
+                message: "must be string"
+              };
+              i === null ? i = [D] : i.push(D), t++;
+            }
+            if (P !== "git:directory") {
+              const D = {
+                instancePath: r + "/resource",
+                schemaPath: "#/definitions/GitDirectoryReference/properties/resource/const",
+                keyword: "const",
+                params: { allowedValue: "git:directory" },
+                message: "must be equal to constant"
+              };
+              i === null ? i = [D] : i.push(D), t++;
+            }
+            var w = q === t;
+          } else
+            var w = !0;
+          if (w) {
+            if (e.url !== void 0) {
+              const P = t;
+              if (typeof e.url != "string") {
+                const D = {
+                  instancePath: r + "/url",
+                  schemaPath: "#/definitions/GitDirectoryReference/properties/url/type",
+                  keyword: "type",
+                  params: { type: "string" },
+                  message: "must be string"
+                };
+                i === null ? i = [D] : i.push(D), t++;
+              }
+              var w = P === t;
+            } else
+              var w = !0;
+            if (w) {
+              if (e.ref !== void 0) {
+                const P = t;
+                if (typeof e.ref != "string") {
+                  const D = {
+                    instancePath: r + "/ref",
+                    schemaPath: "#/definitions/GitDirectoryReference/properties/ref/type",
+                    keyword: "type",
+                    params: { type: "string" },
+                    message: "must be string"
+                  };
+                  i === null ? i = [D] : i.push(D), t++;
+                }
+                var w = P === t;
+              } else
+                var w = !0;
+              if (w)
+                if (e.path !== void 0) {
+                  const P = t;
+                  if (typeof e.path != "string") {
+                    const D = {
+                      instancePath: r + "/path",
+                      schemaPath: "#/definitions/GitDirectoryReference/properties/path/type",
+                      keyword: "type",
+                      params: { type: "string" },
+                      message: "must be string"
+                    };
+                    i === null ? i = [D] : i.push(D), t++;
+                  }
+                  var w = P === t;
+                } else
+                  var w = !0;
+            }
+          }
+        }
+      }
+    } else {
+      const b = {
+        instancePath: r,
+        schemaPath: "#/definitions/GitDirectoryReference/type",
+        keyword: "type",
+        params: { type: "object" },
+        message: "must be object"
+      };
+      i === null ? i = [b] : i.push(b), t++;
+    }
+  var _ = u === t;
+  if (y = y || _, !y) {
+    const b = t;
+    or(e, {
+      instancePath: r,
+      parentData: s,
+      parentDataProperty: n,
+      rootData: o
+    }) || (i = i === null ? or.errors : i.concat(or.errors), t = i.length);
+    var _ = b === t;
+    y = y || _;
+  }
+  if (y)
+    t = p, i !== null && (p ? i.length = p : i = null);
+  else {
+    const b = {
+      instancePath: r,
+      schemaPath: "#/anyOf",
+      keyword: "anyOf",
+      params: {},
+      message: "must match a schema in anyOf"
+    };
+    return i === null ? i = [b] : i.push(b), t++, Je.errors = i, !1;
+  }
+  return Je.errors = i, t === 0;
+}
+const Ka = {
+  type: "string",
+  enum: ["GET", "POST", "HEAD", "OPTIONS", "PATCH", "PUT", "DELETE"]
+};
+function Ue(e, { instancePath: r = "", parentData: s, parentDataProperty: n, rootData: o = e } = {}) {
+  let i = null, t = 0;
+  if (t === 0)
+    if (e && typeof e == "object" && !Array.isArray(e)) {
+      let D;
+      if (e.url === void 0 && (D = "url"))
+        return Ue.errors = [
+          {
+            instancePath: r,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: D },
+            message: "must have required property '" + D + "'"
+          }
+        ], !1;
+      {
+        const M = t;
+        for (const B in e)
+          if (!(B === "method" || B === "url" || B === "headers" || B === "body"))
+            return Ue.errors = [
+              {
+                instancePath: r,
+                schemaPath: "#/additionalProperties",
+                keyword: "additionalProperties",
+                params: { additionalProperty: B },
+                message: "must NOT have additional properties"
+              }
+            ], !1;
+        if (M === t) {
+          if (e.method !== void 0) {
+            let B = e.method;
+            const U = t;
+            if (typeof B != "string")
+              return Ue.errors = [
+                {
+                  instancePath: r + "/method",
                   schemaPath: "#/definitions/HTTPMethod/type",
                   keyword: "type",
                   params: { type: "string" },
                   message: "must be string"
                 }
               ], !1;
-            if (!(E === "GET" || E === "POST" || E === "HEAD" || E === "OPTIONS" || E === "PATCH" || E === "PUT" || E === "DELETE"))
-              return ye.errors = [
+            if (!(B === "GET" || B === "POST" || B === "HEAD" || B === "OPTIONS" || B === "PATCH" || B === "PUT" || B === "DELETE"))
+              return Ue.errors = [
                 {
-                  instancePath: t + "/method",
+                  instancePath: r + "/method",
                   schemaPath: "#/definitions/HTTPMethod/enum",
                   keyword: "enum",
-                  params: { allowedValues: ct.enum },
+                  params: { allowedValues: Ka.enum },
                   message: "must be equal to one of the allowed values"
                 }
               ], !1;
-            var f = x === e;
+            var p = U === t;
           } else
-            var f = !0;
-          if (f) {
-            if (r.url !== void 0) {
-              const E = e;
-              if (typeof r.url != "string")
-                return ye.errors = [
+            var p = !0;
+          if (p) {
+            if (e.url !== void 0) {
+              const B = t;
+              if (typeof e.url != "string")
+                return Ue.errors = [
                   {
-                    instancePath: t + "/url",
+                    instancePath: r + "/url",
                     schemaPath: "#/properties/url/type",
                     keyword: "type",
                     params: { type: "string" },
                     message: "must be string"
                   }
                 ], !1;
-              var f = E === e;
+              var p = B === t;
             } else
-              var f = !0;
-            if (f) {
-              if (r.headers !== void 0) {
-                let E = r.headers;
-                const x = e;
-                if (e === e)
-                  if (E && typeof E == "object" && !Array.isArray(E))
-                    for (const c in E) {
-                      const A = e;
-                      if (typeof E[c] != "string")
-                        return ye.errors = [
+              var p = !0;
+            if (p) {
+              if (e.headers !== void 0) {
+                let B = e.headers;
+                const U = t;
+                if (t === t)
+                  if (B && typeof B == "object" && !Array.isArray(B))
+                    for (const N in B) {
+                      const S = t;
+                      if (typeof B[N] != "string")
+                        return Ue.errors = [
                           {
-                            instancePath: t + "/headers/" + c.replace(
+                            instancePath: r + "/headers/" + N.replace(
                               /~/g,
                               "~0"
                             ).replace(
@@ -4276,67 +8885,67 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                             message: "must be string"
                           }
                         ], !1;
-                      var h = A === e;
-                      if (!h)
+                      var y = S === t;
+                      if (!y)
                         break;
                     }
                   else
-                    return ye.errors = [
+                    return Ue.errors = [
                       {
-                        instancePath: t + "/headers",
+                        instancePath: r + "/headers",
                         schemaPath: "#/definitions/PHPRequestHeaders/type",
                         keyword: "type",
                         params: { type: "object" },
                         message: "must be object"
                       }
                     ], !1;
-                var f = x === e;
+                var p = U === t;
               } else
-                var f = !0;
-              if (f)
-                if (r.body !== void 0) {
-                  let E = r.body;
-                  const x = e, I = e;
-                  let z = !1;
-                  const c = e;
-                  if (typeof E != "string") {
-                    const $ = {
-                      instancePath: t + "/body",
+                var p = !0;
+              if (p)
+                if (e.body !== void 0) {
+                  let B = e.body;
+                  const U = t, A = t;
+                  let x = !1;
+                  const N = t;
+                  if (typeof B != "string") {
+                    const T = {
+                      instancePath: r + "/body",
                       schemaPath: "#/properties/body/anyOf/0/type",
                       keyword: "type",
                       params: { type: "string" },
                       message: "must be string"
                     };
-                    i === null ? i = [$] : i.push($), e++;
+                    i === null ? i = [T] : i.push(T), t++;
                   }
-                  var b = c === e;
-                  if (z = z || b, !z) {
-                    const $ = e;
-                    if (e === $)
-                      if (E && typeof E == "object" && !Array.isArray(E)) {
-                        let _;
-                        if (E.BYTES_PER_ELEMENT === void 0 && (_ = "BYTES_PER_ELEMENT") || E.buffer === void 0 && (_ = "buffer") || E.byteLength === void 0 && (_ = "byteLength") || E.byteOffset === void 0 && (_ = "byteOffset") || E.length === void 0 && (_ = "length")) {
-                          const y = {
-                            instancePath: t + "/body",
+                  var u = N === t;
+                  if (x = x || u, !x) {
+                    const T = t;
+                    if (t === T)
+                      if (B && typeof B == "object" && !Array.isArray(B)) {
+                        let O;
+                        if (B.BYTES_PER_ELEMENT === void 0 && (O = "BYTES_PER_ELEMENT") || B.buffer === void 0 && (O = "buffer") || B.byteLength === void 0 && (O = "byteLength") || B.byteOffset === void 0 && (O = "byteOffset") || B.length === void 0 && (O = "length")) {
+                          const C = {
+                            instancePath: r + "/body",
                             schemaPath: "#/properties/body/anyOf/1/required",
                             keyword: "required",
                             params: {
-                              missingProperty: _
+                              missingProperty: O
                             },
-                            message: "must have required property '" + _ + "'"
+                            message: "must have required property '" + O + "'"
                           };
-                          i === null ? i = [y] : i.push(y), e++;
+                          i === null ? i = [C] : i.push(C), t++;
                         } else {
-                          const y = e;
-                          for (const g in E)
-                            if (!(g === "BYTES_PER_ELEMENT" || g === "buffer" || g === "byteLength" || g === "byteOffset" || g === "length")) {
-                              let v = E[g];
-                              const O = e;
-                              if (!(typeof v == "number" && isFinite(
-                                v
+                          const C = t;
+                          for (const L in B)
+                            if (!(L === "BYTES_PER_ELEMENT" || L === "buffer" || L === "byteLength" || L === "byteOffset" || L === "length")) {
+                              let F = B[L];
+                              const Y = t;
+                              if (!(typeof F == "number" && isFinite(
+                                F
                               ))) {
-                                const N = {
-                                  instancePath: t + "/body/" + g.replace(
+                                const Z = {
+                                  instancePath: r + "/body/" + L.replace(
                                     /~/g,
                                     "~0"
                                   ).replace(
@@ -4351,24 +8960,24 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                   message: "must be number"
                                 };
                                 i === null ? i = [
-                                  N
+                                  Z
                                 ] : i.push(
-                                  N
-                                ), e++;
+                                  Z
+                                ), t++;
                               }
-                              var k = O === e;
-                              if (!k)
+                              var d = Y === t;
+                              if (!d)
                                 break;
                             }
-                          if (y === e) {
-                            if (E.BYTES_PER_ELEMENT !== void 0) {
-                              let g = E.BYTES_PER_ELEMENT;
-                              const v = e;
-                              if (!(typeof g == "number" && isFinite(
-                                g
+                          if (C === t) {
+                            if (B.BYTES_PER_ELEMENT !== void 0) {
+                              let L = B.BYTES_PER_ELEMENT;
+                              const F = t;
+                              if (!(typeof L == "number" && isFinite(
+                                L
                               ))) {
-                                const O = {
-                                  instancePath: t + "/body/BYTES_PER_ELEMENT",
+                                const Y = {
+                                  instancePath: r + "/body/BYTES_PER_ELEMENT",
                                   schemaPath: "#/properties/body/anyOf/1/properties/BYTES_PER_ELEMENT/type",
                                   keyword: "type",
                                   params: {
@@ -4377,65 +8986,65 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                   message: "must be number"
                                 };
                                 i === null ? i = [
-                                  O
+                                  Y
                                 ] : i.push(
-                                  O
-                                ), e++;
+                                  Y
+                                ), t++;
                               }
-                              var m = v === e;
+                              var w = F === t;
                             } else
-                              var m = !0;
-                            if (m) {
-                              if (E.buffer !== void 0) {
-                                let g = E.buffer;
-                                const v = e;
-                                if (e === v)
-                                  if (g && typeof g == "object" && !Array.isArray(
-                                    g
+                              var w = !0;
+                            if (w) {
+                              if (B.buffer !== void 0) {
+                                let L = B.buffer;
+                                const F = t;
+                                if (t === F)
+                                  if (L && typeof L == "object" && !Array.isArray(
+                                    L
                                   )) {
-                                    let N;
-                                    if (g.byteLength === void 0 && (N = "byteLength")) {
-                                      const q = {
-                                        instancePath: t + "/body/buffer",
+                                    let Z;
+                                    if (L.byteLength === void 0 && (Z = "byteLength")) {
+                                      const H = {
+                                        instancePath: r + "/body/buffer",
                                         schemaPath: "#/properties/body/anyOf/1/properties/buffer/required",
                                         keyword: "required",
                                         params: {
-                                          missingProperty: N
+                                          missingProperty: Z
                                         },
-                                        message: "must have required property '" + N + "'"
+                                        message: "must have required property '" + Z + "'"
                                       };
                                       i === null ? i = [
-                                        q
+                                        H
                                       ] : i.push(
-                                        q
-                                      ), e++;
+                                        H
+                                      ), t++;
                                     } else {
-                                      const q = e;
-                                      for (const W in g)
-                                        if (W !== "byteLength") {
-                                          const R = {
-                                            instancePath: t + "/body/buffer",
+                                      const H = t;
+                                      for (const K in L)
+                                        if (K !== "byteLength") {
+                                          const G = {
+                                            instancePath: r + "/body/buffer",
                                             schemaPath: "#/properties/body/anyOf/1/properties/buffer/additionalProperties",
                                             keyword: "additionalProperties",
                                             params: {
-                                              additionalProperty: W
+                                              additionalProperty: K
                                             },
                                             message: "must NOT have additional properties"
                                           };
                                           i === null ? i = [
-                                            R
+                                            G
                                           ] : i.push(
-                                            R
-                                          ), e++;
+                                            G
+                                          ), t++;
                                           break;
                                         }
-                                      if (q === e && g.byteLength !== void 0) {
-                                        let W = g.byteLength;
-                                        if (!(typeof W == "number" && isFinite(
-                                          W
+                                      if (H === t && L.byteLength !== void 0) {
+                                        let K = L.byteLength;
+                                        if (!(typeof K == "number" && isFinite(
+                                          K
                                         ))) {
-                                          const R = {
-                                            instancePath: t + "/body/buffer/byteLength",
+                                          const G = {
+                                            instancePath: r + "/body/buffer/byteLength",
                                             schemaPath: "#/properties/body/anyOf/1/properties/buffer/properties/byteLength/type",
                                             keyword: "type",
                                             params: {
@@ -4444,16 +9053,16 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                             message: "must be number"
                                           };
                                           i === null ? i = [
-                                            R
+                                            G
                                           ] : i.push(
-                                            R
-                                          ), e++;
+                                            G
+                                          ), t++;
                                         }
                                       }
                                     }
                                   } else {
-                                    const N = {
-                                      instancePath: t + "/body/buffer",
+                                    const Z = {
+                                      instancePath: r + "/body/buffer",
                                       schemaPath: "#/properties/body/anyOf/1/properties/buffer/type",
                                       keyword: "type",
                                       params: {
@@ -4462,23 +9071,23 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                       message: "must be object"
                                     };
                                     i === null ? i = [
-                                      N
+                                      Z
                                     ] : i.push(
-                                      N
-                                    ), e++;
+                                      Z
+                                    ), t++;
                                   }
-                                var m = v === e;
+                                var w = F === t;
                               } else
-                                var m = !0;
-                              if (m) {
-                                if (E.byteLength !== void 0) {
-                                  let g = E.byteLength;
-                                  const v = e;
-                                  if (!(typeof g == "number" && isFinite(
-                                    g
+                                var w = !0;
+                              if (w) {
+                                if (B.byteLength !== void 0) {
+                                  let L = B.byteLength;
+                                  const F = t;
+                                  if (!(typeof L == "number" && isFinite(
+                                    L
                                   ))) {
-                                    const N = {
-                                      instancePath: t + "/body/byteLength",
+                                    const Z = {
+                                      instancePath: r + "/body/byteLength",
                                       schemaPath: "#/properties/body/anyOf/1/properties/byteLength/type",
                                       keyword: "type",
                                       params: {
@@ -4487,23 +9096,23 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                       message: "must be number"
                                     };
                                     i === null ? i = [
-                                      N
+                                      Z
                                     ] : i.push(
-                                      N
-                                    ), e++;
+                                      Z
+                                    ), t++;
                                   }
-                                  var m = v === e;
+                                  var w = F === t;
                                 } else
-                                  var m = !0;
-                                if (m) {
-                                  if (E.byteOffset !== void 0) {
-                                    let g = E.byteOffset;
-                                    const v = e;
-                                    if (!(typeof g == "number" && isFinite(
-                                      g
+                                  var w = !0;
+                                if (w) {
+                                  if (B.byteOffset !== void 0) {
+                                    let L = B.byteOffset;
+                                    const F = t;
+                                    if (!(typeof L == "number" && isFinite(
+                                      L
                                     ))) {
-                                      const N = {
-                                        instancePath: t + "/body/byteOffset",
+                                      const Z = {
+                                        instancePath: r + "/body/byteOffset",
                                         schemaPath: "#/properties/body/anyOf/1/properties/byteOffset/type",
                                         keyword: "type",
                                         params: {
@@ -4512,23 +9121,23 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                         message: "must be number"
                                       };
                                       i === null ? i = [
-                                        N
+                                        Z
                                       ] : i.push(
-                                        N
-                                      ), e++;
+                                        Z
+                                      ), t++;
                                     }
-                                    var m = v === e;
+                                    var w = F === t;
                                   } else
-                                    var m = !0;
-                                  if (m)
-                                    if (E.length !== void 0) {
-                                      let g = E.length;
-                                      const v = e;
-                                      if (!(typeof g == "number" && isFinite(
-                                        g
+                                    var w = !0;
+                                  if (w)
+                                    if (B.length !== void 0) {
+                                      let L = B.length;
+                                      const F = t;
+                                      if (!(typeof L == "number" && isFinite(
+                                        L
                                       ))) {
-                                        const N = {
-                                          instancePath: t + "/body/length",
+                                        const Z = {
+                                          instancePath: r + "/body/length",
                                           schemaPath: "#/properties/body/anyOf/1/properties/length/type",
                                           keyword: "type",
                                           params: {
@@ -4537,42 +9146,42 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                           message: "must be number"
                                         };
                                         i === null ? i = [
-                                          N
+                                          Z
                                         ] : i.push(
-                                          N
-                                        ), e++;
+                                          Z
+                                        ), t++;
                                       }
-                                      var m = v === e;
+                                      var w = F === t;
                                     } else
-                                      var m = !0;
+                                      var w = !0;
                                 }
                               }
                             }
                           }
                         }
                       } else {
-                        const _ = {
-                          instancePath: t + "/body",
+                        const O = {
+                          instancePath: r + "/body",
                           schemaPath: "#/properties/body/anyOf/1/type",
                           keyword: "type",
                           params: { type: "object" },
                           message: "must be object"
                         };
-                        i === null ? i = [_] : i.push(_), e++;
+                        i === null ? i = [O] : i.push(O), t++;
                       }
-                    var b = $ === e;
-                    if (z = z || b, !z) {
-                      const _ = e;
-                      if (e === _)
-                        if (E && typeof E == "object" && !Array.isArray(E))
-                          for (const g in E) {
-                            let v = E[g];
-                            const O = e, N = e;
-                            let q = !1;
-                            const W = e;
-                            if (typeof v != "string") {
-                              const R = {
-                                instancePath: t + "/body/" + g.replace(
+                    var u = T === t;
+                    if (x = x || u, !x) {
+                      const O = t;
+                      if (t === O)
+                        if (B && typeof B == "object" && !Array.isArray(B))
+                          for (const L in B) {
+                            let F = B[L];
+                            const Y = t, Z = t;
+                            let H = !1;
+                            const K = t;
+                            if (typeof F != "string") {
+                              const G = {
+                                instancePath: r + "/body/" + L.replace(
                                   /~/g,
                                   "~0"
                                 ).replace(
@@ -4587,22 +9196,22 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                 message: "must be string"
                               };
                               i === null ? i = [
-                                R
+                                G
                               ] : i.push(
-                                R
-                              ), e++;
+                                G
+                              ), t++;
                             }
-                            var w = W === e;
-                            if (q = q || w, !q) {
-                              const R = e;
-                              if (e === R)
-                                if (v && typeof v == "object" && !Array.isArray(
-                                  v
+                            var _ = K === t;
+                            if (H = H || _, !H) {
+                              const G = t;
+                              if (t === G)
+                                if (F && typeof F == "object" && !Array.isArray(
+                                  F
                                 )) {
                                   let ee;
-                                  if (v.BYTES_PER_ELEMENT === void 0 && (ee = "BYTES_PER_ELEMENT") || v.buffer === void 0 && (ee = "buffer") || v.byteLength === void 0 && (ee = "byteLength") || v.byteOffset === void 0 && (ee = "byteOffset") || v.length === void 0 && (ee = "length")) {
-                                    const J = {
-                                      instancePath: t + "/body/" + g.replace(
+                                  if (F.BYTES_PER_ELEMENT === void 0 && (ee = "BYTES_PER_ELEMENT") || F.buffer === void 0 && (ee = "buffer") || F.byteLength === void 0 && (ee = "byteLength") || F.byteOffset === void 0 && (ee = "byteOffset") || F.length === void 0 && (ee = "length")) {
+                                    const X = {
+                                      instancePath: r + "/body/" + L.replace(
                                         /~/g,
                                         "~0"
                                       ).replace(
@@ -4617,27 +9226,27 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                       message: "must have required property '" + ee + "'"
                                     };
                                     i === null ? i = [
-                                      J
+                                      X
                                     ] : i.push(
-                                      J
-                                    ), e++;
+                                      X
+                                    ), t++;
                                   } else {
-                                    const J = e;
-                                    for (const C in v)
-                                      if (!(C === "BYTES_PER_ELEMENT" || C === "buffer" || C === "byteLength" || C === "byteOffset" || C === "length")) {
-                                        let Q = v[C];
-                                        const M = e;
-                                        if (!(typeof Q == "number" && isFinite(
-                                          Q
+                                    const X = t;
+                                    for (const Q in F)
+                                      if (!(Q === "BYTES_PER_ELEMENT" || Q === "buffer" || Q === "byteLength" || Q === "byteOffset" || Q === "length")) {
+                                        let re = F[Q];
+                                        const ne = t;
+                                        if (!(typeof re == "number" && isFinite(
+                                          re
                                         ))) {
-                                          const Y = {
-                                            instancePath: t + "/body/" + g.replace(
+                                          const te = {
+                                            instancePath: r + "/body/" + L.replace(
                                               /~/g,
                                               "~0"
                                             ).replace(
                                               /\//g,
                                               "~1"
-                                            ) + "/" + C.replace(
+                                            ) + "/" + Q.replace(
                                               /~/g,
                                               "~0"
                                             ).replace(
@@ -4652,24 +9261,24 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                             message: "must be number"
                                           };
                                           i === null ? i = [
-                                            Y
+                                            te
                                           ] : i.push(
-                                            Y
-                                          ), e++;
+                                            te
+                                          ), t++;
                                         }
-                                        var S = M === e;
-                                        if (!S)
+                                        var b = ne === t;
+                                        if (!b)
                                           break;
                                       }
-                                    if (J === e) {
-                                      if (v.BYTES_PER_ELEMENT !== void 0) {
-                                        let C = v.BYTES_PER_ELEMENT;
-                                        const Q = e;
-                                        if (!(typeof C == "number" && isFinite(
-                                          C
+                                    if (X === t) {
+                                      if (F.BYTES_PER_ELEMENT !== void 0) {
+                                        let Q = F.BYTES_PER_ELEMENT;
+                                        const re = t;
+                                        if (!(typeof Q == "number" && isFinite(
+                                          Q
                                         ))) {
-                                          const M = {
-                                            instancePath: t + "/body/" + g.replace(
+                                          const ne = {
+                                            instancePath: r + "/body/" + L.replace(
                                               /~/g,
                                               "~0"
                                             ).replace(
@@ -4684,26 +9293,26 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                             message: "must be number"
                                           };
                                           i === null ? i = [
-                                            M
+                                            ne
                                           ] : i.push(
-                                            M
-                                          ), e++;
+                                            ne
+                                          ), t++;
                                         }
-                                        var D = Q === e;
+                                        var j = re === t;
                                       } else
-                                        var D = !0;
-                                      if (D) {
-                                        if (v.buffer !== void 0) {
-                                          let C = v.buffer;
-                                          const Q = e;
-                                          if (e === Q)
-                                            if (C && typeof C == "object" && !Array.isArray(
-                                              C
+                                        var j = !0;
+                                      if (j) {
+                                        if (F.buffer !== void 0) {
+                                          let Q = F.buffer;
+                                          const re = t;
+                                          if (t === re)
+                                            if (Q && typeof Q == "object" && !Array.isArray(
+                                              Q
                                             )) {
-                                              let Y;
-                                              if (C.byteLength === void 0 && (Y = "byteLength")) {
-                                                const K = {
-                                                  instancePath: t + "/body/" + g.replace(
+                                              let te;
+                                              if (Q.byteLength === void 0 && (te = "byteLength")) {
+                                                const we = {
+                                                  instancePath: r + "/body/" + L.replace(
                                                     /~/g,
                                                     "~0"
                                                   ).replace(
@@ -4713,21 +9322,21 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                   schemaPath: "#/properties/body/anyOf/2/additionalProperties/anyOf/1/properties/buffer/required",
                                                   keyword: "required",
                                                   params: {
-                                                    missingProperty: Y
+                                                    missingProperty: te
                                                   },
-                                                  message: "must have required property '" + Y + "'"
+                                                  message: "must have required property '" + te + "'"
                                                 };
                                                 i === null ? i = [
-                                                  K
+                                                  we
                                                 ] : i.push(
-                                                  K
-                                                ), e++;
+                                                  we
+                                                ), t++;
                                               } else {
-                                                const K = e;
-                                                for (const le in C)
-                                                  if (le !== "byteLength") {
-                                                    const fe = {
-                                                      instancePath: t + "/body/" + g.replace(
+                                                const we = t;
+                                                for (const ve in Q)
+                                                  if (ve !== "byteLength") {
+                                                    const Le = {
+                                                      instancePath: r + "/body/" + L.replace(
                                                         /~/g,
                                                         "~0"
                                                       ).replace(
@@ -4737,24 +9346,24 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                       schemaPath: "#/properties/body/anyOf/2/additionalProperties/anyOf/1/properties/buffer/additionalProperties",
                                                       keyword: "additionalProperties",
                                                       params: {
-                                                        additionalProperty: le
+                                                        additionalProperty: ve
                                                       },
                                                       message: "must NOT have additional properties"
                                                     };
                                                     i === null ? i = [
-                                                      fe
+                                                      Le
                                                     ] : i.push(
-                                                      fe
-                                                    ), e++;
+                                                      Le
+                                                    ), t++;
                                                     break;
                                                   }
-                                                if (K === e && C.byteLength !== void 0) {
-                                                  let le = C.byteLength;
-                                                  if (!(typeof le == "number" && isFinite(
-                                                    le
+                                                if (we === t && Q.byteLength !== void 0) {
+                                                  let ve = Q.byteLength;
+                                                  if (!(typeof ve == "number" && isFinite(
+                                                    ve
                                                   ))) {
-                                                    const fe = {
-                                                      instancePath: t + "/body/" + g.replace(
+                                                    const Le = {
+                                                      instancePath: r + "/body/" + L.replace(
                                                         /~/g,
                                                         "~0"
                                                       ).replace(
@@ -4769,16 +9378,16 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                       message: "must be number"
                                                     };
                                                     i === null ? i = [
-                                                      fe
+                                                      Le
                                                     ] : i.push(
-                                                      fe
-                                                    ), e++;
+                                                      Le
+                                                    ), t++;
                                                   }
                                                 }
                                               }
                                             } else {
-                                              const Y = {
-                                                instancePath: t + "/body/" + g.replace(
+                                              const te = {
+                                                instancePath: r + "/body/" + L.replace(
                                                   /~/g,
                                                   "~0"
                                                 ).replace(
@@ -4793,23 +9402,23 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                 message: "must be object"
                                               };
                                               i === null ? i = [
-                                                Y
+                                                te
                                               ] : i.push(
-                                                Y
-                                              ), e++;
+                                                te
+                                              ), t++;
                                             }
-                                          var D = Q === e;
+                                          var j = re === t;
                                         } else
-                                          var D = !0;
-                                        if (D) {
-                                          if (v.byteLength !== void 0) {
-                                            let C = v.byteLength;
-                                            const Q = e;
-                                            if (!(typeof C == "number" && isFinite(
-                                              C
+                                          var j = !0;
+                                        if (j) {
+                                          if (F.byteLength !== void 0) {
+                                            let Q = F.byteLength;
+                                            const re = t;
+                                            if (!(typeof Q == "number" && isFinite(
+                                              Q
                                             ))) {
-                                              const Y = {
-                                                instancePath: t + "/body/" + g.replace(
+                                              const te = {
+                                                instancePath: r + "/body/" + L.replace(
                                                   /~/g,
                                                   "~0"
                                                 ).replace(
@@ -4824,23 +9433,23 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                 message: "must be number"
                                               };
                                               i === null ? i = [
-                                                Y
+                                                te
                                               ] : i.push(
-                                                Y
-                                              ), e++;
+                                                te
+                                              ), t++;
                                             }
-                                            var D = Q === e;
+                                            var j = re === t;
                                           } else
-                                            var D = !0;
-                                          if (D) {
-                                            if (v.byteOffset !== void 0) {
-                                              let C = v.byteOffset;
-                                              const Q = e;
-                                              if (!(typeof C == "number" && isFinite(
-                                                C
+                                            var j = !0;
+                                          if (j) {
+                                            if (F.byteOffset !== void 0) {
+                                              let Q = F.byteOffset;
+                                              const re = t;
+                                              if (!(typeof Q == "number" && isFinite(
+                                                Q
                                               ))) {
-                                                const Y = {
-                                                  instancePath: t + "/body/" + g.replace(
+                                                const te = {
+                                                  instancePath: r + "/body/" + L.replace(
                                                     /~/g,
                                                     "~0"
                                                   ).replace(
@@ -4855,23 +9464,23 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                   message: "must be number"
                                                 };
                                                 i === null ? i = [
-                                                  Y
+                                                  te
                                                 ] : i.push(
-                                                  Y
-                                                ), e++;
+                                                  te
+                                                ), t++;
                                               }
-                                              var D = Q === e;
+                                              var j = re === t;
                                             } else
-                                              var D = !0;
-                                            if (D)
-                                              if (v.length !== void 0) {
-                                                let C = v.length;
-                                                const Q = e;
-                                                if (!(typeof C == "number" && isFinite(
-                                                  C
+                                              var j = !0;
+                                            if (j)
+                                              if (F.length !== void 0) {
+                                                let Q = F.length;
+                                                const re = t;
+                                                if (!(typeof Q == "number" && isFinite(
+                                                  Q
                                                 ))) {
-                                                  const Y = {
-                                                    instancePath: t + "/body/" + g.replace(
+                                                  const te = {
+                                                    instancePath: r + "/body/" + L.replace(
                                                       /~/g,
                                                       "~0"
                                                     ).replace(
@@ -4886,14 +9495,14 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                     message: "must be number"
                                                   };
                                                   i === null ? i = [
-                                                    Y
+                                                    te
                                                   ] : i.push(
-                                                    Y
-                                                  ), e++;
+                                                    te
+                                                  ), t++;
                                                 }
-                                                var D = Q === e;
+                                                var j = re === t;
                                               } else
-                                                var D = !0;
+                                                var j = !0;
                                           }
                                         }
                                       }
@@ -4901,7 +9510,7 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                   }
                                 } else {
                                   const ee = {
-                                    instancePath: t + "/body/" + g.replace(
+                                    instancePath: r + "/body/" + L.replace(
                                       /~/g,
                                       "~0"
                                     ).replace(
@@ -4919,19 +9528,19 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                     ee
                                   ] : i.push(
                                     ee
-                                  ), e++;
+                                  ), t++;
                                 }
-                              var w = R === e;
-                              if (q = q || w, !q) {
-                                const ee = e;
-                                if (e === ee)
-                                  if (v && typeof v == "object" && !Array.isArray(
-                                    v
+                              var _ = G === t;
+                              if (H = H || _, !H) {
+                                const ee = t;
+                                if (t === ee)
+                                  if (F && typeof F == "object" && !Array.isArray(
+                                    F
                                   )) {
-                                    let C;
-                                    if (v.lastModified === void 0 && (C = "lastModified") || v.name === void 0 && (C = "name") || v.size === void 0 && (C = "size") || v.type === void 0 && (C = "type") || v.webkitRelativePath === void 0 && (C = "webkitRelativePath")) {
-                                      const Q = {
-                                        instancePath: t + "/body/" + g.replace(
+                                    let Q;
+                                    if (F.lastModified === void 0 && (Q = "lastModified") || F.name === void 0 && (Q = "name") || F.size === void 0 && (Q = "size") || F.type === void 0 && (Q = "type") || F.webkitRelativePath === void 0 && (Q = "webkitRelativePath")) {
+                                      const re = {
+                                        instancePath: r + "/body/" + L.replace(
                                           /~/g,
                                           "~0"
                                         ).replace(
@@ -4941,21 +9550,21 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                         schemaPath: "#/properties/body/anyOf/2/additionalProperties/anyOf/2/required",
                                         keyword: "required",
                                         params: {
-                                          missingProperty: C
+                                          missingProperty: Q
                                         },
-                                        message: "must have required property '" + C + "'"
+                                        message: "must have required property '" + Q + "'"
                                       };
                                       i === null ? i = [
-                                        Q
+                                        re
                                       ] : i.push(
-                                        Q
-                                      ), e++;
+                                        re
+                                      ), t++;
                                     } else {
-                                      const Q = e;
-                                      for (const M in v)
-                                        if (!(M === "size" || M === "type" || M === "lastModified" || M === "name" || M === "webkitRelativePath")) {
-                                          const Y = {
-                                            instancePath: t + "/body/" + g.replace(
+                                      const re = t;
+                                      for (const ne in F)
+                                        if (!(ne === "size" || ne === "type" || ne === "lastModified" || ne === "name" || ne === "webkitRelativePath")) {
+                                          const te = {
+                                            instancePath: r + "/body/" + L.replace(
                                               /~/g,
                                               "~0"
                                             ).replace(
@@ -4965,26 +9574,26 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                             schemaPath: "#/properties/body/anyOf/2/additionalProperties/anyOf/2/additionalProperties",
                                             keyword: "additionalProperties",
                                             params: {
-                                              additionalProperty: M
+                                              additionalProperty: ne
                                             },
                                             message: "must NOT have additional properties"
                                           };
                                           i === null ? i = [
-                                            Y
+                                            te
                                           ] : i.push(
-                                            Y
-                                          ), e++;
+                                            te
+                                          ), t++;
                                           break;
                                         }
-                                      if (Q === e) {
-                                        if (v.size !== void 0) {
-                                          let M = v.size;
-                                          const Y = e;
-                                          if (!(typeof M == "number" && isFinite(
-                                            M
+                                      if (re === t) {
+                                        if (F.size !== void 0) {
+                                          let ne = F.size;
+                                          const te = t;
+                                          if (!(typeof ne == "number" && isFinite(
+                                            ne
                                           ))) {
-                                            const K = {
-                                              instancePath: t + "/body/" + g.replace(
+                                            const we = {
+                                              instancePath: r + "/body/" + L.replace(
                                                 /~/g,
                                                 "~0"
                                               ).replace(
@@ -4999,20 +9608,20 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                               message: "must be number"
                                             };
                                             i === null ? i = [
-                                              K
+                                              we
                                             ] : i.push(
-                                              K
-                                            ), e++;
+                                              we
+                                            ), t++;
                                           }
-                                          var P = Y === e;
+                                          var P = te === t;
                                         } else
                                           var P = !0;
                                         if (P) {
-                                          if (v.type !== void 0) {
-                                            const M = e;
-                                            if (typeof v.type != "string") {
-                                              const K = {
-                                                instancePath: t + "/body/" + g.replace(
+                                          if (F.type !== void 0) {
+                                            const ne = t;
+                                            if (typeof F.type != "string") {
+                                              const we = {
+                                                instancePath: r + "/body/" + L.replace(
                                                   /~/g,
                                                   "~0"
                                                 ).replace(
@@ -5027,23 +9636,23 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                 message: "must be string"
                                               };
                                               i === null ? i = [
-                                                K
+                                                we
                                               ] : i.push(
-                                                K
-                                              ), e++;
+                                                we
+                                              ), t++;
                                             }
-                                            var P = M === e;
+                                            var P = ne === t;
                                           } else
                                             var P = !0;
                                           if (P) {
-                                            if (v.lastModified !== void 0) {
-                                              let M = v.lastModified;
-                                              const Y = e;
-                                              if (!(typeof M == "number" && isFinite(
-                                                M
+                                            if (F.lastModified !== void 0) {
+                                              let ne = F.lastModified;
+                                              const te = t;
+                                              if (!(typeof ne == "number" && isFinite(
+                                                ne
                                               ))) {
-                                                const le = {
-                                                  instancePath: t + "/body/" + g.replace(
+                                                const ve = {
+                                                  instancePath: r + "/body/" + L.replace(
                                                     /~/g,
                                                     "~0"
                                                   ).replace(
@@ -5058,20 +9667,20 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                   message: "must be number"
                                                 };
                                                 i === null ? i = [
-                                                  le
+                                                  ve
                                                 ] : i.push(
-                                                  le
-                                                ), e++;
+                                                  ve
+                                                ), t++;
                                               }
-                                              var P = Y === e;
+                                              var P = te === t;
                                             } else
                                               var P = !0;
                                             if (P) {
-                                              if (v.name !== void 0) {
-                                                const M = e;
-                                                if (typeof v.name != "string") {
-                                                  const K = {
-                                                    instancePath: t + "/body/" + g.replace(
+                                              if (F.name !== void 0) {
+                                                const ne = t;
+                                                if (typeof F.name != "string") {
+                                                  const we = {
+                                                    instancePath: r + "/body/" + L.replace(
                                                       /~/g,
                                                       "~0"
                                                     ).replace(
@@ -5086,20 +9695,20 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                     message: "must be string"
                                                   };
                                                   i === null ? i = [
-                                                    K
+                                                    we
                                                   ] : i.push(
-                                                    K
-                                                  ), e++;
+                                                    we
+                                                  ), t++;
                                                 }
-                                                var P = M === e;
+                                                var P = ne === t;
                                               } else
                                                 var P = !0;
                                               if (P)
-                                                if (v.webkitRelativePath !== void 0) {
-                                                  const M = e;
-                                                  if (typeof v.webkitRelativePath != "string") {
-                                                    const K = {
-                                                      instancePath: t + "/body/" + g.replace(
+                                                if (F.webkitRelativePath !== void 0) {
+                                                  const ne = t;
+                                                  if (typeof F.webkitRelativePath != "string") {
+                                                    const we = {
+                                                      instancePath: r + "/body/" + L.replace(
                                                         /~/g,
                                                         "~0"
                                                       ).replace(
@@ -5114,12 +9723,12 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                                       message: "must be string"
                                                     };
                                                     i === null ? i = [
-                                                      K
+                                                      we
                                                     ] : i.push(
-                                                      K
-                                                    ), e++;
+                                                      we
+                                                    ), t++;
                                                   }
-                                                  var P = M === e;
+                                                  var P = ne === t;
                                                 } else
                                                   var P = !0;
                                             }
@@ -5128,8 +9737,8 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                       }
                                     }
                                   } else {
-                                    const C = {
-                                      instancePath: t + "/body/" + g.replace(
+                                    const Q = {
+                                      instancePath: r + "/body/" + L.replace(
                                         /~/g,
                                         "~0"
                                       ).replace(
@@ -5144,20 +9753,20 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                       message: "must be object"
                                     };
                                     i === null ? i = [
-                                      C
+                                      Q
                                     ] : i.push(
-                                      C
-                                    ), e++;
+                                      Q
+                                    ), t++;
                                   }
-                                var w = ee === e;
-                                q = q || w;
+                                var _ = ee === t;
+                                H = H || _;
                               }
                             }
-                            if (q)
-                              e = N, i !== null && (N ? i.length = N : i = null);
+                            if (H)
+                              t = Z, i !== null && (Z ? i.length = Z : i = null);
                             else {
-                              const R = {
-                                instancePath: t + "/body/" + g.replace(
+                              const G = {
+                                instancePath: r + "/body/" + L.replace(
                                   /~/g,
                                   "~0"
                                 ).replace(
@@ -5170,18 +9779,18 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                 message: "must match a schema in anyOf"
                               };
                               i === null ? i = [
-                                R
+                                G
                               ] : i.push(
-                                R
-                              ), e++;
+                                G
+                              ), t++;
                             }
-                            var U = O === e;
-                            if (!U)
+                            var q = Y === t;
+                            if (!q)
                               break;
                           }
                         else {
-                          const g = {
-                            instancePath: t + "/body",
+                          const L = {
+                            instancePath: r + "/body",
                             schemaPath: "#/properties/body/anyOf/2/type",
                             keyword: "type",
                             params: {
@@ -5189,44 +9798,44 @@ function ye(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                             },
                             message: "must be object"
                           };
-                          i === null ? i = [g] : i.push(g), e++;
+                          i === null ? i = [L] : i.push(L), t++;
                         }
-                      var b = _ === e;
-                      z = z || b;
+                      var u = O === t;
+                      x = x || u;
                     }
                   }
-                  if (z)
-                    e = I, i !== null && (I ? i.length = I : i = null);
+                  if (x)
+                    t = A, i !== null && (A ? i.length = A : i = null);
                   else {
-                    const $ = {
-                      instancePath: t + "/body",
+                    const T = {
+                      instancePath: r + "/body",
                       schemaPath: "#/properties/body/anyOf",
                       keyword: "anyOf",
                       params: {},
                       message: "must match a schema in anyOf"
                     };
-                    return i === null ? i = [$] : i.push($), e++, ye.errors = i, !1;
+                    return i === null ? i = [T] : i.push(T), t++, Ue.errors = i, !1;
                   }
-                  var f = x === e;
+                  var p = U === t;
                 } else
-                  var f = !0;
+                  var p = !0;
             }
           }
         }
       }
     } else
-      return ye.errors = [
+      return Ue.errors = [
         {
-          instancePath: t,
+          instancePath: r,
           schemaPath: "#/type",
           keyword: "type",
           params: { type: "object" },
           message: "must be object"
         }
       ], !1;
-  return ye.errors = i, e === 0;
+  return Ue.errors = i, t === 0;
 }
-const Rs = {
+const cu = {
   type: "object",
   properties: {
     relativeUri: {
@@ -5292,78 +9901,78 @@ const Rs = {
   },
   additionalProperties: !1
 };
-function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, rootData: l = r } = {}) {
-  let i = null, e = 0;
-  if (e === 0)
-    if (r && typeof r == "object" && !Array.isArray(r)) {
-      const D = e;
-      for (const P in r)
-        if (!dt.call(Rs.properties, P))
-          return oe.errors = [
+function Oe(e, { instancePath: r = "", parentData: s, parentDataProperty: n, rootData: o = e } = {}) {
+  let i = null, t = 0;
+  if (t === 0)
+    if (e && typeof e == "object" && !Array.isArray(e)) {
+      const j = t;
+      for (const P in e)
+        if (!Ya.call(cu.properties, P))
+          return Oe.errors = [
             {
-              instancePath: t,
+              instancePath: r,
               schemaPath: "#/additionalProperties",
               keyword: "additionalProperties",
               params: { additionalProperty: P },
               message: "must NOT have additional properties"
             }
           ], !1;
-      if (D === e) {
-        if (r.relativeUri !== void 0) {
-          const P = e;
-          if (typeof r.relativeUri != "string")
-            return oe.errors = [
+      if (j === t) {
+        if (e.relativeUri !== void 0) {
+          const P = t;
+          if (typeof e.relativeUri != "string")
+            return Oe.errors = [
               {
-                instancePath: t + "/relativeUri",
+                instancePath: r + "/relativeUri",
                 schemaPath: "#/properties/relativeUri/type",
                 keyword: "type",
                 params: { type: "string" },
                 message: "must be string"
               }
             ], !1;
-          var f = P === e;
+          var p = P === t;
         } else
-          var f = !0;
-        if (f) {
-          if (r.scriptPath !== void 0) {
-            const P = e;
-            if (typeof r.scriptPath != "string")
-              return oe.errors = [
+          var p = !0;
+        if (p) {
+          if (e.scriptPath !== void 0) {
+            const P = t;
+            if (typeof e.scriptPath != "string")
+              return Oe.errors = [
                 {
-                  instancePath: t + "/scriptPath",
+                  instancePath: r + "/scriptPath",
                   schemaPath: "#/properties/scriptPath/type",
                   keyword: "type",
                   params: { type: "string" },
                   message: "must be string"
                 }
               ], !1;
-            var f = P === e;
+            var p = P === t;
           } else
-            var f = !0;
-          if (f) {
-            if (r.protocol !== void 0) {
-              const P = e;
-              if (typeof r.protocol != "string")
-                return oe.errors = [
+            var p = !0;
+          if (p) {
+            if (e.protocol !== void 0) {
+              const P = t;
+              if (typeof e.protocol != "string")
+                return Oe.errors = [
                   {
-                    instancePath: t + "/protocol",
+                    instancePath: r + "/protocol",
                     schemaPath: "#/properties/protocol/type",
                     keyword: "type",
                     params: { type: "string" },
                     message: "must be string"
                   }
                 ], !1;
-              var f = P === e;
+              var p = P === t;
             } else
-              var f = !0;
-            if (f) {
-              if (r.method !== void 0) {
-                let P = r.method;
-                const U = e;
+              var p = !0;
+            if (p) {
+              if (e.method !== void 0) {
+                let P = e.method;
+                const q = t;
                 if (typeof P != "string")
-                  return oe.errors = [
+                  return Oe.errors = [
                     {
-                      instancePath: t + "/method",
+                      instancePath: r + "/method",
                       schemaPath: "#/definitions/HTTPMethod/type",
                       keyword: "type",
                       params: { type: "string" },
@@ -5371,32 +9980,32 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                     }
                   ], !1;
                 if (!(P === "GET" || P === "POST" || P === "HEAD" || P === "OPTIONS" || P === "PATCH" || P === "PUT" || P === "DELETE"))
-                  return oe.errors = [
+                  return Oe.errors = [
                     {
-                      instancePath: t + "/method",
+                      instancePath: r + "/method",
                       schemaPath: "#/definitions/HTTPMethod/enum",
                       keyword: "enum",
                       params: {
-                        allowedValues: ct.enum
+                        allowedValues: Ka.enum
                       },
                       message: "must be equal to one of the allowed values"
                     }
                   ], !1;
-                var f = U === e;
+                var p = q === t;
               } else
-                var f = !0;
-              if (f) {
-                if (r.headers !== void 0) {
-                  let P = r.headers;
-                  const U = e;
-                  if (e === e)
+                var p = !0;
+              if (p) {
+                if (e.headers !== void 0) {
+                  let P = e.headers;
+                  const q = t;
+                  if (t === t)
                     if (P && typeof P == "object" && !Array.isArray(P))
-                      for (const E in P) {
-                        const x = e;
-                        if (typeof P[E] != "string")
-                          return oe.errors = [
+                      for (const B in P) {
+                        const U = t;
+                        if (typeof P[B] != "string")
+                          return Oe.errors = [
                             {
-                              instancePath: t + "/headers/" + E.replace(
+                              instancePath: r + "/headers/" + B.replace(
                                 /~/g,
                                 "~0"
                               ).replace(
@@ -5411,67 +10020,67 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                               message: "must be string"
                             }
                           ], !1;
-                        var h = x === e;
-                        if (!h)
+                        var y = U === t;
+                        if (!y)
                           break;
                       }
                     else
-                      return oe.errors = [
+                      return Oe.errors = [
                         {
-                          instancePath: t + "/headers",
+                          instancePath: r + "/headers",
                           schemaPath: "#/definitions/PHPRequestHeaders/type",
                           keyword: "type",
                           params: { type: "object" },
                           message: "must be object"
                         }
                       ], !1;
-                  var f = U === e;
+                  var p = q === t;
                 } else
-                  var f = !0;
-                if (f) {
-                  if (r.body !== void 0) {
-                    let P = r.body;
-                    const U = e, te = e;
-                    let H = !1;
-                    const E = e;
+                  var p = !0;
+                if (p) {
+                  if (e.body !== void 0) {
+                    let P = e.body;
+                    const q = t, D = t;
+                    let M = !1;
+                    const B = t;
                     if (typeof P != "string") {
-                      const I = {
-                        instancePath: t + "/body",
+                      const A = {
+                        instancePath: r + "/body",
                         schemaPath: "#/properties/body/anyOf/0/type",
                         keyword: "type",
                         params: { type: "string" },
                         message: "must be string"
                       };
-                      i === null ? i = [I] : i.push(I), e++;
+                      i === null ? i = [A] : i.push(A), t++;
                     }
-                    var b = E === e;
-                    if (H = H || b, !H) {
-                      const I = e;
-                      if (e === I)
+                    var u = B === t;
+                    if (M = M || u, !M) {
+                      const A = t;
+                      if (t === A)
                         if (P && typeof P == "object" && !Array.isArray(P)) {
-                          let c;
-                          if (P.BYTES_PER_ELEMENT === void 0 && (c = "BYTES_PER_ELEMENT") || P.buffer === void 0 && (c = "buffer") || P.byteLength === void 0 && (c = "byteLength") || P.byteOffset === void 0 && (c = "byteOffset") || P.length === void 0 && (c = "length")) {
-                            const A = {
-                              instancePath: t + "/body",
+                          let N;
+                          if (P.BYTES_PER_ELEMENT === void 0 && (N = "BYTES_PER_ELEMENT") || P.buffer === void 0 && (N = "buffer") || P.byteLength === void 0 && (N = "byteLength") || P.byteOffset === void 0 && (N = "byteOffset") || P.length === void 0 && (N = "length")) {
+                            const S = {
+                              instancePath: r + "/body",
                               schemaPath: "#/properties/body/anyOf/1/required",
                               keyword: "required",
                               params: {
-                                missingProperty: c
+                                missingProperty: N
                               },
-                              message: "must have required property '" + c + "'"
+                              message: "must have required property '" + N + "'"
                             };
-                            i === null ? i = [A] : i.push(A), e++;
+                            i === null ? i = [S] : i.push(S), t++;
                           } else {
-                            const A = e;
-                            for (const $ in P)
-                              if (!($ === "BYTES_PER_ELEMENT" || $ === "buffer" || $ === "byteLength" || $ === "byteOffset" || $ === "length")) {
-                                let T = P[$];
-                                const _ = e;
-                                if (!(typeof T == "number" && isFinite(
-                                  T
+                            const S = t;
+                            for (const T in P)
+                              if (!(T === "BYTES_PER_ELEMENT" || T === "buffer" || T === "byteLength" || T === "byteOffset" || T === "length")) {
+                                let E = P[T];
+                                const O = t;
+                                if (!(typeof E == "number" && isFinite(
+                                  E
                                 ))) {
-                                  const y = {
-                                    instancePath: t + "/body/" + $.replace(
+                                  const C = {
+                                    instancePath: r + "/body/" + T.replace(
                                       /~/g,
                                       "~0"
                                     ).replace(
@@ -5486,24 +10095,24 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                     message: "must be number"
                                   };
                                   i === null ? i = [
-                                    y
+                                    C
                                   ] : i.push(
-                                    y
-                                  ), e++;
+                                    C
+                                  ), t++;
                                 }
-                                var k = _ === e;
-                                if (!k)
+                                var d = O === t;
+                                if (!d)
                                   break;
                               }
-                            if (A === e) {
+                            if (S === t) {
                               if (P.BYTES_PER_ELEMENT !== void 0) {
-                                let $ = P.BYTES_PER_ELEMENT;
-                                const T = e;
-                                if (!(typeof $ == "number" && isFinite(
-                                  $
+                                let T = P.BYTES_PER_ELEMENT;
+                                const E = t;
+                                if (!(typeof T == "number" && isFinite(
+                                  T
                                 ))) {
-                                  const _ = {
-                                    instancePath: t + "/body/BYTES_PER_ELEMENT",
+                                  const O = {
+                                    instancePath: r + "/body/BYTES_PER_ELEMENT",
                                     schemaPath: "#/properties/body/anyOf/1/properties/BYTES_PER_ELEMENT/type",
                                     keyword: "type",
                                     params: {
@@ -5512,65 +10121,65 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                     message: "must be number"
                                   };
                                   i === null ? i = [
-                                    _
+                                    O
                                   ] : i.push(
-                                    _
-                                  ), e++;
+                                    O
+                                  ), t++;
                                 }
-                                var m = T === e;
+                                var w = E === t;
                               } else
-                                var m = !0;
-                              if (m) {
+                                var w = !0;
+                              if (w) {
                                 if (P.buffer !== void 0) {
-                                  let $ = P.buffer;
-                                  const T = e;
-                                  if (e === T)
-                                    if ($ && typeof $ == "object" && !Array.isArray(
-                                      $
+                                  let T = P.buffer;
+                                  const E = t;
+                                  if (t === E)
+                                    if (T && typeof T == "object" && !Array.isArray(
+                                      T
                                     )) {
-                                      let y;
-                                      if ($.byteLength === void 0 && (y = "byteLength")) {
-                                        const g = {
-                                          instancePath: t + "/body/buffer",
+                                      let C;
+                                      if (T.byteLength === void 0 && (C = "byteLength")) {
+                                        const L = {
+                                          instancePath: r + "/body/buffer",
                                           schemaPath: "#/properties/body/anyOf/1/properties/buffer/required",
                                           keyword: "required",
                                           params: {
-                                            missingProperty: y
+                                            missingProperty: C
                                           },
-                                          message: "must have required property '" + y + "'"
+                                          message: "must have required property '" + C + "'"
                                         };
                                         i === null ? i = [
-                                          g
+                                          L
                                         ] : i.push(
-                                          g
-                                        ), e++;
+                                          L
+                                        ), t++;
                                       } else {
-                                        const g = e;
-                                        for (const v in $)
-                                          if (v !== "byteLength") {
-                                            const O = {
-                                              instancePath: t + "/body/buffer",
+                                        const L = t;
+                                        for (const F in T)
+                                          if (F !== "byteLength") {
+                                            const Y = {
+                                              instancePath: r + "/body/buffer",
                                               schemaPath: "#/properties/body/anyOf/1/properties/buffer/additionalProperties",
                                               keyword: "additionalProperties",
                                               params: {
-                                                additionalProperty: v
+                                                additionalProperty: F
                                               },
                                               message: "must NOT have additional properties"
                                             };
                                             i === null ? i = [
-                                              O
+                                              Y
                                             ] : i.push(
-                                              O
-                                            ), e++;
+                                              Y
+                                            ), t++;
                                             break;
                                           }
-                                        if (g === e && $.byteLength !== void 0) {
-                                          let v = $.byteLength;
-                                          if (!(typeof v == "number" && isFinite(
-                                            v
+                                        if (L === t && T.byteLength !== void 0) {
+                                          let F = T.byteLength;
+                                          if (!(typeof F == "number" && isFinite(
+                                            F
                                           ))) {
-                                            const O = {
-                                              instancePath: t + "/body/buffer/byteLength",
+                                            const Y = {
+                                              instancePath: r + "/body/buffer/byteLength",
                                               schemaPath: "#/properties/body/anyOf/1/properties/buffer/properties/byteLength/type",
                                               keyword: "type",
                                               params: {
@@ -5579,16 +10188,16 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                               message: "must be number"
                                             };
                                             i === null ? i = [
-                                              O
+                                              Y
                                             ] : i.push(
-                                              O
-                                            ), e++;
+                                              Y
+                                            ), t++;
                                           }
                                         }
                                       }
                                     } else {
-                                      const y = {
-                                        instancePath: t + "/body/buffer",
+                                      const C = {
+                                        instancePath: r + "/body/buffer",
                                         schemaPath: "#/properties/body/anyOf/1/properties/buffer/type",
                                         keyword: "type",
                                         params: {
@@ -5597,23 +10206,23 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                         message: "must be object"
                                       };
                                       i === null ? i = [
-                                        y
+                                        C
                                       ] : i.push(
-                                        y
-                                      ), e++;
+                                        C
+                                      ), t++;
                                     }
-                                  var m = T === e;
+                                  var w = E === t;
                                 } else
-                                  var m = !0;
-                                if (m) {
+                                  var w = !0;
+                                if (w) {
                                   if (P.byteLength !== void 0) {
-                                    let $ = P.byteLength;
-                                    const T = e;
-                                    if (!(typeof $ == "number" && isFinite(
-                                      $
+                                    let T = P.byteLength;
+                                    const E = t;
+                                    if (!(typeof T == "number" && isFinite(
+                                      T
                                     ))) {
-                                      const y = {
-                                        instancePath: t + "/body/byteLength",
+                                      const C = {
+                                        instancePath: r + "/body/byteLength",
                                         schemaPath: "#/properties/body/anyOf/1/properties/byteLength/type",
                                         keyword: "type",
                                         params: {
@@ -5622,23 +10231,23 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                         message: "must be number"
                                       };
                                       i === null ? i = [
-                                        y
+                                        C
                                       ] : i.push(
-                                        y
-                                      ), e++;
+                                        C
+                                      ), t++;
                                     }
-                                    var m = T === e;
+                                    var w = E === t;
                                   } else
-                                    var m = !0;
-                                  if (m) {
+                                    var w = !0;
+                                  if (w) {
                                     if (P.byteOffset !== void 0) {
-                                      let $ = P.byteOffset;
-                                      const T = e;
-                                      if (!(typeof $ == "number" && isFinite(
-                                        $
+                                      let T = P.byteOffset;
+                                      const E = t;
+                                      if (!(typeof T == "number" && isFinite(
+                                        T
                                       ))) {
-                                        const y = {
-                                          instancePath: t + "/body/byteOffset",
+                                        const C = {
+                                          instancePath: r + "/body/byteOffset",
                                           schemaPath: "#/properties/body/anyOf/1/properties/byteOffset/type",
                                           keyword: "type",
                                           params: {
@@ -5647,23 +10256,23 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                           message: "must be number"
                                         };
                                         i === null ? i = [
-                                          y
+                                          C
                                         ] : i.push(
-                                          y
-                                        ), e++;
+                                          C
+                                        ), t++;
                                       }
-                                      var m = T === e;
+                                      var w = E === t;
                                     } else
-                                      var m = !0;
-                                    if (m)
+                                      var w = !0;
+                                    if (w)
                                       if (P.length !== void 0) {
-                                        let $ = P.length;
-                                        const T = e;
-                                        if (!(typeof $ == "number" && isFinite(
-                                          $
+                                        let T = P.length;
+                                        const E = t;
+                                        if (!(typeof T == "number" && isFinite(
+                                          T
                                         ))) {
-                                          const y = {
-                                            instancePath: t + "/body/length",
+                                          const C = {
+                                            instancePath: r + "/body/length",
                                             schemaPath: "#/properties/body/anyOf/1/properties/length/type",
                                             keyword: "type",
                                             params: {
@@ -5672,22 +10281,22 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                             message: "must be number"
                                           };
                                           i === null ? i = [
-                                            y
+                                            C
                                           ] : i.push(
-                                            y
-                                          ), e++;
+                                            C
+                                          ), t++;
                                         }
-                                        var m = T === e;
+                                        var w = E === t;
                                       } else
-                                        var m = !0;
+                                        var w = !0;
                                   }
                                 }
                               }
                             }
                           }
                         } else {
-                          const c = {
-                            instancePath: t + "/body",
+                          const N = {
+                            instancePath: r + "/body",
                             schemaPath: "#/properties/body/anyOf/1/type",
                             keyword: "type",
                             params: {
@@ -5695,38 +10304,38 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                             },
                             message: "must be object"
                           };
-                          i === null ? i = [c] : i.push(c), e++;
+                          i === null ? i = [N] : i.push(N), t++;
                         }
-                      var b = I === e;
-                      H = H || b;
+                      var u = A === t;
+                      M = M || u;
                     }
-                    if (H)
-                      e = te, i !== null && (te ? i.length = te : i = null);
+                    if (M)
+                      t = D, i !== null && (D ? i.length = D : i = null);
                     else {
-                      const I = {
-                        instancePath: t + "/body",
+                      const A = {
+                        instancePath: r + "/body",
                         schemaPath: "#/properties/body/anyOf",
                         keyword: "anyOf",
                         params: {},
                         message: "must match a schema in anyOf"
                       };
-                      return i === null ? i = [I] : i.push(I), e++, oe.errors = i, !1;
+                      return i === null ? i = [A] : i.push(A), t++, Oe.errors = i, !1;
                     }
-                    var f = U === e;
+                    var p = q === t;
                   } else
-                    var f = !0;
-                  if (f) {
-                    if (r.env !== void 0) {
-                      let P = r.env;
-                      const U = e;
-                      if (e === U)
+                    var p = !0;
+                  if (p) {
+                    if (e.env !== void 0) {
+                      let P = e.env;
+                      const q = t;
+                      if (t === q)
                         if (P && typeof P == "object" && !Array.isArray(P))
-                          for (const H in P) {
-                            const E = e;
-                            if (typeof P[H] != "string")
-                              return oe.errors = [
+                          for (const M in P) {
+                            const B = t;
+                            if (typeof P[M] != "string")
+                              return Oe.errors = [
                                 {
-                                  instancePath: t + "/env/" + H.replace(
+                                  instancePath: r + "/env/" + M.replace(
                                     /~/g,
                                     "~0"
                                   ).replace(
@@ -5741,14 +10350,14 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                   message: "must be string"
                                 }
                               ], !1;
-                            var w = E === e;
-                            if (!w)
+                            var _ = B === t;
+                            if (!_)
                               break;
                           }
                         else
-                          return oe.errors = [
+                          return Oe.errors = [
                             {
-                              instancePath: t + "/env",
+                              instancePath: r + "/env",
                               schemaPath: "#/properties/env/type",
                               keyword: "type",
                               params: {
@@ -5757,21 +10366,21 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                               message: "must be object"
                             }
                           ], !1;
-                      var f = U === e;
+                      var p = q === t;
                     } else
-                      var f = !0;
-                    if (f) {
-                      if (r.$_SERVER !== void 0) {
-                        let P = r.$_SERVER;
-                        const U = e;
-                        if (e === U)
+                      var p = !0;
+                    if (p) {
+                      if (e.$_SERVER !== void 0) {
+                        let P = e.$_SERVER;
+                        const q = t;
+                        if (t === q)
                           if (P && typeof P == "object" && !Array.isArray(P))
-                            for (const H in P) {
-                              const E = e;
-                              if (typeof P[H] != "string")
-                                return oe.errors = [
+                            for (const M in P) {
+                              const B = t;
+                              if (typeof P[M] != "string")
+                                return Oe.errors = [
                                   {
-                                    instancePath: t + "/$_SERVER/" + H.replace(
+                                    instancePath: r + "/$_SERVER/" + M.replace(
                                       /~/g,
                                       "~0"
                                     ).replace(
@@ -5786,14 +10395,14 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                     message: "must be string"
                                   }
                                 ], !1;
-                              var S = E === e;
-                              if (!S)
+                              var b = B === t;
+                              if (!b)
                                 break;
                             }
                           else
-                            return oe.errors = [
+                            return Oe.errors = [
                               {
-                                instancePath: t + "/$_SERVER",
+                                instancePath: r + "/$_SERVER",
                                 schemaPath: "#/properties/%24_SERVER/type",
                                 keyword: "type",
                                 params: {
@@ -5802,16 +10411,16 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                 message: "must be object"
                               }
                             ], !1;
-                        var f = U === e;
+                        var p = q === t;
                       } else
-                        var f = !0;
-                      if (f)
-                        if (r.code !== void 0) {
-                          const P = e;
-                          if (typeof r.code != "string")
-                            return oe.errors = [
+                        var p = !0;
+                      if (p)
+                        if (e.code !== void 0) {
+                          const P = t;
+                          if (typeof e.code != "string")
+                            return Oe.errors = [
                               {
-                                instancePath: t + "/code",
+                                instancePath: r + "/code",
                                 schemaPath: "#/properties/code/type",
                                 keyword: "type",
                                 params: {
@@ -5820,9 +10429,9 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
                                 message: "must be string"
                               }
                             ], !1;
-                          var f = P === e;
+                          var p = P === t;
                         } else
-                          var f = !0;
+                          var p = !0;
                     }
                   }
                 }
@@ -5832,96 +10441,96 @@ function oe(r, { instancePath: t = "", parentData: o, parentDataProperty: p, roo
         }
       }
     } else
-      return oe.errors = [
+      return Oe.errors = [
         {
-          instancePath: t,
+          instancePath: r,
           schemaPath: "#/type",
           keyword: "type",
           params: { type: "object" },
           message: "must be object"
         }
       ], !1;
-  return oe.errors = i, e === 0;
+  return Oe.errors = i, t === 0;
 }
-function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, rootData: l = r } = {}) {
-  let i = null, e = 0;
-  if (e === 0)
-    if (r && typeof r == "object" && !Array.isArray(r)) {
-      let cr;
-      if (r.step === void 0 && (cr = "step"))
-        return n.errors = [
+function h(e, { instancePath: r = "", parentData: s, parentDataProperty: n, rootData: o = e } = {}) {
+  let i = null, t = 0;
+  if (t === 0)
+    if (e && typeof e == "object" && !Array.isArray(e)) {
+      let ys;
+      if (e.step === void 0 && (ys = "step"))
+        return h.errors = [
           {
-            instancePath: t,
+            instancePath: r,
             schemaPath: "#/required",
             keyword: "required",
-            params: { missingProperty: cr },
-            message: "must have required property '" + cr + "'"
+            params: { missingProperty: ys },
+            message: "must have required property '" + ys + "'"
           }
         ], !1;
       {
-        const G = r.step;
-        if (typeof G == "string")
-          if (G === "activatePlugin") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.pluginPath === void 0 && (d = "pluginPath") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+        const pe = e.step;
+        if (typeof pe == "string")
+          if (pe === "activatePlugin") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.pluginPath === void 0 && (R = "pluginPath") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/0/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "pluginPath" || s === "pluginName"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "pluginPath" || a === "pluginName"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/0/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/0/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/0/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -5930,16 +10539,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var f = j === e;
+                              var p = W === t;
                             } else
-                              var f = !0;
-                            if (f)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var p = !0;
+                            if (p)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/0/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -5948,14 +10557,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var f = a === e;
+                                var p = m === t;
                               } else
-                                var f = !0;
+                                var p = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/0/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -5964,17 +10573,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var h = u === e;
+                      var y = k === t;
                     } else
-                      var h = !0;
-                    if (h) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var y = !0;
+                    if (y) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/0/properties/step/type",
                               keyword: "type",
                               params: {
@@ -5983,10 +10592,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "activatePlugin")
-                          return n.errors = [
+                        if (a !== "activatePlugin")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/0/properties/step/const",
                               keyword: "const",
                               params: {
@@ -5995,16 +10604,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var h = u === e;
+                        var y = k === t;
                       } else
-                        var h = !0;
-                      if (h) {
-                        if (r.pluginPath !== void 0) {
-                          const s = e;
-                          if (typeof r.pluginPath != "string")
-                            return n.errors = [
+                        var y = !0;
+                      if (y) {
+                        if (e.pluginPath !== void 0) {
+                          const a = t;
+                          if (typeof e.pluginPath != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/pluginPath",
+                                instancePath: r + "/pluginPath",
                                 schemaPath: "#/oneOf/0/properties/pluginPath/type",
                                 keyword: "type",
                                 params: {
@@ -6013,16 +10622,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var h = s === e;
+                          var y = a === t;
                         } else
-                          var h = !0;
-                        if (h)
-                          if (r.pluginName !== void 0) {
-                            const s = e;
-                            if (typeof r.pluginName != "string")
-                              return n.errors = [
+                          var y = !0;
+                        if (y)
+                          if (e.pluginName !== void 0) {
+                            const a = t;
+                            if (typeof e.pluginName != "string")
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/pluginName",
+                                  instancePath: r + "/pluginName",
                                   schemaPath: "#/oneOf/0/properties/pluginName/type",
                                   keyword: "type",
                                   params: {
@@ -6031,84 +10640,84 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 }
                               ], !1;
-                            var h = s === e;
+                            var y = a === t;
                           } else
-                            var h = !0;
+                            var y = !0;
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/0/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "activateTheme") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.step === void 0 && (d = "step") || r.themeFolderName === void 0 && (d = "themeFolderName"))
-                  return n.errors = [
+          } else if (pe === "activateTheme") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.step === void 0 && (R = "step") || e.themeFolderName === void 0 && (R = "themeFolderName"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/1/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "themeFolderName"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "themeFolderName"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/1/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/1/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/1/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -6117,16 +10726,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var b = j === e;
+                              var u = W === t;
                             } else
-                              var b = !0;
-                            if (b)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var u = !0;
+                            if (u)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/1/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -6135,14 +10744,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var b = a === e;
+                                var u = m === t;
                               } else
-                                var b = !0;
+                                var u = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/1/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -6151,17 +10760,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var k = u === e;
+                      var d = k === t;
                     } else
-                      var k = !0;
-                    if (k) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var d = !0;
+                    if (d) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/1/properties/step/type",
                               keyword: "type",
                               params: {
@@ -6170,10 +10779,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "activateTheme")
-                          return n.errors = [
+                        if (a !== "activateTheme")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/1/properties/step/const",
                               keyword: "const",
                               params: {
@@ -6182,16 +10791,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var k = u === e;
+                        var d = k === t;
                       } else
-                        var k = !0;
-                      if (k)
-                        if (r.themeFolderName !== void 0) {
-                          const s = e;
-                          if (typeof r.themeFolderName != "string")
-                            return n.errors = [
+                        var d = !0;
+                      if (d)
+                        if (e.themeFolderName !== void 0) {
+                          const a = t;
+                          if (typeof e.themeFolderName != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/themeFolderName",
+                                instancePath: r + "/themeFolderName",
                                 schemaPath: "#/oneOf/1/properties/themeFolderName/type",
                                 keyword: "type",
                                 params: {
@@ -6200,83 +10809,83 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var k = s === e;
+                          var d = a === t;
                         } else
-                          var k = !0;
+                          var d = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/1/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "cp") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.fromPath === void 0 && (d = "fromPath") || r.step === void 0 && (d = "step") || r.toPath === void 0 && (d = "toPath"))
-                  return n.errors = [
+          } else if (pe === "cp") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.fromPath === void 0 && (R = "fromPath") || e.step === void 0 && (R = "step") || e.toPath === void 0 && (R = "toPath"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/2/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "fromPath" || s === "toPath"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "fromPath" || a === "toPath"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/2/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/2/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/2/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -6285,16 +10894,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var m = j === e;
+                              var w = W === t;
                             } else
-                              var m = !0;
-                            if (m)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var w = !0;
+                            if (w)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/2/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -6303,14 +10912,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var m = a === e;
+                                var w = m === t;
                               } else
-                                var m = !0;
+                                var w = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/2/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -6319,17 +10928,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var w = u === e;
+                      var _ = k === t;
                     } else
-                      var w = !0;
-                    if (w) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var _ = !0;
+                    if (_) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/2/properties/step/type",
                               keyword: "type",
                               params: {
@@ -6338,10 +10947,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "cp")
-                          return n.errors = [
+                        if (a !== "cp")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/2/properties/step/const",
                               keyword: "const",
                               params: {
@@ -6350,16 +10959,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var w = u === e;
+                        var _ = k === t;
                       } else
-                        var w = !0;
-                      if (w) {
-                        if (r.fromPath !== void 0) {
-                          const s = e;
-                          if (typeof r.fromPath != "string")
-                            return n.errors = [
+                        var _ = !0;
+                      if (_) {
+                        if (e.fromPath !== void 0) {
+                          const a = t;
+                          if (typeof e.fromPath != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/fromPath",
+                                instancePath: r + "/fromPath",
                                 schemaPath: "#/oneOf/2/properties/fromPath/type",
                                 keyword: "type",
                                 params: {
@@ -6368,16 +10977,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var w = s === e;
+                          var _ = a === t;
                         } else
-                          var w = !0;
-                        if (w)
-                          if (r.toPath !== void 0) {
-                            const s = e;
-                            if (typeof r.toPath != "string")
-                              return n.errors = [
+                          var _ = !0;
+                        if (_)
+                          if (e.toPath !== void 0) {
+                            const a = t;
+                            if (typeof e.toPath != "string")
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/toPath",
+                                  instancePath: r + "/toPath",
                                   schemaPath: "#/oneOf/2/properties/toPath/type",
                                   keyword: "type",
                                   params: {
@@ -6386,84 +10995,84 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 }
                               ], !1;
-                            var w = s === e;
+                            var _ = a === t;
                           } else
-                            var w = !0;
+                            var _ = !0;
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/2/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "defineWpConfigConsts") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.consts === void 0 && (d = "consts") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "defineWpConfigConsts") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.consts === void 0 && (R = "consts") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/3/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "consts" || s === "method" || s === "virtualize"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "consts" || a === "method" || a === "virtualize"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/3/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/3/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/3/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -6472,16 +11081,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var S = j === e;
+                              var b = W === t;
                             } else
-                              var S = !0;
-                            if (S)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var b = !0;
+                            if (b)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/3/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -6490,14 +11099,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var S = a === e;
+                                var b = m === t;
                               } else
-                                var S = !0;
+                                var b = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/3/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -6506,17 +11115,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var D = u === e;
+                      var j = k === t;
                     } else
-                      var D = !0;
-                    if (D) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var j = !0;
+                    if (j) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/3/properties/step/type",
                               keyword: "type",
                               params: {
@@ -6525,10 +11134,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "defineWpConfigConsts")
-                          return n.errors = [
+                        if (a !== "defineWpConfigConsts")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/3/properties/step/const",
                               keyword: "const",
                               params: {
@@ -6537,19 +11146,19 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var D = u === e;
+                        var j = k === t;
                       } else
-                        var D = !0;
-                      if (D) {
-                        if (r.consts !== void 0) {
-                          let s = r.consts;
-                          const u = e;
-                          if (e === u && !(s && typeof s == "object" && !Array.isArray(
-                            s
+                        var j = !0;
+                      if (j) {
+                        if (e.consts !== void 0) {
+                          let a = e.consts;
+                          const k = t;
+                          if (t === k && !(a && typeof a == "object" && !Array.isArray(
+                            a
                           )))
-                            return n.errors = [
+                            return h.errors = [
                               {
-                                instancePath: t + "/consts",
+                                instancePath: r + "/consts",
                                 schemaPath: "#/oneOf/3/properties/consts/type",
                                 keyword: "type",
                                 params: {
@@ -6558,17 +11167,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be object"
                               }
                             ], !1;
-                          var D = u === e;
+                          var j = k === t;
                         } else
-                          var D = !0;
-                        if (D) {
-                          if (r.method !== void 0) {
-                            let s = r.method;
-                            const u = e;
-                            if (typeof s != "string")
-                              return n.errors = [
+                          var j = !0;
+                        if (j) {
+                          if (e.method !== void 0) {
+                            let a = e.method;
+                            const k = t;
+                            if (typeof a != "string")
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/method",
+                                  instancePath: r + "/method",
                                   schemaPath: "#/oneOf/3/properties/method/type",
                                   keyword: "type",
                                   params: {
@@ -6577,28 +11186,28 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 }
                               ], !1;
-                            if (!(s === "rewrite-wp-config" || s === "define-before-run"))
-                              return n.errors = [
+                            if (!(a === "rewrite-wp-config" || a === "define-before-run"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/method",
+                                  instancePath: r + "/method",
                                   schemaPath: "#/oneOf/3/properties/method/enum",
                                   keyword: "enum",
                                   params: {
-                                    allowedValues: br.oneOf[3].properties.method.enum
+                                    allowedValues: Ns.oneOf[3].properties.method.enum
                                   },
                                   message: "must be equal to one of the allowed values"
                                 }
                               ], !1;
-                            var D = u === e;
+                            var j = k === t;
                           } else
-                            var D = !0;
-                          if (D)
-                            if (r.virtualize !== void 0) {
-                              const s = e;
-                              if (typeof r.virtualize != "boolean")
-                                return n.errors = [
+                            var j = !0;
+                          if (j)
+                            if (e.virtualize !== void 0) {
+                              const a = t;
+                              if (typeof e.virtualize != "boolean")
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/virtualize",
+                                    instancePath: r + "/virtualize",
                                     schemaPath: "#/oneOf/3/properties/virtualize/type",
                                     keyword: "type",
                                     params: {
@@ -6607,85 +11216,85 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be boolean"
                                   }
                                 ], !1;
-                              var D = s === e;
+                              var j = a === t;
                             } else
-                              var D = !0;
+                              var j = !0;
                         }
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/3/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "defineSiteUrl") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.siteUrl === void 0 && (d = "siteUrl") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "defineSiteUrl") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.siteUrl === void 0 && (R = "siteUrl") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/4/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "siteUrl"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "siteUrl"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/4/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/4/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/4/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -6694,16 +11303,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var P = j === e;
+                              var P = W === t;
                             } else
                               var P = !0;
                             if (P)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/4/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -6712,14 +11321,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var P = a === e;
+                                var P = m === t;
                               } else
                                 var P = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/4/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -6728,17 +11337,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var U = u === e;
+                      var q = k === t;
                     } else
-                      var U = !0;
-                    if (U) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var q = !0;
+                    if (q) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/4/properties/step/type",
                               keyword: "type",
                               params: {
@@ -6747,10 +11356,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "defineSiteUrl")
-                          return n.errors = [
+                        if (a !== "defineSiteUrl")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/4/properties/step/const",
                               keyword: "const",
                               params: {
@@ -6759,16 +11368,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var U = u === e;
+                        var q = k === t;
                       } else
-                        var U = !0;
-                      if (U)
-                        if (r.siteUrl !== void 0) {
-                          const s = e;
-                          if (typeof r.siteUrl != "string")
-                            return n.errors = [
+                        var q = !0;
+                      if (q)
+                        if (e.siteUrl !== void 0) {
+                          const a = t;
+                          if (typeof e.siteUrl != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/siteUrl",
+                                instancePath: r + "/siteUrl",
                                 schemaPath: "#/oneOf/4/properties/siteUrl/type",
                                 keyword: "type",
                                 params: {
@@ -6777,83 +11386,83 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var U = s === e;
+                          var q = a === t;
                         } else
-                          var U = !0;
+                          var q = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/4/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "enableMultisite") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "enableMultisite") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/5/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "wpCliPath"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/5/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/5/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/5/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -6862,16 +11471,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var te = j === e;
+                              var D = W === t;
                             } else
-                              var te = !0;
-                            if (te)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var D = !0;
+                            if (D)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/5/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -6880,14 +11489,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var te = a === e;
+                                var D = m === t;
                               } else
-                                var te = !0;
+                                var D = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/5/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -6896,17 +11505,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var H = u === e;
+                      var M = k === t;
                     } else
-                      var H = !0;
-                    if (H)
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var M = !0;
+                    if (M) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/5/properties/step/type",
                               keyword: "type",
                               params: {
@@ -6915,10 +11524,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "enableMultisite")
-                          return n.errors = [
+                        if (a !== "enableMultisite")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/5/properties/step/const",
                               keyword: "const",
                               params: {
@@ -6927,82 +11536,101 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var H = u === e;
+                        var M = k === t;
                       } else
-                        var H = !0;
+                        var M = !0;
+                      if (M)
+                        if (e.wpCliPath !== void 0) {
+                          const a = t;
+                          if (typeof e.wpCliPath != "string")
+                            return h.errors = [
+                              {
+                                instancePath: r + "/wpCliPath",
+                                schemaPath: "#/oneOf/5/properties/wpCliPath/type",
+                                keyword: "type",
+                                params: {
+                                  type: "string"
+                                },
+                                message: "must be string"
+                              }
+                            ], !1;
+                          var M = a === t;
+                        } else
+                          var M = !0;
+                    }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/5/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "importWxr") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.file === void 0 && (d = "file") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "importWxr") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.file === void 0 && (R = "file") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/6/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "file"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "file"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/6/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/6/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/6/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -7011,16 +11639,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var E = j === e;
+                              var B = W === t;
                             } else
-                              var E = !0;
-                            if (E)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var B = !0;
+                            if (B)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/6/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -7029,14 +11657,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var E = a === e;
+                                var B = m === t;
                               } else
-                                var E = !0;
+                                var B = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/6/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -7045,17 +11673,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var x = u === e;
+                      var U = k === t;
                     } else
-                      var x = !0;
-                    if (x) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var U = !0;
+                    if (U) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/6/properties/step/type",
                               keyword: "type",
                               params: {
@@ -7064,10 +11692,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "importWxr")
-                          return n.errors = [
+                        if (a !== "importWxr")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/6/properties/step/const",
                               keyword: "const",
                               params: {
@@ -7076,97 +11704,97 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var x = u === e;
+                        var U = k === t;
                       } else
-                        var x = !0;
-                      if (x)
-                        if (r.file !== void 0) {
-                          const s = e;
-                          re(r.file, {
-                            instancePath: t + "/file",
-                            parentData: r,
+                        var U = !0;
+                      if (U)
+                        if (e.file !== void 0) {
+                          const a = t;
+                          le(e.file, {
+                            instancePath: r + "/file",
+                            parentData: e,
                             parentDataProperty: "file",
-                            rootData: l
-                          }) || (i = i === null ? re.errors : i.concat(
-                            re.errors
-                          ), e = i.length);
-                          var x = s === e;
+                            rootData: o
+                          }) || (i = i === null ? le.errors : i.concat(
+                            le.errors
+                          ), t = i.length);
+                          var U = a === t;
                         } else
-                          var x = !0;
+                          var U = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/6/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "importThemeStarterContent") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "importThemeStarterContent") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/7/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "themeSlug"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "themeSlug"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/7/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/7/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/7/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -7175,16 +11803,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var I = j === e;
+                              var A = W === t;
                             } else
-                              var I = !0;
-                            if (I)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var A = !0;
+                            if (A)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/7/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -7193,14 +11821,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var I = a === e;
+                                var A = m === t;
                               } else
-                                var I = !0;
+                                var A = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/7/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -7209,17 +11837,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var z = u === e;
+                      var x = k === t;
                     } else
-                      var z = !0;
-                    if (z) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var x = !0;
+                    if (x) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/7/properties/step/type",
                               keyword: "type",
                               params: {
@@ -7228,10 +11856,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "importThemeStarterContent")
-                          return n.errors = [
+                        if (a !== "importThemeStarterContent")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/7/properties/step/const",
                               keyword: "const",
                               params: {
@@ -7240,16 +11868,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var z = u === e;
+                        var x = k === t;
                       } else
-                        var z = !0;
-                      if (z)
-                        if (r.themeSlug !== void 0) {
-                          const s = e;
-                          if (typeof r.themeSlug != "string")
-                            return n.errors = [
+                        var x = !0;
+                      if (x)
+                        if (e.themeSlug !== void 0) {
+                          const a = t;
+                          if (typeof e.themeSlug != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/themeSlug",
+                                instancePath: r + "/themeSlug",
                                 schemaPath: "#/oneOf/7/properties/themeSlug/type",
                                 keyword: "type",
                                 params: {
@@ -7258,83 +11886,83 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var z = s === e;
+                          var x = a === t;
                         } else
-                          var z = !0;
+                          var x = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/7/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "importWordPressFiles") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.step === void 0 && (d = "step") || r.wordPressFilesZip === void 0 && (d = "wordPressFilesZip"))
-                  return n.errors = [
+          } else if (pe === "importWordPressFiles") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.step === void 0 && (R = "step") || e.wordPressFilesZip === void 0 && (R = "wordPressFilesZip"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/8/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "wordPressFilesZip" || s === "pathInZip"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "wordPressFilesZip" || a === "pathInZip"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/8/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/8/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/8/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -7343,16 +11971,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var c = j === e;
+                              var N = W === t;
                             } else
-                              var c = !0;
-                            if (c)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var N = !0;
+                            if (N)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/8/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -7361,14 +11989,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var c = a === e;
+                                var N = m === t;
                               } else
-                                var c = !0;
+                                var N = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/8/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -7377,17 +12005,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var A = u === e;
+                      var S = k === t;
                     } else
-                      var A = !0;
-                    if (A) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var S = !0;
+                    if (S) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/8/properties/step/type",
                               keyword: "type",
                               params: {
@@ -7396,10 +12024,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "importWordPressFiles")
-                          return n.errors = [
+                        if (a !== "importWordPressFiles")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/8/properties/step/const",
                               keyword: "const",
                               params: {
@@ -7408,33 +12036,33 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var A = u === e;
+                        var S = k === t;
                       } else
-                        var A = !0;
-                      if (A) {
-                        if (r.wordPressFilesZip !== void 0) {
-                          const s = e;
-                          re(
-                            r.wordPressFilesZip,
+                        var S = !0;
+                      if (S) {
+                        if (e.wordPressFilesZip !== void 0) {
+                          const a = t;
+                          le(
+                            e.wordPressFilesZip,
                             {
-                              instancePath: t + "/wordPressFilesZip",
-                              parentData: r,
+                              instancePath: r + "/wordPressFilesZip",
+                              parentData: e,
                               parentDataProperty: "wordPressFilesZip",
-                              rootData: l
+                              rootData: o
                             }
-                          ) || (i = i === null ? re.errors : i.concat(
-                            re.errors
-                          ), e = i.length);
-                          var A = s === e;
+                          ) || (i = i === null ? le.errors : i.concat(
+                            le.errors
+                          ), t = i.length);
+                          var S = a === t;
                         } else
-                          var A = !0;
-                        if (A)
-                          if (r.pathInZip !== void 0) {
-                            const s = e;
-                            if (typeof r.pathInZip != "string")
-                              return n.errors = [
+                          var S = !0;
+                        if (S)
+                          if (e.pathInZip !== void 0) {
+                            const a = t;
+                            if (typeof e.pathInZip != "string")
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/pathInZip",
+                                  instancePath: r + "/pathInZip",
                                   schemaPath: "#/oneOf/8/properties/pathInZip/type",
                                   keyword: "type",
                                   params: {
@@ -7443,84 +12071,84 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 }
                               ], !1;
-                            var A = s === e;
+                            var S = a === t;
                           } else
-                            var A = !0;
+                            var S = !0;
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/8/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "installPlugin") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.pluginZipFile === void 0 && (d = "pluginZipFile") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "installPlugin") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.pluginData === void 0 && (R = "pluginData") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/9/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "ifAlreadyInstalled" || s === "step" || s === "pluginZipFile" || s === "options"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "ifAlreadyInstalled" || a === "step" || a === "pluginData" || a === "pluginZipFile" || a === "options"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/9/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/9/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/9/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -7529,16 +12157,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var $ = j === e;
+                              var T = W === t;
                             } else
-                              var $ = !0;
-                            if ($)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var T = !0;
+                            if (T)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/9/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -7547,14 +12175,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var $ = a === e;
+                                var T = m === t;
                               } else
-                                var $ = !0;
+                                var T = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/9/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -7563,17 +12191,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var T = u === e;
+                      var E = k === t;
                     } else
-                      var T = !0;
-                    if (T) {
-                      if (r.ifAlreadyInstalled !== void 0) {
-                        let s = r.ifAlreadyInstalled;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var E = !0;
+                    if (E) {
+                      if (e.ifAlreadyInstalled !== void 0) {
+                        let a = e.ifAlreadyInstalled;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/ifAlreadyInstalled",
+                              instancePath: r + "/ifAlreadyInstalled",
                               schemaPath: "#/oneOf/9/properties/ifAlreadyInstalled/type",
                               keyword: "type",
                               params: {
@@ -7582,29 +12210,29 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (!(s === "overwrite" || s === "skip" || s === "error"))
-                          return n.errors = [
+                        if (!(a === "overwrite" || a === "skip" || a === "error"))
+                          return h.errors = [
                             {
-                              instancePath: t + "/ifAlreadyInstalled",
+                              instancePath: r + "/ifAlreadyInstalled",
                               schemaPath: "#/oneOf/9/properties/ifAlreadyInstalled/enum",
                               keyword: "enum",
                               params: {
-                                allowedValues: br.oneOf[9].properties.ifAlreadyInstalled.enum
+                                allowedValues: Ns.oneOf[9].properties.ifAlreadyInstalled.enum
                               },
                               message: "must be equal to one of the allowed values"
                             }
                           ], !1;
-                        var T = u === e;
+                        var E = k === t;
                       } else
-                        var T = !0;
-                      if (T) {
-                        if (r.step !== void 0) {
-                          let s = r.step;
-                          const u = e;
-                          if (typeof s != "string")
-                            return n.errors = [
+                        var E = !0;
+                      if (E) {
+                        if (e.step !== void 0) {
+                          let a = e.step;
+                          const k = t;
+                          if (typeof a != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/step",
+                                instancePath: r + "/step",
                                 schemaPath: "#/oneOf/9/properties/step/type",
                                 keyword: "type",
                                 params: {
@@ -7613,10 +12241,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          if (s !== "installPlugin")
-                            return n.errors = [
+                          if (a !== "installPlugin")
+                            return h.errors = [
                               {
-                                instancePath: t + "/step",
+                                instancePath: r + "/step",
                                 schemaPath: "#/oneOf/9/properties/step/const",
                                 keyword: "const",
                                 params: {
@@ -7625,151 +12253,230 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be equal to constant"
                               }
                             ], !1;
-                          var T = u === e;
+                          var E = k === t;
                         } else
-                          var T = !0;
-                        if (T) {
-                          if (r.pluginZipFile !== void 0) {
-                            const s = e;
-                            re(
-                              r.pluginZipFile,
+                          var E = !0;
+                        if (E) {
+                          if (e.pluginData !== void 0) {
+                            let a = e.pluginData;
+                            const k = t, z = t;
+                            let m = !1;
+                            const W = t;
+                            le(
+                              a,
                               {
-                                instancePath: t + "/pluginZipFile",
-                                parentData: r,
-                                parentDataProperty: "pluginZipFile",
-                                rootData: l
+                                instancePath: r + "/pluginData",
+                                parentData: e,
+                                parentDataProperty: "pluginData",
+                                rootData: o
                               }
-                            ) || (i = i === null ? re.errors : i.concat(
-                              re.errors
-                            ), e = i.length);
-                            var T = s === e;
+                            ) || (i = i === null ? le.errors : i.concat(
+                              le.errors
+                            ), t = i.length);
+                            var O = W === t;
+                            if (m = m || O, !m) {
+                              const Pe = t;
+                              Je(
+                                a,
+                                {
+                                  instancePath: r + "/pluginData",
+                                  parentData: e,
+                                  parentDataProperty: "pluginData",
+                                  rootData: o
+                                }
+                              ) || (i = i === null ? Je.errors : i.concat(
+                                Je.errors
+                              ), t = i.length);
+                              var O = Pe === t;
+                              m = m || O;
+                            }
+                            if (m)
+                              t = z, i !== null && (z ? i.length = z : i = null);
+                            else {
+                              const Pe = {
+                                instancePath: r + "/pluginData",
+                                schemaPath: "#/oneOf/9/properties/pluginData/anyOf",
+                                keyword: "anyOf",
+                                params: {},
+                                message: "must match a schema in anyOf"
+                              };
+                              return i === null ? i = [
+                                Pe
+                              ] : i.push(
+                                Pe
+                              ), t++, h.errors = i, !1;
+                            }
+                            var E = k === t;
                           } else
-                            var T = !0;
-                          if (T)
-                            if (r.options !== void 0) {
-                              let s = r.options;
-                              const u = e;
-                              if (e === e)
-                                if (s && typeof s == "object" && !Array.isArray(
-                                  s
-                                )) {
-                                  const j = e;
-                                  for (const ke in s)
-                                    if (ke !== "activate")
-                                      return n.errors = [
-                                        {
-                                          instancePath: t + "/options",
-                                          schemaPath: "#/definitions/InstallPluginOptions/additionalProperties",
-                                          keyword: "additionalProperties",
-                                          params: {
-                                            additionalProperty: ke
-                                          },
-                                          message: "must NOT have additional properties"
-                                        }
-                                      ], !1;
-                                  if (j === e && s.activate !== void 0 && typeof s.activate != "boolean")
-                                    return n.errors = [
+                            var E = !0;
+                          if (E) {
+                            if (e.pluginZipFile !== void 0) {
+                              const a = t;
+                              le(
+                                e.pluginZipFile,
+                                {
+                                  instancePath: r + "/pluginZipFile",
+                                  parentData: e,
+                                  parentDataProperty: "pluginZipFile",
+                                  rootData: o
+                                }
+                              ) || (i = i === null ? le.errors : i.concat(
+                                le.errors
+                              ), t = i.length);
+                              var E = a === t;
+                            } else
+                              var E = !0;
+                            if (E)
+                              if (e.options !== void 0) {
+                                let a = e.options;
+                                const k = t;
+                                if (t === t)
+                                  if (a && typeof a == "object" && !Array.isArray(
+                                    a
+                                  )) {
+                                    const W = t;
+                                    for (const me in a)
+                                      if (!(me === "activate" || me === "targetFolderName"))
+                                        return h.errors = [
+                                          {
+                                            instancePath: r + "/options",
+                                            schemaPath: "#/definitions/InstallPluginOptions/additionalProperties",
+                                            keyword: "additionalProperties",
+                                            params: {
+                                              additionalProperty: me
+                                            },
+                                            message: "must NOT have additional properties"
+                                          }
+                                        ], !1;
+                                    if (W === t) {
+                                      if (a.activate !== void 0) {
+                                        const me = t;
+                                        if (typeof a.activate != "boolean")
+                                          return h.errors = [
+                                            {
+                                              instancePath: r + "/options/activate",
+                                              schemaPath: "#/definitions/InstallPluginOptions/properties/activate/type",
+                                              keyword: "type",
+                                              params: {
+                                                type: "boolean"
+                                              },
+                                              message: "must be boolean"
+                                            }
+                                          ], !1;
+                                        var C = me === t;
+                                      } else
+                                        var C = !0;
+                                      if (C)
+                                        if (a.targetFolderName !== void 0) {
+                                          const me = t;
+                                          if (typeof a.targetFolderName != "string")
+                                            return h.errors = [
+                                              {
+                                                instancePath: r + "/options/targetFolderName",
+                                                schemaPath: "#/definitions/InstallPluginOptions/properties/targetFolderName/type",
+                                                keyword: "type",
+                                                params: {
+                                                  type: "string"
+                                                },
+                                                message: "must be string"
+                                              }
+                                            ], !1;
+                                          var C = me === t;
+                                        } else
+                                          var C = !0;
+                                    }
+                                  } else
+                                    return h.errors = [
                                       {
-                                        instancePath: t + "/options/activate",
-                                        schemaPath: "#/definitions/InstallPluginOptions/properties/activate/type",
+                                        instancePath: r + "/options",
+                                        schemaPath: "#/definitions/InstallPluginOptions/type",
                                         keyword: "type",
                                         params: {
-                                          type: "boolean"
+                                          type: "object"
                                         },
-                                        message: "must be boolean"
+                                        message: "must be object"
                                       }
                                     ], !1;
-                                } else
-                                  return n.errors = [
-                                    {
-                                      instancePath: t + "/options",
-                                      schemaPath: "#/definitions/InstallPluginOptions/type",
-                                      keyword: "type",
-                                      params: {
-                                        type: "object"
-                                      },
-                                      message: "must be object"
-                                    }
-                                  ], !1;
-                              var T = u === e;
-                            } else
-                              var T = !0;
+                                var E = k === t;
+                              } else
+                                var E = !0;
+                          }
                         }
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/9/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "installTheme") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.step === void 0 && (d = "step") || r.themeZipFile === void 0 && (d = "themeZipFile"))
-                  return n.errors = [
+          } else if (pe === "installTheme") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.step === void 0 && (R = "step") || e.themeData === void 0 && (R = "themeData"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/10/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "ifAlreadyInstalled" || s === "step" || s === "themeZipFile" || s === "options"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "ifAlreadyInstalled" || a === "step" || a === "themeData" || a === "themeZipFile" || a === "options"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/10/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/10/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/10/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -7778,16 +12485,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var _ = j === e;
+                              var L = W === t;
                             } else
-                              var _ = !0;
-                            if (_)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var L = !0;
+                            if (L)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/10/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -7796,14 +12503,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var _ = a === e;
+                                var L = m === t;
                               } else
-                                var _ = !0;
+                                var L = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/10/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -7812,17 +12519,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var y = u === e;
+                      var F = k === t;
                     } else
-                      var y = !0;
-                    if (y) {
-                      if (r.ifAlreadyInstalled !== void 0) {
-                        let s = r.ifAlreadyInstalled;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var F = !0;
+                    if (F) {
+                      if (e.ifAlreadyInstalled !== void 0) {
+                        let a = e.ifAlreadyInstalled;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/ifAlreadyInstalled",
+                              instancePath: r + "/ifAlreadyInstalled",
                               schemaPath: "#/oneOf/10/properties/ifAlreadyInstalled/type",
                               keyword: "type",
                               params: {
@@ -7831,29 +12538,29 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (!(s === "overwrite" || s === "skip" || s === "error"))
-                          return n.errors = [
+                        if (!(a === "overwrite" || a === "skip" || a === "error"))
+                          return h.errors = [
                             {
-                              instancePath: t + "/ifAlreadyInstalled",
+                              instancePath: r + "/ifAlreadyInstalled",
                               schemaPath: "#/oneOf/10/properties/ifAlreadyInstalled/enum",
                               keyword: "enum",
                               params: {
-                                allowedValues: br.oneOf[10].properties.ifAlreadyInstalled.enum
+                                allowedValues: Ns.oneOf[10].properties.ifAlreadyInstalled.enum
                               },
                               message: "must be equal to one of the allowed values"
                             }
                           ], !1;
-                        var y = u === e;
+                        var F = k === t;
                       } else
-                        var y = !0;
-                      if (y) {
-                        if (r.step !== void 0) {
-                          let s = r.step;
-                          const u = e;
-                          if (typeof s != "string")
-                            return n.errors = [
+                        var F = !0;
+                      if (F) {
+                        if (e.step !== void 0) {
+                          let a = e.step;
+                          const k = t;
+                          if (typeof a != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/step",
+                                instancePath: r + "/step",
                                 schemaPath: "#/oneOf/10/properties/step/type",
                                 keyword: "type",
                                 params: {
@@ -7862,10 +12569,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          if (s !== "installTheme")
-                            return n.errors = [
+                          if (a !== "installTheme")
+                            return h.errors = [
                               {
-                                instancePath: t + "/step",
+                                instancePath: r + "/step",
                                 schemaPath: "#/oneOf/10/properties/step/const",
                                 keyword: "const",
                                 params: {
@@ -7874,74 +12581,109 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be equal to constant"
                               }
                             ], !1;
-                          var y = u === e;
+                          var F = k === t;
                         } else
-                          var y = !0;
-                        if (y) {
-                          if (r.themeZipFile !== void 0) {
-                            const s = e;
-                            re(
-                              r.themeZipFile,
+                          var F = !0;
+                        if (F) {
+                          if (e.themeData !== void 0) {
+                            let a = e.themeData;
+                            const k = t, z = t;
+                            let m = !1;
+                            const W = t;
+                            le(
+                              a,
                               {
-                                instancePath: t + "/themeZipFile",
-                                parentData: r,
-                                parentDataProperty: "themeZipFile",
-                                rootData: l
+                                instancePath: r + "/themeData",
+                                parentData: e,
+                                parentDataProperty: "themeData",
+                                rootData: o
                               }
-                            ) || (i = i === null ? re.errors : i.concat(
-                              re.errors
-                            ), e = i.length);
-                            var y = s === e;
+                            ) || (i = i === null ? le.errors : i.concat(
+                              le.errors
+                            ), t = i.length);
+                            var Y = W === t;
+                            if (m = m || Y, !m) {
+                              const Pe = t;
+                              Je(
+                                a,
+                                {
+                                  instancePath: r + "/themeData",
+                                  parentData: e,
+                                  parentDataProperty: "themeData",
+                                  rootData: o
+                                }
+                              ) || (i = i === null ? Je.errors : i.concat(
+                                Je.errors
+                              ), t = i.length);
+                              var Y = Pe === t;
+                              m = m || Y;
+                            }
+                            if (m)
+                              t = z, i !== null && (z ? i.length = z : i = null);
+                            else {
+                              const Pe = {
+                                instancePath: r + "/themeData",
+                                schemaPath: "#/oneOf/10/properties/themeData/anyOf",
+                                keyword: "anyOf",
+                                params: {},
+                                message: "must match a schema in anyOf"
+                              };
+                              return i === null ? i = [
+                                Pe
+                              ] : i.push(
+                                Pe
+                              ), t++, h.errors = i, !1;
+                            }
+                            var F = k === t;
                           } else
-                            var y = !0;
-                          if (y)
-                            if (r.options !== void 0) {
-                              let s = r.options;
-                              const u = e;
-                              if (e === u)
-                                if (s && typeof s == "object" && !Array.isArray(
-                                  s
-                                )) {
-                                  const a = e;
-                                  for (const j in s)
-                                    if (!(j === "activate" || j === "importStarterContent"))
-                                      return n.errors = [
-                                        {
-                                          instancePath: t + "/options",
-                                          schemaPath: "#/oneOf/10/properties/options/additionalProperties",
-                                          keyword: "additionalProperties",
-                                          params: {
-                                            additionalProperty: j
-                                          },
-                                          message: "must NOT have additional properties"
-                                        }
-                                      ], !1;
-                                  if (a === e) {
-                                    if (s.activate !== void 0) {
-                                      const j = e;
-                                      if (typeof s.activate != "boolean")
-                                        return n.errors = [
+                            var F = !0;
+                          if (F) {
+                            if (e.themeZipFile !== void 0) {
+                              const a = t;
+                              le(
+                                e.themeZipFile,
+                                {
+                                  instancePath: r + "/themeZipFile",
+                                  parentData: e,
+                                  parentDataProperty: "themeZipFile",
+                                  rootData: o
+                                }
+                              ) || (i = i === null ? le.errors : i.concat(
+                                le.errors
+                              ), t = i.length);
+                              var F = a === t;
+                            } else
+                              var F = !0;
+                            if (F)
+                              if (e.options !== void 0) {
+                                let a = e.options;
+                                const k = t;
+                                if (t === t)
+                                  if (a && typeof a == "object" && !Array.isArray(
+                                    a
+                                  )) {
+                                    const W = t;
+                                    for (const me in a)
+                                      if (!(me === "activate" || me === "importStarterContent" || me === "targetFolderName"))
+                                        return h.errors = [
                                           {
-                                            instancePath: t + "/options/activate",
-                                            schemaPath: "#/oneOf/10/properties/options/properties/activate/type",
-                                            keyword: "type",
+                                            instancePath: r + "/options",
+                                            schemaPath: "#/definitions/InstallThemeOptions/additionalProperties",
+                                            keyword: "additionalProperties",
                                             params: {
-                                              type: "boolean"
+                                              additionalProperty: me
                                             },
-                                            message: "must be boolean"
+                                            message: "must NOT have additional properties"
                                           }
                                         ], !1;
-                                      var g = j === e;
-                                    } else
-                                      var g = !0;
-                                    if (g)
-                                      if (s.importStarterContent !== void 0) {
-                                        const j = e;
-                                        if (typeof s.importStarterContent != "boolean")
-                                          return n.errors = [
+                                    if (W === t) {
+                                      if (a.activate !== void 0) {
+                                        const me = t;
+                                        if (typeof a.activate != "boolean")
+                                          return h.errors = [
                                             {
-                                              instancePath: t + "/options/importStarterContent",
-                                              schemaPath: "#/oneOf/10/properties/options/properties/importStarterContent/type",
+                                              instancePath: r + "/options/activate",
+                                              schemaPath: "#/definitions/InstallThemeOptions/properties/activate/type",
                                               keyword: "type",
                                               params: {
                                                 type: "boolean"
@@ -7949,101 +12691,139 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                               message: "must be boolean"
                                             }
                                           ], !1;
-                                        var g = j === e;
+                                        var Z = me === t;
                                       } else
-                                        var g = !0;
-                                  }
-                                } else
-                                  return n.errors = [
-                                    {
-                                      instancePath: t + "/options",
-                                      schemaPath: "#/oneOf/10/properties/options/type",
-                                      keyword: "type",
-                                      params: {
-                                        type: "object"
-                                      },
-                                      message: "must be object"
+                                        var Z = !0;
+                                      if (Z) {
+                                        if (a.importStarterContent !== void 0) {
+                                          const me = t;
+                                          if (typeof a.importStarterContent != "boolean")
+                                            return h.errors = [
+                                              {
+                                                instancePath: r + "/options/importStarterContent",
+                                                schemaPath: "#/definitions/InstallThemeOptions/properties/importStarterContent/type",
+                                                keyword: "type",
+                                                params: {
+                                                  type: "boolean"
+                                                },
+                                                message: "must be boolean"
+                                              }
+                                            ], !1;
+                                          var Z = me === t;
+                                        } else
+                                          var Z = !0;
+                                        if (Z)
+                                          if (a.targetFolderName !== void 0) {
+                                            const me = t;
+                                            if (typeof a.targetFolderName != "string")
+                                              return h.errors = [
+                                                {
+                                                  instancePath: r + "/options/targetFolderName",
+                                                  schemaPath: "#/definitions/InstallThemeOptions/properties/targetFolderName/type",
+                                                  keyword: "type",
+                                                  params: {
+                                                    type: "string"
+                                                  },
+                                                  message: "must be string"
+                                                }
+                                              ], !1;
+                                            var Z = me === t;
+                                          } else
+                                            var Z = !0;
+                                      }
                                     }
-                                  ], !1;
-                              var y = u === e;
-                            } else
-                              var y = !0;
+                                  } else
+                                    return h.errors = [
+                                      {
+                                        instancePath: r + "/options",
+                                        schemaPath: "#/definitions/InstallThemeOptions/type",
+                                        keyword: "type",
+                                        params: {
+                                          type: "object"
+                                        },
+                                        message: "must be object"
+                                      }
+                                    ], !1;
+                                var F = k === t;
+                              } else
+                                var F = !0;
+                          }
                         }
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/10/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "login") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "login") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/11/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "username" || s === "password"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "username" || a === "password"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/11/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/11/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/11/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -8052,16 +12832,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var v = j === e;
+                              var H = W === t;
                             } else
-                              var v = !0;
-                            if (v)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var H = !0;
+                            if (H)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/11/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -8070,14 +12850,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var v = a === e;
+                                var H = m === t;
                               } else
-                                var v = !0;
+                                var H = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/11/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -8086,17 +12866,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var O = u === e;
+                      var K = k === t;
                     } else
-                      var O = !0;
-                    if (O) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var K = !0;
+                    if (K) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/11/properties/step/type",
                               keyword: "type",
                               params: {
@@ -8105,10 +12885,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "login")
-                          return n.errors = [
+                        if (a !== "login")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/11/properties/step/const",
                               keyword: "const",
                               params: {
@@ -8117,16 +12897,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var O = u === e;
+                        var K = k === t;
                       } else
-                        var O = !0;
-                      if (O) {
-                        if (r.username !== void 0) {
-                          const s = e;
-                          if (typeof r.username != "string")
-                            return n.errors = [
+                        var K = !0;
+                      if (K) {
+                        if (e.username !== void 0) {
+                          const a = t;
+                          if (typeof e.username != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/username",
+                                instancePath: r + "/username",
                                 schemaPath: "#/oneOf/11/properties/username/type",
                                 keyword: "type",
                                 params: {
@@ -8135,16 +12915,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var O = s === e;
+                          var K = a === t;
                         } else
-                          var O = !0;
-                        if (O)
-                          if (r.password !== void 0) {
-                            const s = e;
-                            if (typeof r.password != "string")
-                              return n.errors = [
+                          var K = !0;
+                        if (K)
+                          if (e.password !== void 0) {
+                            const a = t;
+                            if (typeof e.password != "string")
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/password",
+                                  instancePath: r + "/password",
                                   schemaPath: "#/oneOf/11/properties/password/type",
                                   keyword: "type",
                                   params: {
@@ -8153,84 +12933,84 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 }
                               ], !1;
-                            var O = s === e;
+                            var K = a === t;
                           } else
-                            var O = !0;
+                            var K = !0;
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/11/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "mkdir") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.path === void 0 && (d = "path") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "mkdir") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.path === void 0 && (R = "path") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/12/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "path"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "path"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/12/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/12/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/12/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -8239,16 +13019,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var N = j === e;
+                              var G = W === t;
                             } else
-                              var N = !0;
-                            if (N)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var G = !0;
+                            if (G)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/12/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -8257,14 +13037,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var N = a === e;
+                                var G = m === t;
                               } else
-                                var N = !0;
+                                var G = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/12/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -8273,17 +13053,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var q = u === e;
+                      var se = k === t;
                     } else
-                      var q = !0;
-                    if (q) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var se = !0;
+                    if (se) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/12/properties/step/type",
                               keyword: "type",
                               params: {
@@ -8292,10 +13072,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "mkdir")
-                          return n.errors = [
+                        if (a !== "mkdir")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/12/properties/step/const",
                               keyword: "const",
                               params: {
@@ -8304,16 +13084,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var q = u === e;
+                        var se = k === t;
                       } else
-                        var q = !0;
-                      if (q)
-                        if (r.path !== void 0) {
-                          const s = e;
-                          if (typeof r.path != "string")
-                            return n.errors = [
+                        var se = !0;
+                      if (se)
+                        if (e.path !== void 0) {
+                          const a = t;
+                          if (typeof e.path != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/path",
+                                instancePath: r + "/path",
                                 schemaPath: "#/oneOf/12/properties/path/type",
                                 keyword: "type",
                                 params: {
@@ -8322,83 +13102,83 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var q = s === e;
+                          var se = a === t;
                         } else
-                          var q = !0;
+                          var se = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/12/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "mv") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.fromPath === void 0 && (d = "fromPath") || r.step === void 0 && (d = "step") || r.toPath === void 0 && (d = "toPath"))
-                  return n.errors = [
+          } else if (pe === "mv") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.fromPath === void 0 && (R = "fromPath") || e.step === void 0 && (R = "step") || e.toPath === void 0 && (R = "toPath"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/13/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "fromPath" || s === "toPath"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "fromPath" || a === "toPath"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/13/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/13/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/13/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -8407,16 +13187,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var W = j === e;
+                              var ee = W === t;
                             } else
-                              var W = !0;
-                            if (W)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var ee = !0;
+                            if (ee)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/13/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -8425,14 +13205,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var W = a === e;
+                                var ee = m === t;
                               } else
-                                var W = !0;
+                                var ee = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/13/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -8441,17 +13221,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var R = u === e;
+                      var X = k === t;
                     } else
-                      var R = !0;
-                    if (R) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var X = !0;
+                    if (X) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/13/properties/step/type",
                               keyword: "type",
                               params: {
@@ -8460,10 +13240,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "mv")
-                          return n.errors = [
+                        if (a !== "mv")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/13/properties/step/const",
                               keyword: "const",
                               params: {
@@ -8472,16 +13252,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var R = u === e;
+                        var X = k === t;
                       } else
-                        var R = !0;
-                      if (R) {
-                        if (r.fromPath !== void 0) {
-                          const s = e;
-                          if (typeof r.fromPath != "string")
-                            return n.errors = [
+                        var X = !0;
+                      if (X) {
+                        if (e.fromPath !== void 0) {
+                          const a = t;
+                          if (typeof e.fromPath != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/fromPath",
+                                instancePath: r + "/fromPath",
                                 schemaPath: "#/oneOf/13/properties/fromPath/type",
                                 keyword: "type",
                                 params: {
@@ -8490,16 +13270,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var R = s === e;
+                          var X = a === t;
                         } else
-                          var R = !0;
-                        if (R)
-                          if (r.toPath !== void 0) {
-                            const s = e;
-                            if (typeof r.toPath != "string")
-                              return n.errors = [
+                          var X = !0;
+                        if (X)
+                          if (e.toPath !== void 0) {
+                            const a = t;
+                            if (typeof e.toPath != "string")
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/toPath",
+                                  instancePath: r + "/toPath",
                                   schemaPath: "#/oneOf/13/properties/toPath/type",
                                   keyword: "type",
                                   params: {
@@ -8508,84 +13288,84 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 }
                               ], !1;
-                            var R = s === e;
+                            var X = a === t;
                           } else
-                            var R = !0;
+                            var X = !0;
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/13/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "resetData") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "resetData") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/14/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/14/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/14/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/14/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -8594,16 +13374,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var V = j === e;
+                              var Q = W === t;
                             } else
-                              var V = !0;
-                            if (V)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var Q = !0;
+                            if (Q)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/14/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -8612,14 +13392,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var V = a === e;
+                                var Q = m === t;
                               } else
-                                var V = !0;
+                                var Q = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/14/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -8628,17 +13408,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var ee = u === e;
+                      var re = k === t;
                     } else
-                      var ee = !0;
-                    if (ee)
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var re = !0;
+                    if (re)
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/14/properties/step/type",
                               keyword: "type",
                               params: {
@@ -8647,10 +13427,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "resetData")
-                          return n.errors = [
+                        if (a !== "resetData")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/14/properties/step/const",
                               keyword: "const",
                               params: {
@@ -8659,82 +13439,82 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var ee = u === e;
+                        var re = k === t;
                       } else
-                        var ee = !0;
+                        var re = !0;
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/14/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "request") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.request === void 0 && (d = "request") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "request") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.request === void 0 && (R = "request") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/15/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "request"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "request"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/15/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/15/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/15/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -8743,16 +13523,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var J = j === e;
+                              var ne = W === t;
                             } else
-                              var J = !0;
-                            if (J)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var ne = !0;
+                            if (ne)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/15/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -8761,14 +13541,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var J = a === e;
+                                var ne = m === t;
                               } else
-                                var J = !0;
+                                var ne = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/15/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -8777,17 +13557,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var C = u === e;
+                      var te = k === t;
                     } else
-                      var C = !0;
-                    if (C) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var te = !0;
+                    if (te) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/15/properties/step/type",
                               keyword: "type",
                               params: {
@@ -8796,10 +13576,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "request")
-                          return n.errors = [
+                        if (a !== "request")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/15/properties/step/const",
                               keyword: "const",
                               params: {
@@ -8808,100 +13588,100 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var C = u === e;
+                        var te = k === t;
                       } else
-                        var C = !0;
-                      if (C)
-                        if (r.request !== void 0) {
-                          const s = e;
-                          ye(
-                            r.request,
+                        var te = !0;
+                      if (te)
+                        if (e.request !== void 0) {
+                          const a = t;
+                          Ue(
+                            e.request,
                             {
-                              instancePath: t + "/request",
-                              parentData: r,
+                              instancePath: r + "/request",
+                              parentData: e,
                               parentDataProperty: "request",
-                              rootData: l
+                              rootData: o
                             }
-                          ) || (i = i === null ? ye.errors : i.concat(
-                            ye.errors
-                          ), e = i.length);
-                          var C = s === e;
+                          ) || (i = i === null ? Ue.errors : i.concat(
+                            Ue.errors
+                          ), t = i.length);
+                          var te = a === t;
                         } else
-                          var C = !0;
+                          var te = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/15/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "rm") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.path === void 0 && (d = "path") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "rm") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.path === void 0 && (R = "path") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/16/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "path"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "path"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/16/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/16/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/16/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -8910,16 +13690,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var Q = j === e;
+                              var we = W === t;
                             } else
-                              var Q = !0;
-                            if (Q)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var we = !0;
+                            if (we)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/16/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -8928,14 +13708,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var Q = a === e;
+                                var we = m === t;
                               } else
-                                var Q = !0;
+                                var we = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/16/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -8944,17 +13724,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var M = u === e;
+                      var ve = k === t;
                     } else
-                      var M = !0;
-                    if (M) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var ve = !0;
+                    if (ve) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/16/properties/step/type",
                               keyword: "type",
                               params: {
@@ -8963,10 +13743,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "rm")
-                          return n.errors = [
+                        if (a !== "rm")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/16/properties/step/const",
                               keyword: "const",
                               params: {
@@ -8975,16 +13755,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var M = u === e;
+                        var ve = k === t;
                       } else
-                        var M = !0;
-                      if (M)
-                        if (r.path !== void 0) {
-                          const s = e;
-                          if (typeof r.path != "string")
-                            return n.errors = [
+                        var ve = !0;
+                      if (ve)
+                        if (e.path !== void 0) {
+                          const a = t;
+                          if (typeof e.path != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/path",
+                                instancePath: r + "/path",
                                 schemaPath: "#/oneOf/16/properties/path/type",
                                 keyword: "type",
                                 params: {
@@ -8993,83 +13773,83 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var M = s === e;
+                          var ve = a === t;
                         } else
-                          var M = !0;
+                          var ve = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/16/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "rmdir") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.path === void 0 && (d = "path") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "rmdir") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.path === void 0 && (R = "path") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/17/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "path"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "path"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/17/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/17/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/17/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -9078,16 +13858,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var Y = j === e;
+                              var Le = W === t;
                             } else
-                              var Y = !0;
-                            if (Y)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var Le = !0;
+                            if (Le)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/17/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -9096,14 +13876,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var Y = a === e;
+                                var Le = m === t;
                               } else
-                                var Y = !0;
+                                var Le = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/17/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -9112,17 +13892,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var K = u === e;
+                      var tr = k === t;
                     } else
-                      var K = !0;
-                    if (K) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var tr = !0;
+                    if (tr) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/17/properties/step/type",
                               keyword: "type",
                               params: {
@@ -9131,10 +13911,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "rmdir")
-                          return n.errors = [
+                        if (a !== "rmdir")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/17/properties/step/const",
                               keyword: "const",
                               params: {
@@ -9143,16 +13923,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var K = u === e;
+                        var tr = k === t;
                       } else
-                        var K = !0;
-                      if (K)
-                        if (r.path !== void 0) {
-                          const s = e;
-                          if (typeof r.path != "string")
-                            return n.errors = [
+                        var tr = !0;
+                      if (tr)
+                        if (e.path !== void 0) {
+                          const a = t;
+                          if (typeof e.path != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/path",
+                                instancePath: r + "/path",
                                 schemaPath: "#/oneOf/17/properties/path/type",
                                 keyword: "type",
                                 params: {
@@ -9161,83 +13941,83 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var K = s === e;
+                          var tr = a === t;
                         } else
-                          var K = !0;
+                          var tr = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/17/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "runPHP") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.code === void 0 && (d = "code") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "runPHP") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.code === void 0 && (R = "code") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/18/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "code"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "code"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/18/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/18/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/18/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -9246,16 +14026,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var le = j === e;
+                              var Mr = W === t;
                             } else
-                              var le = !0;
-                            if (le)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var Mr = !0;
+                            if (Mr)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/18/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -9264,14 +14044,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var le = a === e;
+                                var Mr = m === t;
                               } else
-                                var le = !0;
+                                var Mr = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/18/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -9280,17 +14060,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var fe = u === e;
+                      var sr = k === t;
                     } else
-                      var fe = !0;
-                    if (fe) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var sr = !0;
+                    if (sr) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/18/properties/step/type",
                               keyword: "type",
                               params: {
@@ -9299,10 +14079,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "runPHP")
-                          return n.errors = [
+                        if (a !== "runPHP")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/18/properties/step/const",
                               keyword: "const",
                               params: {
@@ -9311,16 +14091,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var fe = u === e;
+                        var sr = k === t;
                       } else
-                        var fe = !0;
-                      if (fe)
-                        if (r.code !== void 0) {
-                          const s = e;
-                          if (typeof r.code != "string")
-                            return n.errors = [
+                        var sr = !0;
+                      if (sr)
+                        if (e.code !== void 0) {
+                          const a = t;
+                          if (typeof e.code != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/code",
+                                instancePath: r + "/code",
                                 schemaPath: "#/oneOf/18/properties/code/type",
                                 keyword: "type",
                                 params: {
@@ -9329,83 +14109,83 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var fe = s === e;
+                          var sr = a === t;
                         } else
-                          var fe = !0;
+                          var sr = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/18/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "runPHPWithOptions") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.options === void 0 && (d = "options") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "runPHPWithOptions") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.options === void 0 && (R = "options") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/19/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "options"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "options"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/19/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/19/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/19/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -9414,16 +14194,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var Ie = j === e;
+                              var Qe = W === t;
                             } else
-                              var Ie = !0;
-                            if (Ie)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var Qe = !0;
+                            if (Qe)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/19/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -9432,14 +14212,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var Ie = a === e;
+                                var Qe = m === t;
                               } else
-                                var Ie = !0;
+                                var Qe = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/19/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -9448,17 +14228,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var $e = u === e;
+                      var Ce = k === t;
                     } else
-                      var $e = !0;
-                    if ($e) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var Ce = !0;
+                    if (Ce) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/19/properties/step/type",
                               keyword: "type",
                               params: {
@@ -9467,10 +14247,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "runPHPWithOptions")
-                          return n.errors = [
+                        if (a !== "runPHPWithOptions")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/19/properties/step/const",
                               keyword: "const",
                               params: {
@@ -9479,100 +14259,100 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var $e = u === e;
+                        var Ce = k === t;
                       } else
-                        var $e = !0;
-                      if ($e)
-                        if (r.options !== void 0) {
-                          const s = e;
-                          oe(
-                            r.options,
+                        var Ce = !0;
+                      if (Ce)
+                        if (e.options !== void 0) {
+                          const a = t;
+                          Oe(
+                            e.options,
                             {
-                              instancePath: t + "/options",
-                              parentData: r,
+                              instancePath: r + "/options",
+                              parentData: e,
                               parentDataProperty: "options",
-                              rootData: l
+                              rootData: o
                             }
-                          ) || (i = i === null ? oe.errors : i.concat(
-                            oe.errors
-                          ), e = i.length);
-                          var $e = s === e;
+                          ) || (i = i === null ? Oe.errors : i.concat(
+                            Oe.errors
+                          ), t = i.length);
+                          var Ce = a === t;
                         } else
-                          var $e = !0;
+                          var Ce = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/19/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "runWpInstallationWizard") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.options === void 0 && (d = "options") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "runWpInstallationWizard") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.options === void 0 && (R = "options") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/20/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "options"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "options"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/20/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/20/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/20/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -9581,16 +14361,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var De = j === e;
+                              var Wr = W === t;
                             } else
-                              var De = !0;
-                            if (De)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var Wr = !0;
+                            if (Wr)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/20/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -9599,14 +14379,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var De = a === e;
+                                var Wr = m === t;
                               } else
-                                var De = !0;
+                                var Wr = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/20/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -9615,17 +14395,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var Te = u === e;
+                      var cr = k === t;
                     } else
-                      var Te = !0;
-                    if (Te) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var cr = !0;
+                    if (cr) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/20/properties/step/type",
                               keyword: "type",
                               params: {
@@ -9634,10 +14414,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "runWpInstallationWizard")
-                          return n.errors = [
+                        if (a !== "runWpInstallationWizard")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/20/properties/step/const",
                               keyword: "const",
                               params: {
@@ -9646,38 +14426,38 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var Te = u === e;
+                        var cr = k === t;
                       } else
-                        var Te = !0;
-                      if (Te)
-                        if (r.options !== void 0) {
-                          let s = r.options;
-                          const u = e;
-                          if (e === e)
-                            if (s && typeof s == "object" && !Array.isArray(
-                              s
+                        var cr = !0;
+                      if (cr)
+                        if (e.options !== void 0) {
+                          let a = e.options;
+                          const k = t;
+                          if (t === t)
+                            if (a && typeof a == "object" && !Array.isArray(
+                              a
                             )) {
-                              const j = e;
-                              for (const ke in s)
-                                if (!(ke === "adminUsername" || ke === "adminPassword"))
-                                  return n.errors = [
+                              const W = t;
+                              for (const me in a)
+                                if (!(me === "adminUsername" || me === "adminPassword"))
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/options",
+                                      instancePath: r + "/options",
                                       schemaPath: "#/definitions/WordPressInstallationOptions/additionalProperties",
                                       keyword: "additionalProperties",
                                       params: {
-                                        additionalProperty: ke
+                                        additionalProperty: me
                                       },
                                       message: "must NOT have additional properties"
                                     }
                                   ], !1;
-                              if (j === e) {
-                                if (s.adminUsername !== void 0) {
-                                  const ke = e;
-                                  if (typeof s.adminUsername != "string")
-                                    return n.errors = [
+                              if (W === t) {
+                                if (a.adminUsername !== void 0) {
+                                  const me = t;
+                                  if (typeof a.adminUsername != "string")
+                                    return h.errors = [
                                       {
-                                        instancePath: t + "/options/adminUsername",
+                                        instancePath: r + "/options/adminUsername",
                                         schemaPath: "#/definitions/WordPressInstallationOptions/properties/adminUsername/type",
                                         keyword: "type",
                                         params: {
@@ -9686,16 +14466,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                         message: "must be string"
                                       }
                                     ], !1;
-                                  var We = ke === e;
+                                  var vr = me === t;
                                 } else
-                                  var We = !0;
-                                if (We)
-                                  if (s.adminPassword !== void 0) {
-                                    const ke = e;
-                                    if (typeof s.adminPassword != "string")
-                                      return n.errors = [
+                                  var vr = !0;
+                                if (vr)
+                                  if (a.adminPassword !== void 0) {
+                                    const me = t;
+                                    if (typeof a.adminPassword != "string")
+                                      return h.errors = [
                                         {
-                                          instancePath: t + "/options/adminPassword",
+                                          instancePath: r + "/options/adminPassword",
                                           schemaPath: "#/definitions/WordPressInstallationOptions/properties/adminPassword/type",
                                           keyword: "type",
                                           params: {
@@ -9704,14 +14484,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                           message: "must be string"
                                         }
                                       ], !1;
-                                    var We = ke === e;
+                                    var vr = me === t;
                                   } else
-                                    var We = !0;
+                                    var vr = !0;
                               }
                             } else
-                              return n.errors = [
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/options",
+                                  instancePath: r + "/options",
                                   schemaPath: "#/definitions/WordPressInstallationOptions/type",
                                   keyword: "type",
                                   params: {
@@ -9720,83 +14500,83 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be object"
                                 }
                               ], !1;
-                          var Te = u === e;
+                          var cr = k === t;
                         } else
-                          var Te = !0;
+                          var cr = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/20/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "runSql") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.sql === void 0 && (d = "sql") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "runSql") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.sql === void 0 && (R = "sql") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/21/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "sql"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "sql"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/21/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/21/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/21/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -9805,16 +14585,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var Me = j === e;
+                              var Hr = W === t;
                             } else
-                              var Me = !0;
-                            if (Me)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var Hr = !0;
+                            if (Hr)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/21/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -9823,14 +14603,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var Me = a === e;
+                                var Hr = m === t;
                               } else
-                                var Me = !0;
+                                var Hr = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/21/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -9839,17 +14619,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var je = u === e;
+                      var dr = k === t;
                     } else
-                      var je = !0;
-                    if (je) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var dr = !0;
+                    if (dr) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/21/properties/step/type",
                               keyword: "type",
                               params: {
@@ -9858,10 +14638,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "runSql")
-                          return n.errors = [
+                        if (a !== "runSql")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/21/properties/step/const",
                               keyword: "const",
                               params: {
@@ -9870,97 +14650,97 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var je = u === e;
+                        var dr = k === t;
                       } else
-                        var je = !0;
-                      if (je)
-                        if (r.sql !== void 0) {
-                          const s = e;
-                          re(r.sql, {
-                            instancePath: t + "/sql",
-                            parentData: r,
+                        var dr = !0;
+                      if (dr)
+                        if (e.sql !== void 0) {
+                          const a = t;
+                          le(e.sql, {
+                            instancePath: r + "/sql",
+                            parentData: e,
                             parentDataProperty: "sql",
-                            rootData: l
-                          }) || (i = i === null ? re.errors : i.concat(
-                            re.errors
-                          ), e = i.length);
-                          var je = s === e;
+                            rootData: o
+                          }) || (i = i === null ? le.errors : i.concat(
+                            le.errors
+                          ), t = i.length);
+                          var dr = a === t;
                         } else
-                          var je = !0;
+                          var dr = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/21/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "setSiteOptions") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.options === void 0 && (d = "options") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "setSiteOptions") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.options === void 0 && (R = "options") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/22/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "options"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "options"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/22/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/22/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/22/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -9969,16 +14749,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var Be = j === e;
+                              var Ar = W === t;
                             } else
-                              var Be = !0;
-                            if (Be)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var Ar = !0;
+                            if (Ar)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/22/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -9987,14 +14767,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var Be = a === e;
+                                var Ar = m === t;
                               } else
-                                var Be = !0;
+                                var Ar = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/22/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -10003,17 +14783,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var Ae = u === e;
+                      var Me = k === t;
                     } else
-                      var Ae = !0;
-                    if (Ae) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var Me = !0;
+                    if (Me) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/22/properties/step/type",
                               keyword: "type",
                               params: {
@@ -10022,10 +14802,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "setSiteOptions")
-                          return n.errors = [
+                        if (a !== "setSiteOptions")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/22/properties/step/const",
                               keyword: "const",
                               params: {
@@ -10034,19 +14814,19 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var Ae = u === e;
+                        var Me = k === t;
                       } else
-                        var Ae = !0;
-                      if (Ae)
-                        if (r.options !== void 0) {
-                          let s = r.options;
-                          const u = e;
-                          if (e === u && !(s && typeof s == "object" && !Array.isArray(
-                            s
+                        var Me = !0;
+                      if (Me)
+                        if (e.options !== void 0) {
+                          let a = e.options;
+                          const k = t;
+                          if (t === k && !(a && typeof a == "object" && !Array.isArray(
+                            a
                           )))
-                            return n.errors = [
+                            return h.errors = [
                               {
-                                instancePath: t + "/options",
+                                instancePath: r + "/options",
                                 schemaPath: "#/oneOf/22/properties/options/type",
                                 keyword: "type",
                                 params: {
@@ -10055,83 +14835,83 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be object"
                               }
                             ], !1;
-                          var Ae = u === e;
+                          var Me = k === t;
                         } else
-                          var Ae = !0;
+                          var Me = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/22/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "unzip") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.extractToPath === void 0 && (d = "extractToPath") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "unzip") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.extractToPath === void 0 && (R = "extractToPath") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/23/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "zipFile" || s === "zipPath" || s === "extractToPath"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "zipFile" || a === "zipPath" || a === "extractToPath"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/23/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/23/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/23/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -10140,16 +14920,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var Ue = j === e;
+                              var je = W === t;
                             } else
-                              var Ue = !0;
-                            if (Ue)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var je = !0;
+                            if (je)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/23/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -10158,14 +14938,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var Ue = a === e;
+                                var je = m === t;
                               } else
-                                var Ue = !0;
+                                var je = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/23/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -10174,17 +14954,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var ue = u === e;
+                      var Ae = k === t;
                     } else
-                      var ue = !0;
-                    if (ue) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var Ae = !0;
+                    if (Ae) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/23/properties/step/type",
                               keyword: "type",
                               params: {
@@ -10193,10 +14973,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "unzip")
-                          return n.errors = [
+                        if (a !== "unzip")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/23/properties/step/const",
                               keyword: "const",
                               params: {
@@ -10205,33 +14985,33 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var ue = u === e;
+                        var Ae = k === t;
                       } else
-                        var ue = !0;
-                      if (ue) {
-                        if (r.zipFile !== void 0) {
-                          const s = e;
-                          re(
-                            r.zipFile,
+                        var Ae = !0;
+                      if (Ae) {
+                        if (e.zipFile !== void 0) {
+                          const a = t;
+                          le(
+                            e.zipFile,
                             {
-                              instancePath: t + "/zipFile",
-                              parentData: r,
+                              instancePath: r + "/zipFile",
+                              parentData: e,
                               parentDataProperty: "zipFile",
-                              rootData: l
+                              rootData: o
                             }
-                          ) || (i = i === null ? re.errors : i.concat(
-                            re.errors
-                          ), e = i.length);
-                          var ue = s === e;
+                          ) || (i = i === null ? le.errors : i.concat(
+                            le.errors
+                          ), t = i.length);
+                          var Ae = a === t;
                         } else
-                          var ue = !0;
-                        if (ue) {
-                          if (r.zipPath !== void 0) {
-                            const s = e;
-                            if (typeof r.zipPath != "string")
-                              return n.errors = [
+                          var Ae = !0;
+                        if (Ae) {
+                          if (e.zipPath !== void 0) {
+                            const a = t;
+                            if (typeof e.zipPath != "string")
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/zipPath",
+                                  instancePath: r + "/zipPath",
                                   schemaPath: "#/oneOf/23/properties/zipPath/type",
                                   keyword: "type",
                                   params: {
@@ -10240,16 +15020,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 }
                               ], !1;
-                            var ue = s === e;
+                            var Ae = a === t;
                           } else
-                            var ue = !0;
-                          if (ue)
-                            if (r.extractToPath !== void 0) {
-                              const s = e;
-                              if (typeof r.extractToPath != "string")
-                                return n.errors = [
+                            var Ae = !0;
+                          if (Ae)
+                            if (e.extractToPath !== void 0) {
+                              const a = t;
+                              if (typeof e.extractToPath != "string")
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/extractToPath",
+                                    instancePath: r + "/extractToPath",
                                     schemaPath: "#/oneOf/23/properties/extractToPath/type",
                                     keyword: "type",
                                     params: {
@@ -10258,85 +15038,85 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be string"
                                   }
                                 ], !1;
-                              var ue = s === e;
+                              var Ae = a === t;
                             } else
-                              var ue = !0;
+                              var Ae = !0;
                         }
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/23/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "updateUserMeta") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.meta === void 0 && (d = "meta") || r.step === void 0 && (d = "step") || r.userId === void 0 && (d = "userId"))
-                  return n.errors = [
+          } else if (pe === "updateUserMeta") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.meta === void 0 && (R = "meta") || e.step === void 0 && (R = "step") || e.userId === void 0 && (R = "userId"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/24/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "meta" || s === "userId"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "meta" || a === "userId"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/24/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/24/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/24/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -10345,16 +15125,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var ze = j === e;
+                              var Zr = W === t;
                             } else
-                              var ze = !0;
-                            if (ze)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var Zr = !0;
+                            if (Zr)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/24/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -10363,14 +15143,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var ze = a === e;
+                                var Zr = m === t;
                               } else
-                                var ze = !0;
+                                var Zr = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/24/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -10379,17 +15159,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var ve = u === e;
+                      var Ee = k === t;
                     } else
-                      var ve = !0;
-                    if (ve) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var Ee = !0;
+                    if (Ee) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/24/properties/step/type",
                               keyword: "type",
                               params: {
@@ -10398,10 +15178,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "updateUserMeta")
-                          return n.errors = [
+                        if (a !== "updateUserMeta")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/24/properties/step/const",
                               keyword: "const",
                               params: {
@@ -10410,19 +15190,19 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var ve = u === e;
+                        var Ee = k === t;
                       } else
-                        var ve = !0;
-                      if (ve) {
-                        if (r.meta !== void 0) {
-                          let s = r.meta;
-                          const u = e;
-                          if (e === u && !(s && typeof s == "object" && !Array.isArray(
-                            s
+                        var Ee = !0;
+                      if (Ee) {
+                        if (e.meta !== void 0) {
+                          let a = e.meta;
+                          const k = t;
+                          if (t === k && !(a && typeof a == "object" && !Array.isArray(
+                            a
                           )))
-                            return n.errors = [
+                            return h.errors = [
                               {
-                                instancePath: t + "/meta",
+                                instancePath: r + "/meta",
                                 schemaPath: "#/oneOf/24/properties/meta/type",
                                 keyword: "type",
                                 params: {
@@ -10431,19 +15211,19 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be object"
                               }
                             ], !1;
-                          var ve = u === e;
+                          var Ee = k === t;
                         } else
-                          var ve = !0;
-                        if (ve)
-                          if (r.userId !== void 0) {
-                            let s = r.userId;
-                            const u = e;
-                            if (!(typeof s == "number" && isFinite(
-                              s
+                          var Ee = !0;
+                        if (Ee)
+                          if (e.userId !== void 0) {
+                            let a = e.userId;
+                            const k = t;
+                            if (!(typeof a == "number" && isFinite(
+                              a
                             )))
-                              return n.errors = [
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/userId",
+                                  instancePath: r + "/userId",
                                   schemaPath: "#/oneOf/24/properties/userId/type",
                                   keyword: "type",
                                   params: {
@@ -10452,84 +15232,84 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be number"
                                 }
                               ], !1;
-                            var ve = u === e;
+                            var Ee = k === t;
                           } else
-                            var ve = !0;
+                            var Ee = !0;
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/24/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "writeFile") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.data === void 0 && (d = "data") || r.path === void 0 && (d = "path") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "writeFile") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.data === void 0 && (R = "data") || e.path === void 0 && (R = "path") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/25/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "path" || s === "data"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "path" || a === "data"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/25/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/25/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/25/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -10538,16 +15318,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var Ve = j === e;
+                              var Gr = W === t;
                             } else
-                              var Ve = !0;
-                            if (Ve)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var Gr = !0;
+                            if (Gr)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/25/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -10556,14 +15336,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var Ve = a === e;
+                                var Gr = m === t;
                               } else
-                                var Ve = !0;
+                                var Gr = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/25/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -10572,17 +15352,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var Pe = u === e;
+                      var c = k === t;
                     } else
-                      var Pe = !0;
-                    if (Pe) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var c = !0;
+                    if (c) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/25/properties/step/type",
                               keyword: "type",
                               params: {
@@ -10591,10 +15371,10 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "writeFile")
-                          return n.errors = [
+                        if (a !== "writeFile")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/25/properties/step/const",
                               keyword: "const",
                               params: {
@@ -10603,16 +15383,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var Pe = u === e;
+                        var c = k === t;
                       } else
-                        var Pe = !0;
-                      if (Pe) {
-                        if (r.path !== void 0) {
-                          const s = e;
-                          if (typeof r.path != "string")
-                            return n.errors = [
+                        var c = !0;
+                      if (c) {
+                        if (e.path !== void 0) {
+                          const a = t;
+                          if (typeof e.path != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/path",
+                                instancePath: r + "/path",
                                 schemaPath: "#/oneOf/25/properties/path/type",
                                 keyword: "type",
                                 params: {
@@ -10621,32 +15401,32 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var Pe = s === e;
+                          var c = a === t;
                         } else
-                          var Pe = !0;
-                        if (Pe)
-                          if (r.data !== void 0) {
-                            let s = r.data;
-                            const u = e, L = e;
-                            let a = !1;
-                            const j = e;
-                            re(
-                              s,
+                          var c = !0;
+                        if (c)
+                          if (e.data !== void 0) {
+                            let a = e.data;
+                            const k = t, z = t;
+                            let m = !1;
+                            const W = t;
+                            le(
+                              a,
                               {
-                                instancePath: t + "/data",
-                                parentData: r,
+                                instancePath: r + "/data",
+                                parentData: e,
                                 parentDataProperty: "data",
-                                rootData: l
+                                rootData: o
                               }
-                            ) || (i = i === null ? re.errors : i.concat(
-                              re.errors
-                            ), e = i.length);
-                            var Ne = j === e;
-                            if (a = a || Ne, !a) {
-                              const ce = e;
-                              if (typeof s != "string") {
-                                const Oe = {
-                                  instancePath: t + "/data",
+                            ) || (i = i === null ? le.errors : i.concat(
+                              le.errors
+                            ), t = i.length);
+                            var f = W === t;
+                            if (m = m || f, !m) {
+                              const Pe = t;
+                              if (typeof a != "string") {
+                                const ir = {
+                                  instancePath: r + "/data",
                                   schemaPath: "#/oneOf/25/properties/data/anyOf/1/type",
                                   keyword: "type",
                                   params: {
@@ -10655,45 +15435,45 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 };
                                 i === null ? i = [
-                                  Oe
+                                  ir
                                 ] : i.push(
-                                  Oe
-                                ), e++;
+                                  ir
+                                ), t++;
                               }
-                              var Ne = ce === e;
-                              if (a = a || Ne, !a) {
-                                const Oe = e;
-                                if (e === Oe)
-                                  if (s && typeof s == "object" && !Array.isArray(
-                                    s
+                              var f = Pe === t;
+                              if (m = m || f, !m) {
+                                const ir = t;
+                                if (t === ir)
+                                  if (a && typeof a == "object" && !Array.isArray(
+                                    a
                                   )) {
-                                    let he;
-                                    if (s.BYTES_PER_ELEMENT === void 0 && (he = "BYTES_PER_ELEMENT") || s.buffer === void 0 && (he = "buffer") || s.byteLength === void 0 && (he = "byteLength") || s.byteOffset === void 0 && (he = "byteOffset") || s.length === void 0 && (he = "length")) {
-                                      const Ze = {
-                                        instancePath: t + "/data",
+                                    let We;
+                                    if (a.BYTES_PER_ELEMENT === void 0 && (We = "BYTES_PER_ELEMENT") || a.buffer === void 0 && (We = "buffer") || a.byteLength === void 0 && (We = "byteLength") || a.byteOffset === void 0 && (We = "byteOffset") || a.length === void 0 && (We = "length")) {
+                                      const Ft = {
+                                        instancePath: r + "/data",
                                         schemaPath: "#/oneOf/25/properties/data/anyOf/2/required",
                                         keyword: "required",
                                         params: {
-                                          missingProperty: he
+                                          missingProperty: We
                                         },
-                                        message: "must have required property '" + he + "'"
+                                        message: "must have required property '" + We + "'"
                                       };
                                       i === null ? i = [
-                                        Ze
+                                        Ft
                                       ] : i.push(
-                                        Ze
-                                      ), e++;
+                                        Ft
+                                      ), t++;
                                     } else {
-                                      const Ze = e;
-                                      for (const Z in s)
-                                        if (!(Z === "BYTES_PER_ELEMENT" || Z === "buffer" || Z === "byteLength" || Z === "byteOffset" || Z === "length")) {
-                                          let me = s[Z];
-                                          const Qe = e;
-                                          if (!(typeof me == "number" && isFinite(
-                                            me
+                                      const Ft = t;
+                                      for (const ue in a)
+                                        if (!(ue === "BYTES_PER_ELEMENT" || ue === "buffer" || ue === "byteLength" || ue === "byteOffset" || ue === "length")) {
+                                          let De = a[ue];
+                                          const jt = t;
+                                          if (!(typeof De == "number" && isFinite(
+                                            De
                                           ))) {
-                                            const ne = {
-                                              instancePath: t + "/data/" + Z.replace(
+                                            const Te = {
+                                              instancePath: r + "/data/" + ue.replace(
                                                 /~/g,
                                                 "~0"
                                               ).replace(
@@ -10708,24 +15488,24 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                               message: "must be number"
                                             };
                                             i === null ? i = [
-                                              ne
+                                              Te
                                             ] : i.push(
-                                              ne
-                                            ), e++;
+                                              Te
+                                            ), t++;
                                           }
-                                          var Pt = Qe === e;
-                                          if (!Pt)
+                                          var l = jt === t;
+                                          if (!l)
                                             break;
                                         }
-                                      if (Ze === e) {
-                                        if (s.BYTES_PER_ELEMENT !== void 0) {
-                                          let Z = s.BYTES_PER_ELEMENT;
-                                          const me = e;
-                                          if (!(typeof Z == "number" && isFinite(
-                                            Z
+                                      if (Ft === t) {
+                                        if (a.BYTES_PER_ELEMENT !== void 0) {
+                                          let ue = a.BYTES_PER_ELEMENT;
+                                          const De = t;
+                                          if (!(typeof ue == "number" && isFinite(
+                                            ue
                                           ))) {
-                                            const Qe = {
-                                              instancePath: t + "/data/BYTES_PER_ELEMENT",
+                                            const jt = {
+                                              instancePath: r + "/data/BYTES_PER_ELEMENT",
                                               schemaPath: "#/oneOf/25/properties/data/anyOf/2/properties/BYTES_PER_ELEMENT/type",
                                               keyword: "type",
                                               params: {
@@ -10734,65 +15514,65 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                               message: "must be number"
                                             };
                                             i === null ? i = [
-                                              Qe
+                                              jt
                                             ] : i.push(
-                                              Qe
-                                            ), e++;
+                                              jt
+                                            ), t++;
                                           }
-                                          var de = me === e;
+                                          var g = De === t;
                                         } else
-                                          var de = !0;
-                                        if (de) {
-                                          if (s.buffer !== void 0) {
-                                            let Z = s.buffer;
-                                            const me = e;
-                                            if (e === me)
-                                              if (Z && typeof Z == "object" && !Array.isArray(
-                                                Z
+                                          var g = !0;
+                                        if (g) {
+                                          if (a.buffer !== void 0) {
+                                            let ue = a.buffer;
+                                            const De = t;
+                                            if (t === De)
+                                              if (ue && typeof ue == "object" && !Array.isArray(
+                                                ue
                                               )) {
-                                                let ne;
-                                                if (Z.byteLength === void 0 && (ne = "byteLength")) {
-                                                  const Je = {
-                                                    instancePath: t + "/data/buffer",
+                                                let Te;
+                                                if (ue.byteLength === void 0 && (Te = "byteLength")) {
+                                                  const Bt = {
+                                                    instancePath: r + "/data/buffer",
                                                     schemaPath: "#/oneOf/25/properties/data/anyOf/2/properties/buffer/required",
                                                     keyword: "required",
                                                     params: {
-                                                      missingProperty: ne
+                                                      missingProperty: Te
                                                     },
-                                                    message: "must have required property '" + ne + "'"
+                                                    message: "must have required property '" + Te + "'"
                                                   };
                                                   i === null ? i = [
-                                                    Je
+                                                    Bt
                                                   ] : i.push(
-                                                    Je
-                                                  ), e++;
+                                                    Bt
+                                                  ), t++;
                                                 } else {
-                                                  const Je = e;
-                                                  for (const Fe in Z)
-                                                    if (Fe !== "byteLength") {
-                                                      const Ce = {
-                                                        instancePath: t + "/data/buffer",
+                                                  const Bt = t;
+                                                  for (const ot in ue)
+                                                    if (ot !== "byteLength") {
+                                                      const pt = {
+                                                        instancePath: r + "/data/buffer",
                                                         schemaPath: "#/oneOf/25/properties/data/anyOf/2/properties/buffer/additionalProperties",
                                                         keyword: "additionalProperties",
                                                         params: {
-                                                          additionalProperty: Fe
+                                                          additionalProperty: ot
                                                         },
                                                         message: "must NOT have additional properties"
                                                       };
                                                       i === null ? i = [
-                                                        Ce
+                                                        pt
                                                       ] : i.push(
-                                                        Ce
-                                                      ), e++;
+                                                        pt
+                                                      ), t++;
                                                       break;
                                                     }
-                                                  if (Je === e && Z.byteLength !== void 0) {
-                                                    let Fe = Z.byteLength;
-                                                    if (!(typeof Fe == "number" && isFinite(
-                                                      Fe
+                                                  if (Bt === t && ue.byteLength !== void 0) {
+                                                    let ot = ue.byteLength;
+                                                    if (!(typeof ot == "number" && isFinite(
+                                                      ot
                                                     ))) {
-                                                      const Ce = {
-                                                        instancePath: t + "/data/buffer/byteLength",
+                                                      const pt = {
+                                                        instancePath: r + "/data/buffer/byteLength",
                                                         schemaPath: "#/oneOf/25/properties/data/anyOf/2/properties/buffer/properties/byteLength/type",
                                                         keyword: "type",
                                                         params: {
@@ -10801,16 +15581,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                                         message: "must be number"
                                                       };
                                                       i === null ? i = [
-                                                        Ce
+                                                        pt
                                                       ] : i.push(
-                                                        Ce
-                                                      ), e++;
+                                                        pt
+                                                      ), t++;
                                                     }
                                                   }
                                                 }
                                               } else {
-                                                const ne = {
-                                                  instancePath: t + "/data/buffer",
+                                                const Te = {
+                                                  instancePath: r + "/data/buffer",
                                                   schemaPath: "#/oneOf/25/properties/data/anyOf/2/properties/buffer/type",
                                                   keyword: "type",
                                                   params: {
@@ -10819,23 +15599,23 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                                   message: "must be object"
                                                 };
                                                 i === null ? i = [
-                                                  ne
+                                                  Te
                                                 ] : i.push(
-                                                  ne
-                                                ), e++;
+                                                  Te
+                                                ), t++;
                                               }
-                                            var de = me === e;
+                                            var g = De === t;
                                           } else
-                                            var de = !0;
-                                          if (de) {
-                                            if (s.byteLength !== void 0) {
-                                              let Z = s.byteLength;
-                                              const me = e;
-                                              if (!(typeof Z == "number" && isFinite(
-                                                Z
+                                            var g = !0;
+                                          if (g) {
+                                            if (a.byteLength !== void 0) {
+                                              let ue = a.byteLength;
+                                              const De = t;
+                                              if (!(typeof ue == "number" && isFinite(
+                                                ue
                                               ))) {
-                                                const ne = {
-                                                  instancePath: t + "/data/byteLength",
+                                                const Te = {
+                                                  instancePath: r + "/data/byteLength",
                                                   schemaPath: "#/oneOf/25/properties/data/anyOf/2/properties/byteLength/type",
                                                   keyword: "type",
                                                   params: {
@@ -10844,23 +15624,23 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                                   message: "must be number"
                                                 };
                                                 i === null ? i = [
-                                                  ne
+                                                  Te
                                                 ] : i.push(
-                                                  ne
-                                                ), e++;
+                                                  Te
+                                                ), t++;
                                               }
-                                              var de = me === e;
+                                              var g = De === t;
                                             } else
-                                              var de = !0;
-                                            if (de) {
-                                              if (s.byteOffset !== void 0) {
-                                                let Z = s.byteOffset;
-                                                const me = e;
-                                                if (!(typeof Z == "number" && isFinite(
-                                                  Z
+                                              var g = !0;
+                                            if (g) {
+                                              if (a.byteOffset !== void 0) {
+                                                let ue = a.byteOffset;
+                                                const De = t;
+                                                if (!(typeof ue == "number" && isFinite(
+                                                  ue
                                                 ))) {
-                                                  const ne = {
-                                                    instancePath: t + "/data/byteOffset",
+                                                  const Te = {
+                                                    instancePath: r + "/data/byteOffset",
                                                     schemaPath: "#/oneOf/25/properties/data/anyOf/2/properties/byteOffset/type",
                                                     keyword: "type",
                                                     params: {
@@ -10869,23 +15649,23 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                                     message: "must be number"
                                                   };
                                                   i === null ? i = [
-                                                    ne
+                                                    Te
                                                   ] : i.push(
-                                                    ne
-                                                  ), e++;
+                                                    Te
+                                                  ), t++;
                                                 }
-                                                var de = me === e;
+                                                var g = De === t;
                                               } else
-                                                var de = !0;
-                                              if (de)
-                                                if (s.length !== void 0) {
-                                                  let Z = s.length;
-                                                  const me = e;
-                                                  if (!(typeof Z == "number" && isFinite(
-                                                    Z
+                                                var g = !0;
+                                              if (g)
+                                                if (a.length !== void 0) {
+                                                  let ue = a.length;
+                                                  const De = t;
+                                                  if (!(typeof ue == "number" && isFinite(
+                                                    ue
                                                   ))) {
-                                                    const ne = {
-                                                      instancePath: t + "/data/length",
+                                                    const Te = {
+                                                      instancePath: r + "/data/length",
                                                       schemaPath: "#/oneOf/25/properties/data/anyOf/2/properties/length/type",
                                                       keyword: "type",
                                                       params: {
@@ -10894,22 +15674,22 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                                       message: "must be number"
                                                     };
                                                     i === null ? i = [
-                                                      ne
+                                                      Te
                                                     ] : i.push(
-                                                      ne
-                                                    ), e++;
+                                                      Te
+                                                    ), t++;
                                                   }
-                                                  var de = me === e;
+                                                  var g = De === t;
                                                 } else
-                                                  var de = !0;
+                                                  var g = !0;
                                             }
                                           }
                                         }
                                       }
                                     }
                                   } else {
-                                    const he = {
-                                      instancePath: t + "/data",
+                                    const We = {
+                                      instancePath: r + "/data",
                                       schemaPath: "#/oneOf/25/properties/data/anyOf/2/type",
                                       keyword: "type",
                                       params: {
@@ -10918,109 +15698,109 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be object"
                                     };
                                     i === null ? i = [
-                                      he
+                                      We
                                     ] : i.push(
-                                      he
-                                    ), e++;
+                                      We
+                                    ), t++;
                                   }
-                                var Ne = Oe === e;
-                                a = a || Ne;
+                                var f = ir === t;
+                                m = m || f;
                               }
                             }
-                            if (a)
-                              e = L, i !== null && (L ? i.length = L : i = null);
+                            if (m)
+                              t = z, i !== null && (z ? i.length = z : i = null);
                             else {
-                              const ce = {
-                                instancePath: t + "/data",
+                              const Pe = {
+                                instancePath: r + "/data",
                                 schemaPath: "#/oneOf/25/properties/data/anyOf",
                                 keyword: "anyOf",
                                 params: {},
                                 message: "must match a schema in anyOf"
                               };
                               return i === null ? i = [
-                                ce
+                                Pe
                               ] : i.push(
-                                ce
-                              ), e++, n.errors = i, !1;
+                                Pe
+                              ), t++, h.errors = i, !1;
                             }
-                            var Pe = u === e;
+                            var c = k === t;
                           } else
-                            var Pe = !0;
+                            var c = !0;
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/25/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "wp-cli") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.command === void 0 && (d = "command") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "writeFiles") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.filesTree === void 0 && (R = "filesTree") || e.step === void 0 && (R = "step") || e.writeToPath === void 0 && (R = "writeToPath"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/26/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "command" || s === "wpCliPath"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "writeToPath" || a === "filesTree"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/26/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/26/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/26/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -11029,16 +15809,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var He = j === e;
+                              var v = W === t;
                             } else
-                              var He = !0;
-                            if (He)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var v = !0;
+                            if (v)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/26/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -11047,14 +15827,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var He = a === e;
+                                var v = m === t;
                               } else
-                                var He = !0;
+                                var v = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/26/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -11063,17 +15843,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var _e = u === e;
+                      var $ = k === t;
                     } else
-                      var _e = !0;
-                    if (_e) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var $ = !0;
+                    if ($) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/26/properties/step/type",
                               keyword: "type",
                               params: {
@@ -11082,197 +15862,131 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "wp-cli")
-                          return n.errors = [
+                        if (a !== "writeFiles")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/26/properties/step/const",
                               keyword: "const",
                               params: {
-                                allowedValue: "wp-cli"
+                                allowedValue: "writeFiles"
                               },
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var _e = u === e;
+                        var $ = k === t;
                       } else
-                        var _e = !0;
-                      if (_e) {
-                        if (r.command !== void 0) {
-                          let s = r.command;
-                          const u = e, L = e;
-                          let a = !1;
-                          const j = e;
-                          if (typeof s != "string") {
-                            const ce = {
-                              instancePath: t + "/command",
-                              schemaPath: "#/oneOf/26/properties/command/anyOf/0/type",
-                              keyword: "type",
-                              params: {
-                                type: "string"
-                              },
-                              message: "must be string"
-                            };
-                            i === null ? i = [ce] : i.push(ce), e++;
-                          }
-                          var dr = j === e;
-                          if (a = a || dr, !a) {
-                            const ce = e;
-                            if (e === ce)
-                              if (Array.isArray(
-                                s
-                              )) {
-                                var Lr = !0;
-                                const Oe = s.length;
-                                for (let Ye = 0; Ye < Oe; Ye++) {
-                                  const he = e;
-                                  if (typeof s[Ye] != "string") {
-                                    const Z = {
-                                      instancePath: t + "/command/" + Ye,
-                                      schemaPath: "#/oneOf/26/properties/command/anyOf/1/items/type",
-                                      keyword: "type",
-                                      params: {
-                                        type: "string"
-                                      },
-                                      message: "must be string"
-                                    };
-                                    i === null ? i = [
-                                      Z
-                                    ] : i.push(
-                                      Z
-                                    ), e++;
-                                  }
-                                  var Lr = he === e;
-                                  if (!Lr)
-                                    break;
-                                }
-                              } else {
-                                const Oe = {
-                                  instancePath: t + "/command",
-                                  schemaPath: "#/oneOf/26/properties/command/anyOf/1/type",
-                                  keyword: "type",
-                                  params: {
-                                    type: "array"
-                                  },
-                                  message: "must be array"
-                                };
-                                i === null ? i = [
-                                  Oe
-                                ] : i.push(
-                                  Oe
-                                ), e++;
+                        var $ = !0;
+                      if ($) {
+                        if (e.writeToPath !== void 0) {
+                          const a = t;
+                          if (typeof e.writeToPath != "string")
+                            return h.errors = [
+                              {
+                                instancePath: r + "/writeToPath",
+                                schemaPath: "#/oneOf/26/properties/writeToPath/type",
+                                keyword: "type",
+                                params: {
+                                  type: "string"
+                                },
+                                message: "must be string"
                               }
-                            var dr = ce === e;
-                            a = a || dr;
-                          }
-                          if (a)
-                            e = L, i !== null && (L ? i.length = L : i = null);
-                          else {
-                            const ce = {
-                              instancePath: t + "/command",
-                              schemaPath: "#/oneOf/26/properties/command/anyOf",
-                              keyword: "anyOf",
-                              params: {},
-                              message: "must match a schema in anyOf"
-                            };
-                            return i === null ? i = [ce] : i.push(ce), e++, n.errors = i, !1;
-                          }
-                          var _e = u === e;
+                            ], !1;
+                          var $ = a === t;
                         } else
-                          var _e = !0;
-                        if (_e)
-                          if (r.wpCliPath !== void 0) {
-                            const s = e;
-                            if (typeof r.wpCliPath != "string")
-                              return n.errors = [
-                                {
-                                  instancePath: t + "/wpCliPath",
-                                  schemaPath: "#/oneOf/26/properties/wpCliPath/type",
-                                  keyword: "type",
-                                  params: {
-                                    type: "string"
-                                  },
-                                  message: "must be string"
-                                }
-                              ], !1;
-                            var _e = s === e;
+                          var $ = !0;
+                        if ($)
+                          if (e.filesTree !== void 0) {
+                            const a = t;
+                            Je(
+                              e.filesTree,
+                              {
+                                instancePath: r + "/filesTree",
+                                parentData: e,
+                                parentDataProperty: "filesTree",
+                                rootData: o
+                              }
+                            ) || (i = i === null ? Je.errors : i.concat(
+                              Je.errors
+                            ), t = i.length);
+                            var $ = a === t;
                           } else
-                            var _e = !0;
+                            var $ = !0;
                       }
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
+                    instancePath: r,
                     schemaPath: "#/oneOf/26/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
-          } else if (G === "setSiteLanguage") {
-            if (e === e)
-              if (r && typeof r == "object" && !Array.isArray(r)) {
-                let d;
-                if (r.language === void 0 && (d = "language") || r.step === void 0 && (d = "step"))
-                  return n.errors = [
+          } else if (pe === "wp-cli") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.command === void 0 && (R = "command") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
                     {
-                      instancePath: t,
+                      instancePath: r,
                       schemaPath: "#/oneOf/27/required",
                       keyword: "required",
                       params: {
-                        missingProperty: d
+                        missingProperty: R
                       },
-                      message: "must have required property '" + d + "'"
+                      message: "must have required property '" + R + "'"
                     }
                   ], !1;
                 {
-                  const F = e;
-                  for (const s in r)
-                    if (!(s === "progress" || s === "step" || s === "language"))
-                      return n.errors = [
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "command" || a === "wpCliPath"))
+                      return h.errors = [
                         {
-                          instancePath: t,
+                          instancePath: r,
                           schemaPath: "#/oneOf/27/additionalProperties",
                           keyword: "additionalProperties",
                           params: {
-                            additionalProperty: s
+                            additionalProperty: a
                           },
                           message: "must NOT have additional properties"
                         }
                       ], !1;
-                  if (F === e) {
-                    if (r.progress !== void 0) {
-                      let s = r.progress;
-                      const u = e;
-                      if (e === u)
-                        if (s && typeof s == "object" && !Array.isArray(s)) {
-                          const L = e;
-                          for (const a in s)
-                            if (!(a === "weight" || a === "caption"))
-                              return n.errors = [
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
                                 {
-                                  instancePath: t + "/progress",
+                                  instancePath: r + "/progress",
                                   schemaPath: "#/oneOf/27/properties/progress/additionalProperties",
                                   keyword: "additionalProperties",
                                   params: {
-                                    additionalProperty: a
+                                    additionalProperty: m
                                   },
                                   message: "must NOT have additional properties"
                                 }
                               ], !1;
-                          if (L === e) {
-                            if (s.weight !== void 0) {
-                              let a = s.weight;
-                              const j = e;
-                              if (!(typeof a == "number" && isFinite(
-                                a
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
                               )))
-                                return n.errors = [
+                                return h.errors = [
                                   {
-                                    instancePath: t + "/progress/weight",
+                                    instancePath: r + "/progress/weight",
                                     schemaPath: "#/oneOf/27/properties/progress/properties/weight/type",
                                     keyword: "type",
                                     params: {
@@ -11281,16 +15995,16 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be number"
                                   }
                                 ], !1;
-                              var Ge = j === e;
+                              var I = W === t;
                             } else
-                              var Ge = !0;
-                            if (Ge)
-                              if (s.caption !== void 0) {
-                                const a = e;
-                                if (typeof s.caption != "string")
-                                  return n.errors = [
+                              var I = !0;
+                            if (I)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
                                     {
-                                      instancePath: t + "/progress/caption",
+                                      instancePath: r + "/progress/caption",
                                       schemaPath: "#/oneOf/27/properties/progress/properties/caption/type",
                                       keyword: "type",
                                       params: {
@@ -11299,14 +16013,14 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be string"
                                     }
                                   ], !1;
-                                var Ge = a === e;
+                                var I = m === t;
                               } else
-                                var Ge = !0;
+                                var I = !0;
                           }
                         } else
-                          return n.errors = [
+                          return h.errors = [
                             {
-                              instancePath: t + "/progress",
+                              instancePath: r + "/progress",
                               schemaPath: "#/oneOf/27/properties/progress/type",
                               keyword: "type",
                               params: {
@@ -11315,17 +16029,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var qe = u === e;
+                      var J = k === t;
                     } else
-                      var qe = !0;
-                    if (qe) {
-                      if (r.step !== void 0) {
-                        let s = r.step;
-                        const u = e;
-                        if (typeof s != "string")
-                          return n.errors = [
+                      var J = !0;
+                    if (J) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/27/properties/step/type",
                               keyword: "type",
                               params: {
@@ -11334,11 +16048,263 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        if (s !== "setSiteLanguage")
-                          return n.errors = [
+                        if (a !== "wp-cli")
+                          return h.errors = [
                             {
-                              instancePath: t + "/step",
+                              instancePath: r + "/step",
                               schemaPath: "#/oneOf/27/properties/step/const",
+                              keyword: "const",
+                              params: {
+                                allowedValue: "wp-cli"
+                              },
+                              message: "must be equal to constant"
+                            }
+                          ], !1;
+                        var J = k === t;
+                      } else
+                        var J = !0;
+                      if (J) {
+                        if (e.command !== void 0) {
+                          let a = e.command;
+                          const k = t, z = t;
+                          let m = !1;
+                          const W = t;
+                          if (typeof a != "string") {
+                            const Pe = {
+                              instancePath: r + "/command",
+                              schemaPath: "#/oneOf/27/properties/command/anyOf/0/type",
+                              keyword: "type",
+                              params: {
+                                type: "string"
+                              },
+                              message: "must be string"
+                            };
+                            i === null ? i = [Pe] : i.push(Pe), t++;
+                          }
+                          var ye = W === t;
+                          if (m = m || ye, !m) {
+                            const Pe = t;
+                            if (t === Pe)
+                              if (Array.isArray(
+                                a
+                              )) {
+                                var de = !0;
+                                const ir = a.length;
+                                for (let Rt = 0; Rt < ir; Rt++) {
+                                  const We = t;
+                                  if (typeof a[Rt] != "string") {
+                                    const ue = {
+                                      instancePath: r + "/command/" + Rt,
+                                      schemaPath: "#/oneOf/27/properties/command/anyOf/1/items/type",
+                                      keyword: "type",
+                                      params: {
+                                        type: "string"
+                                      },
+                                      message: "must be string"
+                                    };
+                                    i === null ? i = [
+                                      ue
+                                    ] : i.push(
+                                      ue
+                                    ), t++;
+                                  }
+                                  var de = We === t;
+                                  if (!de)
+                                    break;
+                                }
+                              } else {
+                                const ir = {
+                                  instancePath: r + "/command",
+                                  schemaPath: "#/oneOf/27/properties/command/anyOf/1/type",
+                                  keyword: "type",
+                                  params: {
+                                    type: "array"
+                                  },
+                                  message: "must be array"
+                                };
+                                i === null ? i = [
+                                  ir
+                                ] : i.push(
+                                  ir
+                                ), t++;
+                              }
+                            var ye = Pe === t;
+                            m = m || ye;
+                          }
+                          if (m)
+                            t = z, i !== null && (z ? i.length = z : i = null);
+                          else {
+                            const Pe = {
+                              instancePath: r + "/command",
+                              schemaPath: "#/oneOf/27/properties/command/anyOf",
+                              keyword: "anyOf",
+                              params: {},
+                              message: "must match a schema in anyOf"
+                            };
+                            return i === null ? i = [Pe] : i.push(Pe), t++, h.errors = i, !1;
+                          }
+                          var J = k === t;
+                        } else
+                          var J = !0;
+                        if (J)
+                          if (e.wpCliPath !== void 0) {
+                            const a = t;
+                            if (typeof e.wpCliPath != "string")
+                              return h.errors = [
+                                {
+                                  instancePath: r + "/wpCliPath",
+                                  schemaPath: "#/oneOf/27/properties/wpCliPath/type",
+                                  keyword: "type",
+                                  params: {
+                                    type: "string"
+                                  },
+                                  message: "must be string"
+                                }
+                              ], !1;
+                            var J = a === t;
+                          } else
+                            var J = !0;
+                      }
+                    }
+                  }
+                }
+              } else
+                return h.errors = [
+                  {
+                    instancePath: r,
+                    schemaPath: "#/oneOf/27/type",
+                    keyword: "type",
+                    params: { type: "object" },
+                    message: "must be object"
+                  }
+                ], !1;
+          } else if (pe === "setSiteLanguage") {
+            if (t === t)
+              if (e && typeof e == "object" && !Array.isArray(e)) {
+                let R;
+                if (e.language === void 0 && (R = "language") || e.step === void 0 && (R = "step"))
+                  return h.errors = [
+                    {
+                      instancePath: r,
+                      schemaPath: "#/oneOf/28/required",
+                      keyword: "required",
+                      params: {
+                        missingProperty: R
+                      },
+                      message: "must have required property '" + R + "'"
+                    }
+                  ], !1;
+                {
+                  const V = t;
+                  for (const a in e)
+                    if (!(a === "progress" || a === "step" || a === "language"))
+                      return h.errors = [
+                        {
+                          instancePath: r,
+                          schemaPath: "#/oneOf/28/additionalProperties",
+                          keyword: "additionalProperties",
+                          params: {
+                            additionalProperty: a
+                          },
+                          message: "must NOT have additional properties"
+                        }
+                      ], !1;
+                  if (V === t) {
+                    if (e.progress !== void 0) {
+                      let a = e.progress;
+                      const k = t;
+                      if (t === k)
+                        if (a && typeof a == "object" && !Array.isArray(a)) {
+                          const z = t;
+                          for (const m in a)
+                            if (!(m === "weight" || m === "caption"))
+                              return h.errors = [
+                                {
+                                  instancePath: r + "/progress",
+                                  schemaPath: "#/oneOf/28/properties/progress/additionalProperties",
+                                  keyword: "additionalProperties",
+                                  params: {
+                                    additionalProperty: m
+                                  },
+                                  message: "must NOT have additional properties"
+                                }
+                              ], !1;
+                          if (z === t) {
+                            if (a.weight !== void 0) {
+                              let m = a.weight;
+                              const W = t;
+                              if (!(typeof m == "number" && isFinite(
+                                m
+                              )))
+                                return h.errors = [
+                                  {
+                                    instancePath: r + "/progress/weight",
+                                    schemaPath: "#/oneOf/28/properties/progress/properties/weight/type",
+                                    keyword: "type",
+                                    params: {
+                                      type: "number"
+                                    },
+                                    message: "must be number"
+                                  }
+                                ], !1;
+                              var he = W === t;
+                            } else
+                              var he = !0;
+                            if (he)
+                              if (a.caption !== void 0) {
+                                const m = t;
+                                if (typeof a.caption != "string")
+                                  return h.errors = [
+                                    {
+                                      instancePath: r + "/progress/caption",
+                                      schemaPath: "#/oneOf/28/properties/progress/properties/caption/type",
+                                      keyword: "type",
+                                      params: {
+                                        type: "string"
+                                      },
+                                      message: "must be string"
+                                    }
+                                  ], !1;
+                                var he = m === t;
+                              } else
+                                var he = !0;
+                          }
+                        } else
+                          return h.errors = [
+                            {
+                              instancePath: r + "/progress",
+                              schemaPath: "#/oneOf/28/properties/progress/type",
+                              keyword: "type",
+                              params: {
+                                type: "object"
+                              },
+                              message: "must be object"
+                            }
+                          ], !1;
+                      var ae = k === t;
+                    } else
+                      var ae = !0;
+                    if (ae) {
+                      if (e.step !== void 0) {
+                        let a = e.step;
+                        const k = t;
+                        if (typeof a != "string")
+                          return h.errors = [
+                            {
+                              instancePath: r + "/step",
+                              schemaPath: "#/oneOf/28/properties/step/type",
+                              keyword: "type",
+                              params: {
+                                type: "string"
+                              },
+                              message: "must be string"
+                            }
+                          ], !1;
+                        if (a !== "setSiteLanguage")
+                          return h.errors = [
+                            {
+                              instancePath: r + "/step",
+                              schemaPath: "#/oneOf/28/properties/step/const",
                               keyword: "const",
                               params: {
                                 allowedValue: "setSiteLanguage"
@@ -11346,17 +16312,17 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be equal to constant"
                             }
                           ], !1;
-                        var qe = u === e;
+                        var ae = k === t;
                       } else
-                        var qe = !0;
-                      if (qe)
-                        if (r.language !== void 0) {
-                          const s = e;
-                          if (typeof r.language != "string")
-                            return n.errors = [
+                        var ae = !0;
+                      if (ae)
+                        if (e.language !== void 0) {
+                          const a = t;
+                          if (typeof e.language != "string")
+                            return h.errors = [
                               {
-                                instancePath: t + "/language",
-                                schemaPath: "#/oneOf/27/properties/language/type",
+                                instancePath: r + "/language",
+                                schemaPath: "#/oneOf/28/properties/language/type",
                                 keyword: "type",
                                 params: {
                                   type: "string"
@@ -11364,122 +16330,122 @@ function n(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var qe = s === e;
+                          var ae = a === t;
                         } else
-                          var qe = !0;
+                          var ae = !0;
                     }
                   }
                 }
               } else
-                return n.errors = [
+                return h.errors = [
                   {
-                    instancePath: t,
-                    schemaPath: "#/oneOf/27/type",
+                    instancePath: r,
+                    schemaPath: "#/oneOf/28/type",
                     keyword: "type",
                     params: { type: "object" },
                     message: "must be object"
                   }
                 ], !1;
           } else
-            return n.errors = [
+            return h.errors = [
               {
-                instancePath: t,
+                instancePath: r,
                 schemaPath: "#/discriminator",
                 keyword: "discriminator",
                 params: {
                   error: "mapping",
                   tag: "step",
-                  tagValue: G
+                  tagValue: pe
                 },
                 message: 'value of tag "step" must be in oneOf'
               }
             ], !1;
         else
-          return n.errors = [
+          return h.errors = [
             {
-              instancePath: t,
+              instancePath: r,
               schemaPath: "#/discriminator",
               keyword: "discriminator",
               params: {
                 error: "tag",
                 tag: "step",
-                tagValue: G
+                tagValue: pe
               },
               message: 'tag "step" must be string'
             }
           ], !1;
       }
     } else
-      return n.errors = [
+      return h.errors = [
         {
-          instancePath: t,
+          instancePath: r,
           schemaPath: "#/type",
           keyword: "type",
           params: { type: "object" },
           message: "must be object"
         }
       ], !1;
-  return n.errors = i, e === 0;
+  return h.errors = i, t === 0;
 }
-function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, rootData: l = r } = {}) {
-  let i = null, e = 0;
-  if (e === 0)
-    if (r && typeof r == "object" && !Array.isArray(r)) {
-      const z = e;
-      for (const c in r)
-        if (!dt.call(js.properties, c))
-          return B.errors = [
+function ie(e, { instancePath: r = "", parentData: s, parentDataProperty: n, rootData: o = e } = {}) {
+  let i = null, t = 0;
+  if (t === 0)
+    if (e && typeof e == "object" && !Array.isArray(e)) {
+      const A = t;
+      for (const x in e)
+        if (!Ya.call(pu.properties, x))
+          return ie.errors = [
             {
-              instancePath: t,
+              instancePath: r,
               schemaPath: "#/additionalProperties",
               keyword: "additionalProperties",
-              params: { additionalProperty: c },
+              params: { additionalProperty: x },
               message: "must NOT have additional properties"
             }
           ], !1;
-      if (z === e) {
-        if (r.landingPage !== void 0) {
-          const c = e;
-          if (typeof r.landingPage != "string")
-            return B.errors = [
+      if (A === t) {
+        if (e.landingPage !== void 0) {
+          const x = t;
+          if (typeof e.landingPage != "string")
+            return ie.errors = [
               {
-                instancePath: t + "/landingPage",
+                instancePath: r + "/landingPage",
                 schemaPath: "#/properties/landingPage/type",
                 keyword: "type",
                 params: { type: "string" },
                 message: "must be string"
               }
             ], !1;
-          var f = c === e;
+          var p = x === t;
         } else
-          var f = !0;
-        if (f) {
-          if (r.description !== void 0) {
-            const c = e;
-            if (typeof r.description != "string")
-              return B.errors = [
+          var p = !0;
+        if (p) {
+          if (e.description !== void 0) {
+            const x = t;
+            if (typeof e.description != "string")
+              return ie.errors = [
                 {
-                  instancePath: t + "/description",
+                  instancePath: r + "/description",
                   schemaPath: "#/properties/description/type",
                   keyword: "type",
                   params: { type: "string" },
                   message: "must be string"
                 }
               ], !1;
-            var f = c === e;
+            var p = x === t;
           } else
-            var f = !0;
-          if (f) {
-            if (r.meta !== void 0) {
-              let c = r.meta;
-              const A = e;
-              if (e === A)
-                if (c && typeof c == "object" && !Array.isArray(c)) {
+            var p = !0;
+          if (p) {
+            if (e.meta !== void 0) {
+              let x = e.meta;
+              const N = t;
+              if (t === N)
+                if (x && typeof x == "object" && !Array.isArray(x)) {
                   let T;
-                  if (c.title === void 0 && (T = "title") || c.author === void 0 && (T = "author"))
-                    return B.errors = [
+                  if (x.title === void 0 && (T = "title") || x.author === void 0 && (T = "author"))
+                    return ie.errors = [
                       {
-                        instancePath: t + "/meta",
+                        instancePath: r + "/meta",
                         schemaPath: "#/properties/meta/required",
                         keyword: "required",
                         params: {
@@ -11489,27 +16455,27 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                       }
                     ], !1;
                   {
-                    const _ = e;
-                    for (const y in c)
-                      if (!(y === "title" || y === "description" || y === "author" || y === "categories"))
-                        return B.errors = [
+                    const E = t;
+                    for (const O in x)
+                      if (!(O === "title" || O === "description" || O === "author" || O === "categories"))
+                        return ie.errors = [
                           {
-                            instancePath: t + "/meta",
+                            instancePath: r + "/meta",
                             schemaPath: "#/properties/meta/additionalProperties",
                             keyword: "additionalProperties",
                             params: {
-                              additionalProperty: y
+                              additionalProperty: O
                             },
                             message: "must NOT have additional properties"
                           }
                         ], !1;
-                    if (_ === e) {
-                      if (c.title !== void 0) {
-                        const y = e;
-                        if (typeof c.title != "string")
-                          return B.errors = [
+                    if (E === t) {
+                      if (x.title !== void 0) {
+                        const O = t;
+                        if (typeof x.title != "string")
+                          return ie.errors = [
                             {
-                              instancePath: t + "/meta/title",
+                              instancePath: r + "/meta/title",
                               schemaPath: "#/properties/meta/properties/title/type",
                               keyword: "type",
                               params: {
@@ -11518,16 +16484,16 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be string"
                             }
                           ], !1;
-                        var h = y === e;
+                        var y = O === t;
                       } else
-                        var h = !0;
-                      if (h) {
-                        if (c.description !== void 0) {
-                          const y = e;
-                          if (typeof c.description != "string")
-                            return B.errors = [
+                        var y = !0;
+                      if (y) {
+                        if (x.description !== void 0) {
+                          const O = t;
+                          if (typeof x.description != "string")
+                            return ie.errors = [
                               {
-                                instancePath: t + "/meta/description",
+                                instancePath: r + "/meta/description",
                                 schemaPath: "#/properties/meta/properties/description/type",
                                 keyword: "type",
                                 params: {
@@ -11536,16 +16502,16 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          var h = y === e;
+                          var y = O === t;
                         } else
-                          var h = !0;
-                        if (h) {
-                          if (c.author !== void 0) {
-                            const y = e;
-                            if (typeof c.author != "string")
-                              return B.errors = [
+                          var y = !0;
+                        if (y) {
+                          if (x.author !== void 0) {
+                            const O = t;
+                            if (typeof x.author != "string")
+                              return ie.errors = [
                                 {
-                                  instancePath: t + "/meta/author",
+                                  instancePath: r + "/meta/author",
                                   schemaPath: "#/properties/meta/properties/author/type",
                                   keyword: "type",
                                   params: {
@@ -11554,25 +16520,25 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 }
                               ], !1;
-                            var h = y === e;
+                            var y = O === t;
                           } else
-                            var h = !0;
-                          if (h)
-                            if (c.categories !== void 0) {
-                              let y = c.categories;
-                              const g = e;
-                              if (e === g)
+                            var y = !0;
+                          if (y)
+                            if (x.categories !== void 0) {
+                              let O = x.categories;
+                              const C = t;
+                              if (t === C)
                                 if (Array.isArray(
-                                  y
+                                  O
                                 )) {
-                                  var b = !0;
-                                  const O = y.length;
-                                  for (let N = 0; N < O; N++) {
-                                    const q = e;
-                                    if (typeof y[N] != "string")
-                                      return B.errors = [
+                                  var u = !0;
+                                  const F = O.length;
+                                  for (let Y = 0; Y < F; Y++) {
+                                    const Z = t;
+                                    if (typeof O[Y] != "string")
+                                      return ie.errors = [
                                         {
-                                          instancePath: t + "/meta/categories/" + N,
+                                          instancePath: r + "/meta/categories/" + Y,
                                           schemaPath: "#/properties/meta/properties/categories/items/type",
                                           keyword: "type",
                                           params: {
@@ -11581,14 +16547,14 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                           message: "must be string"
                                         }
                                       ], !1;
-                                    var b = q === e;
-                                    if (!b)
+                                    var u = Z === t;
+                                    if (!u)
                                       break;
                                   }
                                 } else
-                                  return B.errors = [
+                                  return ie.errors = [
                                     {
-                                      instancePath: t + "/meta/categories",
+                                      instancePath: r + "/meta/categories",
                                       schemaPath: "#/properties/meta/properties/categories/type",
                                       keyword: "type",
                                       params: {
@@ -11597,37 +16563,37 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be array"
                                     }
                                   ], !1;
-                              var h = g === e;
+                              var y = C === t;
                             } else
-                              var h = !0;
+                              var y = !0;
                         }
                       }
                     }
                   }
                 } else
-                  return B.errors = [
+                  return ie.errors = [
                     {
-                      instancePath: t + "/meta",
+                      instancePath: r + "/meta",
                       schemaPath: "#/properties/meta/type",
                       keyword: "type",
                       params: { type: "object" },
                       message: "must be object"
                     }
                   ], !1;
-              var f = A === e;
+              var p = N === t;
             } else
-              var f = !0;
-            if (f) {
-              if (r.preferredVersions !== void 0) {
-                let c = r.preferredVersions;
-                const A = e;
-                if (e === A)
-                  if (c && typeof c == "object" && !Array.isArray(c)) {
+              var p = !0;
+            if (p) {
+              if (e.preferredVersions !== void 0) {
+                let x = e.preferredVersions;
+                const N = t;
+                if (t === N)
+                  if (x && typeof x == "object" && !Array.isArray(x)) {
                     let T;
-                    if (c.php === void 0 && (T = "php") || c.wp === void 0 && (T = "wp"))
-                      return B.errors = [
+                    if (x.php === void 0 && (T = "php") || x.wp === void 0 && (T = "wp"))
+                      return ie.errors = [
                         {
-                          instancePath: t + "/preferredVersions",
+                          instancePath: r + "/preferredVersions",
                           schemaPath: "#/properties/preferredVersions/required",
                           keyword: "required",
                           params: {
@@ -11637,29 +16603,29 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                         }
                       ], !1;
                     {
-                      const _ = e;
-                      for (const y in c)
-                        if (!(y === "php" || y === "wp"))
-                          return B.errors = [
+                      const E = t;
+                      for (const O in x)
+                        if (!(O === "php" || O === "wp"))
+                          return ie.errors = [
                             {
-                              instancePath: t + "/preferredVersions",
+                              instancePath: r + "/preferredVersions",
                               schemaPath: "#/properties/preferredVersions/additionalProperties",
                               keyword: "additionalProperties",
                               params: {
-                                additionalProperty: y
+                                additionalProperty: O
                               },
                               message: "must NOT have additional properties"
                             }
                           ], !1;
-                      if (_ === e) {
-                        if (c.php !== void 0) {
-                          let y = c.php;
-                          const g = e, v = e;
-                          let O = !1;
-                          const N = e;
-                          if (typeof y != "string") {
-                            const q = {
-                              instancePath: t + "/preferredVersions/php",
+                      if (E === t) {
+                        if (x.php !== void 0) {
+                          let O = x.php;
+                          const C = t, L = t;
+                          let F = !1;
+                          const Y = t;
+                          if (typeof O != "string") {
+                            const Z = {
+                              instancePath: r + "/preferredVersions/php",
                               schemaPath: "#/definitions/SupportedPHPVersion/type",
                               keyword: "type",
                               params: {
@@ -11667,26 +16633,26 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               },
                               message: "must be string"
                             };
-                            i === null ? i = [q] : i.push(q), e++;
+                            i === null ? i = [Z] : i.push(Z), t++;
                           }
-                          if (!(y === "8.3" || y === "8.2" || y === "8.1" || y === "8.0" || y === "7.4" || y === "7.3" || y === "7.2" || y === "7.1" || y === "7.0")) {
-                            const q = {
-                              instancePath: t + "/preferredVersions/php",
+                          if (!(O === "8.3" || O === "8.2" || O === "8.1" || O === "8.0" || O === "7.4" || O === "7.3" || O === "7.2" || O === "7.1" || O === "7.0")) {
+                            const Z = {
+                              instancePath: r + "/preferredVersions/php",
                               schemaPath: "#/definitions/SupportedPHPVersion/enum",
                               keyword: "enum",
                               params: {
-                                allowedValues: As.enum
+                                allowedValues: fu.enum
                               },
                               message: "must be equal to one of the allowed values"
                             };
-                            i === null ? i = [q] : i.push(q), e++;
+                            i === null ? i = [Z] : i.push(Z), t++;
                           }
-                          var k = N === e;
-                          if (O = O || k, !O) {
-                            const q = e;
-                            if (typeof y != "string") {
-                              const R = {
-                                instancePath: t + "/preferredVersions/php",
+                          var d = Y === t;
+                          if (F = F || d, !F) {
+                            const Z = t;
+                            if (typeof O != "string") {
+                              const K = {
+                                instancePath: r + "/preferredVersions/php",
                                 schemaPath: "#/properties/preferredVersions/properties/php/anyOf/1/type",
                                 keyword: "type",
                                 params: {
@@ -11695,14 +16661,14 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               };
                               i === null ? i = [
-                                R
+                                K
                               ] : i.push(
-                                R
-                              ), e++;
+                                K
+                              ), t++;
                             }
-                            if (y !== "latest") {
-                              const R = {
-                                instancePath: t + "/preferredVersions/php",
+                            if (O !== "latest") {
+                              const K = {
+                                instancePath: r + "/preferredVersions/php",
                                 schemaPath: "#/properties/preferredVersions/properties/php/anyOf/1/const",
                                 keyword: "const",
                                 params: {
@@ -11711,36 +16677,36 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be equal to constant"
                               };
                               i === null ? i = [
-                                R
+                                K
                               ] : i.push(
-                                R
-                              ), e++;
+                                K
+                              ), t++;
                             }
-                            var k = q === e;
-                            O = O || k;
+                            var d = Z === t;
+                            F = F || d;
                           }
-                          if (O)
-                            e = v, i !== null && (v ? i.length = v : i = null);
+                          if (F)
+                            t = L, i !== null && (L ? i.length = L : i = null);
                           else {
-                            const q = {
-                              instancePath: t + "/preferredVersions/php",
+                            const Z = {
+                              instancePath: r + "/preferredVersions/php",
                               schemaPath: "#/properties/preferredVersions/properties/php/anyOf",
                               keyword: "anyOf",
                               params: {},
                               message: "must match a schema in anyOf"
                             };
-                            return i === null ? i = [q] : i.push(q), e++, B.errors = i, !1;
+                            return i === null ? i = [Z] : i.push(Z), t++, ie.errors = i, !1;
                           }
-                          var m = g === e;
+                          var w = C === t;
                         } else
-                          var m = !0;
-                        if (m)
-                          if (c.wp !== void 0) {
-                            const y = e;
-                            if (typeof c.wp != "string")
-                              return B.errors = [
+                          var w = !0;
+                        if (w)
+                          if (x.wp !== void 0) {
+                            const O = t;
+                            if (typeof x.wp != "string")
+                              return ie.errors = [
                                 {
-                                  instancePath: t + "/preferredVersions/wp",
+                                  instancePath: r + "/preferredVersions/wp",
                                   schemaPath: "#/properties/preferredVersions/properties/wp/type",
                                   keyword: "type",
                                   params: {
@@ -11749,48 +16715,48 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 }
                               ], !1;
-                            var m = y === e;
+                            var w = O === t;
                           } else
-                            var m = !0;
+                            var w = !0;
                       }
                     }
                   } else
-                    return B.errors = [
+                    return ie.errors = [
                       {
-                        instancePath: t + "/preferredVersions",
+                        instancePath: r + "/preferredVersions",
                         schemaPath: "#/properties/preferredVersions/type",
                         keyword: "type",
                         params: { type: "object" },
                         message: "must be object"
                       }
                     ], !1;
-                var f = A === e;
+                var p = N === t;
               } else
-                var f = !0;
-              if (f) {
-                if (r.features !== void 0) {
-                  let c = r.features;
-                  const A = e;
-                  if (e === A)
-                    if (c && typeof c == "object" && !Array.isArray(c)) {
-                      const T = e;
-                      for (const _ in c)
-                        if (_ !== "networking")
-                          return B.errors = [
+                var p = !0;
+              if (p) {
+                if (e.features !== void 0) {
+                  let x = e.features;
+                  const N = t;
+                  if (t === N)
+                    if (x && typeof x == "object" && !Array.isArray(x)) {
+                      const T = t;
+                      for (const E in x)
+                        if (E !== "networking")
+                          return ie.errors = [
                             {
-                              instancePath: t + "/features",
+                              instancePath: r + "/features",
                               schemaPath: "#/properties/features/additionalProperties",
                               keyword: "additionalProperties",
                               params: {
-                                additionalProperty: _
+                                additionalProperty: E
                               },
                               message: "must NOT have additional properties"
                             }
                           ], !1;
-                      if (T === e && c.networking !== void 0 && typeof c.networking != "boolean")
-                        return B.errors = [
+                      if (T === t && x.networking !== void 0 && typeof x.networking != "boolean")
+                        return ie.errors = [
                           {
-                            instancePath: t + "/features/networking",
+                            instancePath: r + "/features/networking",
                             schemaPath: "#/properties/features/properties/networking/type",
                             keyword: "type",
                             params: {
@@ -11800,33 +16766,33 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                           }
                         ], !1;
                     } else
-                      return B.errors = [
+                      return ie.errors = [
                         {
-                          instancePath: t + "/features",
+                          instancePath: r + "/features",
                           schemaPath: "#/properties/features/type",
                           keyword: "type",
                           params: { type: "object" },
                           message: "must be object"
                         }
                       ], !1;
-                  var f = A === e;
+                  var p = N === t;
                 } else
-                  var f = !0;
-                if (f) {
-                  if (r.extraLibraries !== void 0) {
-                    let c = r.extraLibraries;
-                    const A = e;
-                    if (e === A)
-                      if (Array.isArray(c)) {
-                        var w = !0;
-                        const T = c.length;
-                        for (let _ = 0; _ < T; _++) {
-                          let y = c[_];
-                          const g = e;
-                          if (typeof y != "string")
-                            return B.errors = [
+                  var p = !0;
+                if (p) {
+                  if (e.extraLibraries !== void 0) {
+                    let x = e.extraLibraries;
+                    const N = t;
+                    if (t === N)
+                      if (Array.isArray(x)) {
+                        var _ = !0;
+                        const T = x.length;
+                        for (let E = 0; E < T; E++) {
+                          let O = x[E];
+                          const C = t;
+                          if (typeof O != "string")
+                            return ie.errors = [
                               {
-                                instancePath: t + "/extraLibraries/" + _,
+                                instancePath: r + "/extraLibraries/" + E,
                                 schemaPath: "#/definitions/ExtraLibrary/type",
                                 keyword: "type",
                                 params: {
@@ -11835,10 +16801,10 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be string"
                               }
                             ], !1;
-                          if (y !== "wp-cli")
-                            return B.errors = [
+                          if (O !== "wp-cli")
+                            return ie.errors = [
                               {
-                                instancePath: t + "/extraLibraries/" + _,
+                                instancePath: r + "/extraLibraries/" + E,
                                 schemaPath: "#/definitions/ExtraLibrary/const",
                                 keyword: "const",
                                 params: {
@@ -11847,14 +16813,14 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be equal to constant"
                               }
                             ], !1;
-                          var w = g === e;
-                          if (!w)
+                          var _ = C === t;
+                          if (!_)
                             break;
                         }
                       } else
-                        return B.errors = [
+                        return ie.errors = [
                           {
-                            instancePath: t + "/extraLibraries",
+                            instancePath: r + "/extraLibraries",
                             schemaPath: "#/properties/extraLibraries/type",
                             keyword: "type",
                             params: {
@@ -11863,44 +16829,45 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                             message: "must be array"
                           }
                         ], !1;
-                    var f = A === e;
+                    var p = N === t;
                   } else
-                    var f = !0;
-                  if (f) {
-                    if (r.constants !== void 0) {
-                      let c = r.constants;
-                      const A = e;
-                      if (e === A)
-                        if (c && typeof c == "object" && !Array.isArray(c))
-                          for (const T in c) {
-                            const _ = e;
-                            if (typeof c[T] != "string")
-                              return B.errors = [
+                    var p = !0;
+                  if (p) {
+                    if (e.constants !== void 0) {
+                      let x = e.constants;
+                      const N = t;
+                      if (t === t)
+                        if (x && typeof x == "object" && !Array.isArray(x))
+                          for (const E in x) {
+                            let O = x[E];
+                            const C = t;
+                            if (typeof O != "string" && typeof O != "boolean" && !(typeof O == "number" && isFinite(O)))
+                              return ie.errors = [
                                 {
-                                  instancePath: t + "/constants/" + T.replace(
+                                  instancePath: r + "/constants/" + E.replace(
                                     /~/g,
                                     "~0"
                                   ).replace(
                                     /\//g,
                                     "~1"
                                   ),
-                                  schemaPath: "#/properties/constants/additionalProperties/type",
+                                  schemaPath: "#/definitions/PHPConstants/additionalProperties/type",
                                   keyword: "type",
                                   params: {
-                                    type: "string"
+                                    type: lu.additionalProperties.type
                                   },
-                                  message: "must be string"
+                                  message: "must be string,boolean,number"
                                 }
                               ], !1;
-                            var S = _ === e;
-                            if (!S)
+                            var b = C === t;
+                            if (!b)
                               break;
                           }
                         else
-                          return B.errors = [
+                          return ie.errors = [
                             {
-                              instancePath: t + "/constants",
-                              schemaPath: "#/properties/constants/type",
+                              instancePath: r + "/constants",
+                              schemaPath: "#/definitions/PHPConstants/type",
                               keyword: "type",
                               params: {
                                 type: "object"
@@ -11908,25 +16875,25 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                               message: "must be object"
                             }
                           ], !1;
-                      var f = A === e;
+                      var p = N === t;
                     } else
-                      var f = !0;
-                    if (f) {
-                      if (r.plugins !== void 0) {
-                        let c = r.plugins;
-                        const A = e;
-                        if (e === A)
-                          if (Array.isArray(c)) {
-                            var D = !0;
-                            const T = c.length;
-                            for (let _ = 0; _ < T; _++) {
-                              let y = c[_];
-                              const g = e, v = e;
-                              let O = !1;
-                              const N = e;
-                              if (typeof y != "string") {
-                                const W = {
-                                  instancePath: t + "/plugins/" + _,
+                      var p = !0;
+                    if (p) {
+                      if (e.plugins !== void 0) {
+                        let x = e.plugins;
+                        const N = t;
+                        if (t === N)
+                          if (Array.isArray(x)) {
+                            var j = !0;
+                            const T = x.length;
+                            for (let E = 0; E < T; E++) {
+                              let O = x[E];
+                              const C = t, L = t;
+                              let F = !1;
+                              const Y = t;
+                              if (typeof O != "string") {
+                                const H = {
+                                  instancePath: r + "/plugins/" + E,
                                   schemaPath: "#/properties/plugins/items/anyOf/0/type",
                                   keyword: "type",
                                   params: {
@@ -11935,52 +16902,52 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be string"
                                 };
                                 i === null ? i = [
-                                  W
+                                  H
                                 ] : i.push(
-                                  W
-                                ), e++;
+                                  H
+                                ), t++;
                               }
-                              var P = N === e;
-                              if (O = O || P, !O) {
-                                const W = e;
-                                re(
-                                  y,
+                              var P = Y === t;
+                              if (F = F || P, !F) {
+                                const H = t;
+                                le(
+                                  O,
                                   {
-                                    instancePath: t + "/plugins/" + _,
-                                    parentData: c,
-                                    parentDataProperty: _,
-                                    rootData: l
+                                    instancePath: r + "/plugins/" + E,
+                                    parentData: x,
+                                    parentDataProperty: E,
+                                    rootData: o
                                   }
-                                ) || (i = i === null ? re.errors : i.concat(
-                                  re.errors
-                                ), e = i.length);
-                                var P = W === e;
-                                O = O || P;
+                                ) || (i = i === null ? le.errors : i.concat(
+                                  le.errors
+                                ), t = i.length);
+                                var P = H === t;
+                                F = F || P;
                               }
-                              if (O)
-                                e = v, i !== null && (v ? i.length = v : i = null);
+                              if (F)
+                                t = L, i !== null && (L ? i.length = L : i = null);
                               else {
-                                const W = {
-                                  instancePath: t + "/plugins/" + _,
+                                const H = {
+                                  instancePath: r + "/plugins/" + E,
                                   schemaPath: "#/properties/plugins/items/anyOf",
                                   keyword: "anyOf",
                                   params: {},
                                   message: "must match a schema in anyOf"
                                 };
                                 return i === null ? i = [
-                                  W
+                                  H
                                 ] : i.push(
-                                  W
-                                ), e++, B.errors = i, !1;
+                                  H
+                                ), t++, ie.errors = i, !1;
                               }
-                              var D = g === e;
-                              if (!D)
+                              var j = C === t;
+                              if (!j)
                                 break;
                             }
                           } else
-                            return B.errors = [
+                            return ie.errors = [
                               {
-                                instancePath: t + "/plugins",
+                                instancePath: r + "/plugins",
                                 schemaPath: "#/properties/plugins/type",
                                 keyword: "type",
                                 params: {
@@ -11989,25 +16956,25 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be array"
                               }
                             ], !1;
-                        var f = A === e;
+                        var p = N === t;
                       } else
-                        var f = !0;
-                      if (f) {
-                        if (r.siteOptions !== void 0) {
-                          let c = r.siteOptions;
-                          const A = e;
-                          if (e === A)
-                            if (c && typeof c == "object" && !Array.isArray(
-                              c
+                        var p = !0;
+                      if (p) {
+                        if (e.siteOptions !== void 0) {
+                          let x = e.siteOptions;
+                          const N = t;
+                          if (t === N)
+                            if (x && typeof x == "object" && !Array.isArray(
+                              x
                             )) {
-                              const T = e;
-                              for (const _ in c)
-                                if (_ !== "blogname") {
-                                  const y = e;
-                                  if (typeof c[_] != "string")
-                                    return B.errors = [
+                              const T = t;
+                              for (const E in x)
+                                if (E !== "blogname") {
+                                  const O = t;
+                                  if (typeof x[E] != "string")
+                                    return ie.errors = [
                                       {
-                                        instancePath: t + "/siteOptions/" + _.replace(
+                                        instancePath: r + "/siteOptions/" + E.replace(
                                           /~/g,
                                           "~0"
                                         ).replace(
@@ -12022,14 +16989,14 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                         message: "must be string"
                                       }
                                     ], !1;
-                                  var U = y === e;
-                                  if (!U)
+                                  var q = O === t;
+                                  if (!q)
                                     break;
                                 }
-                              if (T === e && c.blogname !== void 0 && typeof c.blogname != "string")
-                                return B.errors = [
+                              if (T === t && x.blogname !== void 0 && typeof x.blogname != "string")
+                                return ie.errors = [
                                   {
-                                    instancePath: t + "/siteOptions/blogname",
+                                    instancePath: r + "/siteOptions/blogname",
                                     schemaPath: "#/properties/siteOptions/properties/blogname/type",
                                     keyword: "type",
                                     params: {
@@ -12039,9 +17006,9 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   }
                                 ], !1;
                             } else
-                              return B.errors = [
+                              return ie.errors = [
                                 {
-                                  instancePath: t + "/siteOptions",
+                                  instancePath: r + "/siteOptions",
                                   schemaPath: "#/properties/siteOptions/type",
                                   keyword: "type",
                                   params: {
@@ -12050,18 +17017,18 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                   message: "must be object"
                                 }
                               ], !1;
-                          var f = A === e;
+                          var p = N === t;
                         } else
-                          var f = !0;
-                        if (f) {
-                          if (r.login !== void 0) {
-                            let c = r.login;
-                            const A = e, $ = e;
+                          var p = !0;
+                        if (p) {
+                          if (e.login !== void 0) {
+                            let x = e.login;
+                            const N = t, S = t;
                             let T = !1;
-                            const _ = e;
-                            if (typeof c != "boolean") {
-                              const g = {
-                                instancePath: t + "/login",
+                            const E = t;
+                            if (typeof x != "boolean") {
+                              const C = {
+                                instancePath: r + "/login",
                                 schemaPath: "#/properties/login/anyOf/0/type",
                                 keyword: "type",
                                 params: {
@@ -12070,60 +17037,60 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                 message: "must be boolean"
                               };
                               i === null ? i = [
-                                g
+                                C
                               ] : i.push(
-                                g
-                              ), e++;
+                                C
+                              ), t++;
                             }
-                            var te = _ === e;
-                            if (T = T || te, !T) {
-                              const g = e;
-                              if (e === g)
-                                if (c && typeof c == "object" && !Array.isArray(
-                                  c
+                            var D = E === t;
+                            if (T = T || D, !T) {
+                              const C = t;
+                              if (t === C)
+                                if (x && typeof x == "object" && !Array.isArray(
+                                  x
                                 )) {
-                                  let O;
-                                  if (c.username === void 0 && (O = "username") || c.password === void 0 && (O = "password")) {
-                                    const N = {
-                                      instancePath: t + "/login",
+                                  let F;
+                                  if (x.username === void 0 && (F = "username") || x.password === void 0 && (F = "password")) {
+                                    const Y = {
+                                      instancePath: r + "/login",
                                       schemaPath: "#/properties/login/anyOf/1/required",
                                       keyword: "required",
                                       params: {
-                                        missingProperty: O
+                                        missingProperty: F
                                       },
-                                      message: "must have required property '" + O + "'"
+                                      message: "must have required property '" + F + "'"
                                     };
                                     i === null ? i = [
-                                      N
+                                      Y
                                     ] : i.push(
-                                      N
-                                    ), e++;
+                                      Y
+                                    ), t++;
                                   } else {
-                                    const N = e;
-                                    for (const q in c)
-                                      if (!(q === "username" || q === "password")) {
-                                        const W = {
-                                          instancePath: t + "/login",
+                                    const Y = t;
+                                    for (const Z in x)
+                                      if (!(Z === "username" || Z === "password")) {
+                                        const H = {
+                                          instancePath: r + "/login",
                                           schemaPath: "#/properties/login/anyOf/1/additionalProperties",
                                           keyword: "additionalProperties",
                                           params: {
-                                            additionalProperty: q
+                                            additionalProperty: Z
                                           },
                                           message: "must NOT have additional properties"
                                         };
                                         i === null ? i = [
-                                          W
+                                          H
                                         ] : i.push(
-                                          W
-                                        ), e++;
+                                          H
+                                        ), t++;
                                         break;
                                       }
-                                    if (N === e) {
-                                      if (c.username !== void 0) {
-                                        const q = e;
-                                        if (typeof c.username != "string") {
-                                          const W = {
-                                            instancePath: t + "/login/username",
+                                    if (Y === t) {
+                                      if (x.username !== void 0) {
+                                        const Z = t;
+                                        if (typeof x.username != "string") {
+                                          const H = {
+                                            instancePath: r + "/login/username",
                                             schemaPath: "#/properties/login/anyOf/1/properties/username/type",
                                             keyword: "type",
                                             params: {
@@ -12132,20 +17099,20 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                             message: "must be string"
                                           };
                                           i === null ? i = [
-                                            W
+                                            H
                                           ] : i.push(
-                                            W
-                                          ), e++;
+                                            H
+                                          ), t++;
                                         }
-                                        var H = q === e;
+                                        var M = Z === t;
                                       } else
-                                        var H = !0;
-                                      if (H)
-                                        if (c.password !== void 0) {
-                                          const q = e;
-                                          if (typeof c.password != "string") {
-                                            const R = {
-                                              instancePath: t + "/login/password",
+                                        var M = !0;
+                                      if (M)
+                                        if (x.password !== void 0) {
+                                          const Z = t;
+                                          if (typeof x.password != "string") {
+                                            const K = {
+                                              instancePath: r + "/login/password",
                                               schemaPath: "#/properties/login/anyOf/1/properties/password/type",
                                               keyword: "type",
                                               params: {
@@ -12154,19 +17121,19 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                               message: "must be string"
                                             };
                                             i === null ? i = [
-                                              R
+                                              K
                                             ] : i.push(
-                                              R
-                                            ), e++;
+                                              K
+                                            ), t++;
                                           }
-                                          var H = q === e;
+                                          var M = Z === t;
                                         } else
-                                          var H = !0;
+                                          var M = !0;
                                     }
                                   }
                                 } else {
-                                  const O = {
-                                    instancePath: t + "/login",
+                                  const F = {
+                                    instancePath: r + "/login",
                                     schemaPath: "#/properties/login/anyOf/1/type",
                                     keyword: "type",
                                     params: {
@@ -12175,79 +17142,177 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                     message: "must be object"
                                   };
                                   i === null ? i = [
-                                    O
+                                    F
                                   ] : i.push(
-                                    O
-                                  ), e++;
+                                    F
+                                  ), t++;
                                 }
-                              var te = g === e;
-                              T = T || te;
+                              var D = C === t;
+                              T = T || D;
                             }
                             if (T)
-                              e = $, i !== null && ($ ? i.length = $ : i = null);
+                              t = S, i !== null && (S ? i.length = S : i = null);
                             else {
-                              const g = {
-                                instancePath: t + "/login",
+                              const C = {
+                                instancePath: r + "/login",
                                 schemaPath: "#/properties/login/anyOf",
                                 keyword: "anyOf",
                                 params: {},
                                 message: "must match a schema in anyOf"
                               };
                               return i === null ? i = [
-                                g
+                                C
                               ] : i.push(
-                                g
-                              ), e++, B.errors = i, !1;
+                                C
+                              ), t++, ie.errors = i, !1;
                             }
-                            var f = A === e;
+                            var p = N === t;
                           } else
-                            var f = !0;
-                          if (f) {
-                            if (r.phpExtensionBundles !== void 0) {
-                              let c = r.phpExtensionBundles;
-                              const A = e;
-                              if (e === A)
+                            var p = !0;
+                          if (p) {
+                            if (e.steps !== void 0) {
+                              let x = e.steps;
+                              const N = t;
+                              if (t === N)
                                 if (Array.isArray(
-                                  c
+                                  x
                                 )) {
-                                  var E = !0;
-                                  const T = c.length;
-                                  for (let _ = 0; _ < T; _++) {
-                                    let y = c[_];
-                                    const g = e;
-                                    if (typeof y != "string")
-                                      return B.errors = [
-                                        {
-                                          instancePath: t + "/phpExtensionBundles/" + _,
-                                          schemaPath: "#/definitions/SupportedPHPExtensionBundle/type",
+                                  var B = !0;
+                                  const T = x.length;
+                                  for (let E = 0; E < T; E++) {
+                                    let O = x[E];
+                                    const C = t, L = t;
+                                    let F = !1;
+                                    const Y = t;
+                                    h(
+                                      O,
+                                      {
+                                        instancePath: r + "/steps/" + E,
+                                        parentData: x,
+                                        parentDataProperty: E,
+                                        rootData: o
+                                      }
+                                    ) || (i = i === null ? h.errors : i.concat(
+                                      h.errors
+                                    ), t = i.length);
+                                    var U = Y === t;
+                                    if (F = F || U, !F) {
+                                      const H = t;
+                                      if (typeof O != "string") {
+                                        const G = {
+                                          instancePath: r + "/steps/" + E,
+                                          schemaPath: "#/properties/steps/items/anyOf/1/type",
                                           keyword: "type",
                                           params: {
                                             type: "string"
                                           },
                                           message: "must be string"
+                                        };
+                                        i === null ? i = [
+                                          G
+                                        ] : i.push(
+                                          G
+                                        ), t++;
+                                      }
+                                      var U = H === t;
+                                      if (F = F || U, !F) {
+                                        const G = t, se = {
+                                          instancePath: r + "/steps/" + E,
+                                          schemaPath: "#/properties/steps/items/anyOf/2/not",
+                                          keyword: "not",
+                                          params: {},
+                                          message: "must NOT be valid"
+                                        };
+                                        i === null ? i = [
+                                          se
+                                        ] : i.push(
+                                          se
+                                        ), t++;
+                                        var U = G === t;
+                                        if (F = F || U, !F) {
+                                          const X = t;
+                                          if (typeof O != "boolean") {
+                                            const re = {
+                                              instancePath: r + "/steps/" + E,
+                                              schemaPath: "#/properties/steps/items/anyOf/3/type",
+                                              keyword: "type",
+                                              params: {
+                                                type: "boolean"
+                                              },
+                                              message: "must be boolean"
+                                            };
+                                            i === null ? i = [
+                                              re
+                                            ] : i.push(
+                                              re
+                                            ), t++;
+                                          }
+                                          if (O !== !1) {
+                                            const re = {
+                                              instancePath: r + "/steps/" + E,
+                                              schemaPath: "#/properties/steps/items/anyOf/3/const",
+                                              keyword: "const",
+                                              params: {
+                                                allowedValue: !1
+                                              },
+                                              message: "must be equal to constant"
+                                            };
+                                            i === null ? i = [
+                                              re
+                                            ] : i.push(
+                                              re
+                                            ), t++;
+                                          }
+                                          var U = X === t;
+                                          if (F = F || U, !F) {
+                                            const re = t;
+                                            if (O !== null) {
+                                              const te = {
+                                                instancePath: r + "/steps/" + E,
+                                                schemaPath: "#/properties/steps/items/anyOf/4/type",
+                                                keyword: "type",
+                                                params: {
+                                                  type: "null"
+                                                },
+                                                message: "must be null"
+                                              };
+                                              i === null ? i = [
+                                                te
+                                              ] : i.push(
+                                                te
+                                              ), t++;
+                                            }
+                                            var U = re === t;
+                                            F = F || U;
+                                          }
                                         }
-                                      ], !1;
-                                    if (!(y === "kitchen-sink" || y === "light"))
-                                      return B.errors = [
-                                        {
-                                          instancePath: t + "/phpExtensionBundles/" + _,
-                                          schemaPath: "#/definitions/SupportedPHPExtensionBundle/enum",
-                                          keyword: "enum",
-                                          params: {
-                                            allowedValues: qs.enum
-                                          },
-                                          message: "must be equal to one of the allowed values"
-                                        }
-                                      ], !1;
-                                    var E = g === e;
-                                    if (!E)
+                                      }
+                                    }
+                                    if (F)
+                                      t = L, i !== null && (L ? i.length = L : i = null);
+                                    else {
+                                      const H = {
+                                        instancePath: r + "/steps/" + E,
+                                        schemaPath: "#/properties/steps/items/anyOf",
+                                        keyword: "anyOf",
+                                        params: {},
+                                        message: "must match a schema in anyOf"
+                                      };
+                                      return i === null ? i = [
+                                        H
+                                      ] : i.push(
+                                        H
+                                      ), t++, ie.errors = i, !1;
+                                    }
+                                    var B = C === t;
+                                    if (!B)
                                       break;
                                   }
                                 } else
-                                  return B.errors = [
+                                  return ie.errors = [
                                     {
-                                      instancePath: t + "/phpExtensionBundles",
-                                      schemaPath: "#/properties/phpExtensionBundles/type",
+                                      instancePath: r + "/steps",
+                                      schemaPath: "#/properties/steps/type",
                                       keyword: "type",
                                       params: {
                                         type: "array"
@@ -12255,182 +17320,27 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
                                       message: "must be array"
                                     }
                                   ], !1;
-                              var f = A === e;
+                              var p = N === t;
                             } else
-                              var f = !0;
-                            if (f) {
-                              if (r.steps !== void 0) {
-                                let c = r.steps;
-                                const A = e;
-                                if (e === A)
-                                  if (Array.isArray(
-                                    c
-                                  )) {
-                                    var x = !0;
-                                    const T = c.length;
-                                    for (let _ = 0; _ < T; _++) {
-                                      let y = c[_];
-                                      const g = e, v = e;
-                                      let O = !1;
-                                      const N = e;
-                                      n(
-                                        y,
-                                        {
-                                          instancePath: t + "/steps/" + _,
-                                          parentData: c,
-                                          parentDataProperty: _,
-                                          rootData: l
-                                        }
-                                      ) || (i = i === null ? n.errors : i.concat(
-                                        n.errors
-                                      ), e = i.length);
-                                      var I = N === e;
-                                      if (O = O || I, !O) {
-                                        const W = e;
-                                        if (typeof y != "string") {
-                                          const V = {
-                                            instancePath: t + "/steps/" + _,
-                                            schemaPath: "#/properties/steps/items/anyOf/1/type",
-                                            keyword: "type",
-                                            params: {
-                                              type: "string"
-                                            },
-                                            message: "must be string"
-                                          };
-                                          i === null ? i = [
-                                            V
-                                          ] : i.push(
-                                            V
-                                          ), e++;
-                                        }
-                                        var I = W === e;
-                                        if (O = O || I, !O) {
-                                          const V = e, ee = {
-                                            instancePath: t + "/steps/" + _,
-                                            schemaPath: "#/properties/steps/items/anyOf/2/not",
-                                            keyword: "not",
-                                            params: {},
-                                            message: "must NOT be valid"
-                                          };
-                                          i === null ? i = [
-                                            ee
-                                          ] : i.push(
-                                            ee
-                                          ), e++;
-                                          var I = V === e;
-                                          if (O = O || I, !O) {
-                                            const C = e;
-                                            if (typeof y != "boolean") {
-                                              const M = {
-                                                instancePath: t + "/steps/" + _,
-                                                schemaPath: "#/properties/steps/items/anyOf/3/type",
-                                                keyword: "type",
-                                                params: {
-                                                  type: "boolean"
-                                                },
-                                                message: "must be boolean"
-                                              };
-                                              i === null ? i = [
-                                                M
-                                              ] : i.push(
-                                                M
-                                              ), e++;
-                                            }
-                                            if (y !== !1) {
-                                              const M = {
-                                                instancePath: t + "/steps/" + _,
-                                                schemaPath: "#/properties/steps/items/anyOf/3/const",
-                                                keyword: "const",
-                                                params: {
-                                                  allowedValue: !1
-                                                },
-                                                message: "must be equal to constant"
-                                              };
-                                              i === null ? i = [
-                                                M
-                                              ] : i.push(
-                                                M
-                                              ), e++;
-                                            }
-                                            var I = C === e;
-                                            if (O = O || I, !O) {
-                                              const M = e;
-                                              if (y !== null) {
-                                                const K = {
-                                                  instancePath: t + "/steps/" + _,
-                                                  schemaPath: "#/properties/steps/items/anyOf/4/type",
-                                                  keyword: "type",
-                                                  params: {
-                                                    type: "null"
-                                                  },
-                                                  message: "must be null"
-                                                };
-                                                i === null ? i = [
-                                                  K
-                                                ] : i.push(
-                                                  K
-                                                ), e++;
-                                              }
-                                              var I = M === e;
-                                              O = O || I;
-                                            }
-                                          }
-                                        }
-                                      }
-                                      if (O)
-                                        e = v, i !== null && (v ? i.length = v : i = null);
-                                      else {
-                                        const W = {
-                                          instancePath: t + "/steps/" + _,
-                                          schemaPath: "#/properties/steps/items/anyOf",
-                                          keyword: "anyOf",
-                                          params: {},
-                                          message: "must match a schema in anyOf"
-                                        };
-                                        return i === null ? i = [
-                                          W
-                                        ] : i.push(
-                                          W
-                                        ), e++, B.errors = i, !1;
-                                      }
-                                      var x = g === e;
-                                      if (!x)
-                                        break;
+                              var p = !0;
+                            if (p)
+                              if (e.$schema !== void 0) {
+                                const x = t;
+                                if (typeof e.$schema != "string")
+                                  return ie.errors = [
+                                    {
+                                      instancePath: r + "/$schema",
+                                      schemaPath: "#/properties/%24schema/type",
+                                      keyword: "type",
+                                      params: {
+                                        type: "string"
+                                      },
+                                      message: "must be string"
                                     }
-                                  } else
-                                    return B.errors = [
-                                      {
-                                        instancePath: t + "/steps",
-                                        schemaPath: "#/properties/steps/type",
-                                        keyword: "type",
-                                        params: {
-                                          type: "array"
-                                        },
-                                        message: "must be array"
-                                      }
-                                    ], !1;
-                                var f = A === e;
+                                  ], !1;
+                                var p = x === t;
                               } else
-                                var f = !0;
-                              if (f)
-                                if (r.$schema !== void 0) {
-                                  const c = e;
-                                  if (typeof r.$schema != "string")
-                                    return B.errors = [
-                                      {
-                                        instancePath: t + "/$schema",
-                                        schemaPath: "#/properties/%24schema/type",
-                                        keyword: "type",
-                                        params: {
-                                          type: "string"
-                                        },
-                                        message: "must be string"
-                                      }
-                                    ], !1;
-                                  var f = c === e;
-                                } else
-                                  var f = !0;
-                            }
+                                var p = !0;
                           }
                         }
                       }
@@ -12443,697 +17353,675 @@ function B(r, { instancePath: t = "", parentData: o, parentDataProperty: p, root
         }
       }
     } else
-      return B.errors = [
+      return ie.errors = [
         {
-          instancePath: t,
+          instancePath: r,
           schemaPath: "#/type",
           keyword: "type",
           params: { type: "object" },
           message: "must be object"
         }
       ], !1;
-  return B.errors = i, e === 0;
+  return ie.errors = i, t === 0;
 }
-function er(r, { instancePath: t = "", parentData: o, parentDataProperty: p, rootData: l = r } = {}) {
-  let i = null, e = 0;
-  return B(r, {
-    instancePath: t,
-    parentData: o,
-    parentDataProperty: p,
-    rootData: l
-  }) || (i = i === null ? B.errors : i.concat(B.errors), e = i.length), er.errors = i, e === 0;
+function Gt(e, { instancePath: r = "", parentData: s, parentDataProperty: n, rootData: o = e } = {}) {
+  let i = null, t = 0;
+  return ie(e, {
+    instancePath: r,
+    parentData: s,
+    parentDataProperty: n,
+    rootData: o
+  }) || (i = i === null ? ie.errors : i.concat(ie.errors), t = i.length), Gt.errors = i, t === 0;
 }
-const { wpCLI: Ls, ...Mr } = fs, Ss = {
-  ...Mr,
-  "wp-cli": Ls,
-  importFile: Mr.importWxr
+const { wpCLI: du, ..._n } = Jo, hu = {
+  ..._n,
+  "wp-cli": du,
+  importFile: _n.importWxr
 };
-function xs(r, {
-  progress: t = new ur(),
-  semaphore: o = new Ot({ concurrency: 3 }),
-  onStepCompleted: p = () => {
-  }
+function yu(e, {
+  progress: r = new os(),
+  semaphore: s = new ao({ concurrency: 3 }),
+  onStepCompleted: n = () => {
+  },
+  corsProxy: o
 } = {}) {
-  var m, w, S, D, P, U, te, H, E;
-  r = {
-    ...r,
-    steps: (r.steps || []).filter(Is).filter(Ds)
+  var _, b, j, P, q, D, M, B, U;
+  e = structuredClone(e), e = {
+    ...e,
+    steps: (e.steps || []).filter(wu).filter(bu)
   };
-  for (const x of r.steps)
-    typeof x == "object" && x.step === "importFile" && (x.step = "importWxr", ae.warn(
+  for (const A of e.steps)
+    !A || typeof A != "object" || (A.step === "importFile" ? (A.step = "importWxr", Se.warn(
       'The "importFile" step is deprecated. Use "importWxr" instead.'
-    ));
-  if (r.constants && r.steps.unshift({
+    )) : (A == null ? void 0 : A.step) === "installPlugin" && "pluginZipFile" in A ? (A.pluginData = A.pluginZipFile, Se.warn(
+      'The "pluginZipFile" option of the "installPlugin" step is deprecated. Use "pluginData" instead.'
+    )) : (A == null ? void 0 : A.step) === "installTheme" && "themeZipFile" in A && (A.themeData = A.themeZipFile, Se.warn(
+      'The "themeZipFile" option of the "installTheme" step is deprecated. Use "themeData" instead.'
+    )));
+  if (e.constants && e.steps.unshift({
     step: "defineWpConfigConsts",
-    consts: r.constants
-  }), r.siteOptions && r.steps.unshift({
+    consts: e.constants
+  }), e.siteOptions && e.steps.unshift({
     step: "setSiteOptions",
-    options: r.siteOptions
-  }), r.plugins) {
-    const x = r.plugins.map((I) => typeof I == "string" ? I.startsWith("https://") ? {
+    options: e.siteOptions
+  }), e.plugins) {
+    const A = e.plugins.map((x) => typeof x == "string" ? x.startsWith("https://") ? {
       resource: "url",
-      url: I
+      url: x
     } : {
       resource: "wordpress.org/plugins",
-      slug: I
-    } : I).map((I) => ({
+      slug: x
+    } : x).map((x) => ({
       step: "installPlugin",
-      pluginZipFile: I
+      pluginData: x
     }));
-    r.steps.unshift(...x);
+    e.steps.unshift(...A);
   }
-  r.login && r.steps.push({
+  e.login && e.steps.push({
     step: "login",
-    ...r.login === !0 ? { username: "admin", password: "password" } : r.login
-  }), r.phpExtensionBundles || (r.phpExtensionBundles = []), r.phpExtensionBundles || (r.phpExtensionBundles = []), r.phpExtensionBundles.length === 0 && r.phpExtensionBundles.push("kitchen-sink");
-  const l = ((m = r.steps) == null ? void 0 : m.findIndex(
-    (x) => typeof x == "object" && (x == null ? void 0 : x.step) === "wp-cli"
+    ...e.login === !0 ? { username: "admin" } : e.login
+  });
+  const i = ((_ = e.steps) == null ? void 0 : _.findIndex(
+    (A) => typeof A == "object" && (A == null ? void 0 : A.step) && ["wp-cli", "enableMultisite"].includes(A.step)
   )) ?? -1;
-  if ((w = r == null ? void 0 : r.extraLibraries) != null && w.includes("wp-cli") || l > -1) {
-    r.phpExtensionBundles.includes("light") && (r.phpExtensionBundles = r.phpExtensionBundles.filter(
-      (I) => I !== "light"
-    ), ae.warn(
-      "WP-CLI is used in your Blueprint, and it requires the iconv and mbstring PHP extensions. However, you did not specify the kitchen-sink extension bundle. Playground will override your choice and load the kitchen-sink PHP extensions bundle to prevent the WP-CLI step from failing. "
-    ));
-    const x = {
+  if ((b = e == null ? void 0 : e.extraLibraries) != null && b.includes("wp-cli") || i !== -1) {
+    const A = {
       step: "writeFile",
-      data: {
-        resource: "url",
-        /**
-         * Use compression for downloading the wp-cli.phar file.
-         * The official release, hosted at raw.githubusercontent.com, is ~7MB
-         * and the transfer is uncompressed. playground.wordpress.net supports
-         * transfer compression and only transmits ~1.4MB.
-         *
-         * @TODO: minify the wp-cli.phar file. It can be as small as 1MB when all the
-         *        whitespaces and are removed, and even 500KB when libraries
-         *        like the JavaScript parser or Composer are removed.
-         */
-        url: "https://playground.wordpress.net/wp-cli.phar"
-      },
-      path: "/tmp/wp-cli.phar"
+      data: $o,
+      path: si
     };
-    l === -1 ? (S = r.steps) == null || S.push(x) : (D = r.steps) == null || D.splice(l, 0, x);
+    i === -1 ? (j = e.steps) == null || j.push(A) : (P = e.steps) == null || P.splice(
+      i,
+      0,
+      A
+    );
   }
-  const i = (P = r.steps) == null ? void 0 : P.findIndex(
-    (x) => typeof x == "object" && (x == null ? void 0 : x.step) === "importWxr"
+  const t = (q = e.steps) == null ? void 0 : q.findIndex(
+    (A) => typeof A == "object" && (A == null ? void 0 : A.step) === "importWxr"
   );
-  i !== void 0 && i > -1 && (r.phpExtensionBundles.includes("light") && (r.phpExtensionBundles = r.phpExtensionBundles.filter(
-    (x) => x !== "light"
-  ), ae.warn(
-    "The importWxr step used in your Blueprint requires the iconv and mbstring PHP extensions. However, you did not specify the kitchen-sink extension bundle. Playground will override your choice and load the kitchen-sink PHP extensions bundle to prevent the WP-CLI step from failing. "
-  )), (U = r.steps) == null || U.splice(i, 0, {
+  t !== void 0 && t > -1 && ((D = e.steps) == null || D.splice(t, 0, {
     step: "installPlugin",
-    pluginZipFile: {
+    pluginData: {
       resource: "url",
       url: "https://playground.wordpress.net/wordpress-importer.zip",
       caption: "Downloading the WordPress Importer plugin"
     }
   }));
-  const { valid: e, errors: f } = Ns(r);
-  if (!e) {
-    const x = new Error(
-      `Invalid blueprint: ${f[0].message} at ${f[0].instancePath}`
+  const { valid: p, errors: y } = mu(e);
+  if (!p) {
+    const A = new Error(
+      `Invalid blueprint: ${y[0].message} at ${y[0].instancePath}`
     );
-    throw x.errors = f, x;
+    throw A.errors = y, A;
   }
-  const h = r.steps || [], b = h.reduce(
-    (x, I) => {
-      var z;
-      return x + (((z = I.progress) == null ? void 0 : z.weight) || 1);
+  const u = e.steps || [], d = u.reduce(
+    (A, x) => {
+      var N;
+      return A + (((N = x.progress) == null ? void 0 : N.weight) || 1);
     },
     0
-  ), k = h.map(
-    (x) => Ws(x, {
-      semaphore: o,
-      rootProgressTracker: t,
-      totalProgressWeight: b
+  ), w = u.map(
+    (A) => _u(A, {
+      semaphore: s,
+      rootProgressTracker: r,
+      totalProgressWeight: d,
+      corsProxy: o
     })
   );
   return {
     versions: {
-      php: Fs(
-        (te = r.preferredVersions) == null ? void 0 : te.php,
-        jr,
-        gs
+      php: gu(
+        (M = e.preferredVersions) == null ? void 0 : M.php,
+        ni,
+        Do
       ),
-      wp: ((H = r.preferredVersions) == null ? void 0 : H.wp) || "latest"
+      wp: ((B = e.preferredVersions) == null ? void 0 : B.wp) || "latest"
     },
-    phpExtensions: Cs(
-      [],
-      r.phpExtensionBundles || []
-    ),
     features: {
       // Disable networking by default
-      networking: ((E = r.features) == null ? void 0 : E.networking) ?? !1
+      networking: ((U = e.features) == null ? void 0 : U.networking) ?? !1
     },
-    extraLibraries: r.extraLibraries || [],
-    run: async (x) => {
+    extraLibraries: e.extraLibraries || [],
+    run: async (A) => {
       try {
-        for (const { resources: I } of k)
-          for (const z of I)
-            z.setPlayground(x), z.isAsync && z.resolve();
-        for (const [I, { run: z, step: c }] of Object.entries(k))
+        for (const { resources: x } of w)
+          for (const N of x)
+            N.setPlayground(A), N.isAsync && N.resolve();
+        for (const [x, { run: N, step: S }] of Object.entries(w))
           try {
-            const A = await z(x);
-            p(A, c);
-          } catch (A) {
-            throw ae.error(A), new Error(
-              `Error when executing the blueprint step #${I} (${JSON.stringify(
-                c
-              )}) ${A instanceof Error ? `: ${A.message}` : A}`,
-              { cause: A }
+            const T = await N(A);
+            n(T, S);
+          } catch (T) {
+            throw Se.error(T), new Error(
+              `Error when executing the blueprint step #${x} (${JSON.stringify(
+                S
+              )}) ${T instanceof Error ? `: ${T.message}` : T}`,
+              { cause: T }
             );
           }
       } finally {
         try {
-          await x.goTo(
-            r.landingPage || "/"
+          await A.goTo(
+            e.landingPage || "/"
           );
         } catch {
         }
-        t.finish();
+        r.finish();
       }
     }
   };
 }
-function Ns(r) {
-  var l;
-  const t = er(r);
-  if (t)
-    return { valid: t };
-  const o = /* @__PURE__ */ new Set();
-  for (const i of er.errors)
-    i.schemaPath.startsWith("#/properties/steps/items/anyOf") || o.add(i.instancePath);
-  const p = (l = er.errors) == null ? void 0 : l.filter(
-    (i) => !(i.schemaPath.startsWith("#/properties/steps/items/anyOf") && o.has(i.instancePath))
+function mu(e) {
+  var o;
+  const r = Gt(e);
+  if (r)
+    return { valid: r };
+  const s = /* @__PURE__ */ new Set();
+  for (const i of Gt.errors)
+    i.schemaPath.startsWith("#/properties/steps/items/anyOf") || s.add(i.instancePath);
+  const n = (o = Gt.errors) == null ? void 0 : o.filter(
+    (i) => !(i.schemaPath.startsWith("#/properties/steps/items/anyOf") && s.has(i.instancePath))
   );
   return {
-    valid: t,
-    errors: p
+    valid: r,
+    errors: n
   };
 }
-function Fs(r, t, o) {
-  return r && t.includes(r) ? r : o;
+function gu(e, r, s) {
+  return e && r.includes(e) ? e : s;
 }
-function Cs(r, t) {
-  const o = lt.filter(
-    (l) => r.includes(l)
-  ), p = t.flatMap(
-    (l) => l in Wr ? Wr[l] : []
-  );
-  return Array.from(/* @__PURE__ */ new Set([...o, ...p]));
+function wu(e) {
+  return !!(typeof e == "object" && e);
 }
-function Is(r) {
-  return !!(typeof r == "object" && r);
-}
-function Ds(r) {
-  return ["setPhpIniEntry", "request"].includes(r.step) ? (ae.warn(
-    `The "${r.step}" Blueprint is no longer supported and you can remove it from your Blueprint.`
+function bu(e) {
+  return ["setPhpIniEntry", "request"].includes(e.step) ? (Se.warn(
+    `The "${e.step}" Blueprint is no longer supported and you can remove it from your Blueprint.`
   ), !1) : !0;
 }
-function Ws(r, {
-  semaphore: t,
-  rootProgressTracker: o,
-  totalProgressWeight: p
+function _u(e, {
+  semaphore: r,
+  rootProgressTracker: s,
+  totalProgressWeight: n,
+  corsProxy: o
 }) {
-  var k;
-  const l = o.stage(
-    (((k = r.progress) == null ? void 0 : k.weight) || 1) / p
-  ), i = {};
-  for (const m of Object.keys(r)) {
-    let w = r[m];
-    ws(w) && (w = Le.create(w, {
-      semaphore: t
-    })), i[m] = w;
+  var w;
+  const i = s.stage(
+    (((w = e.progress) == null ? void 0 : w.weight) || 1) / n
+  ), t = {};
+  for (const _ of Object.keys(e)) {
+    let b = e[_];
+    Xl(b) && (b = _r.create(b, {
+      semaphore: r,
+      corsProxy: o
+    })), t[_] = b;
   }
-  const e = async (m) => {
-    var w;
+  const p = async (_) => {
+    var b;
     try {
-      return l.fillSlowly(), await Ss[r.step](
-        m,
-        await Ms(i),
+      return i.fillSlowly(), await hu[e.step](
+        _,
+        await vu(t),
         {
-          tracker: l,
-          initialCaption: (w = r.progress) == null ? void 0 : w.caption
+          tracker: i,
+          initialCaption: (b = e.progress) == null ? void 0 : b.caption
         }
       );
     } finally {
-      l.finish();
+      i.finish();
     }
-  }, f = Br(i), h = Br(i).filter(
-    (m) => m.isAsync
-  ), b = 1 / (h.length + 1);
-  for (const m of h)
-    m.progress = l.stage(b);
-  return { run: e, step: r, resources: f };
+  }, y = vn(t), u = vn(t).filter(
+    (_) => _.isAsync
+  ), d = 1 / (u.length + 1);
+  for (const _ of u)
+    _.progress = i.stage(d);
+  return { run: p, step: e, resources: y };
 }
-function Br(r) {
-  const t = [];
-  for (const o in r) {
-    const p = r[o];
-    p instanceof Le && t.push(p);
+function vn(e) {
+  const r = [];
+  for (const s in e) {
+    const n = e[s];
+    n instanceof _r && r.push(n);
   }
-  return t;
+  return r;
 }
-async function Ms(r) {
-  const t = {};
-  for (const o in r) {
-    const p = r[o];
-    p instanceof Le ? t[o] = await p.resolve() : t[o] = p;
+async function vu(e) {
+  const r = {};
+  for (const s in e) {
+    const n = e[s];
+    n instanceof _r ? r[s] = await n.resolve() : r[s] = n;
   }
-  return t;
+  return r;
 }
-async function Bs(r, t) {
-  await r.run(t);
+async function Pu(e, r) {
+  await e.run(r);
 }
-function li() {
+function Wu() {
 }
 /**
  * @license
  * Copyright 2019 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-const mt = Symbol("Comlink.proxy"), Us = Symbol("Comlink.endpoint"), zs = Symbol("Comlink.releaseProxy"), wr = Symbol("Comlink.finalizer"), rr = Symbol("Comlink.thrown"), yt = (r) => typeof r == "object" && r !== null || typeof r == "function", Vs = {
-  canHandle: (r) => yt(r) && r[mt],
-  serialize(r) {
-    const { port1: t, port2: o } = new MessageChannel();
-    return qr(r, t), [o, [o]];
+const Xa = Symbol("Comlink.proxy"), ku = Symbol("Comlink.endpoint"), Eu = Symbol("Comlink.releaseProxy"), Ds = Symbol("Comlink.finalizer"), Vt = Symbol("Comlink.thrown"), Qa = (e) => typeof e == "object" && e !== null || typeof e == "function", Ou = {
+  canHandle: (e) => Qa(e) && e[Xa],
+  serialize(e) {
+    const { port1: r, port2: s } = new MessageChannel();
+    return gi(e, r), [s, [s]];
   },
-  deserialize(r) {
-    return r.start(), Rr(r);
+  deserialize(e) {
+    return e.start(), wi(e);
   }
-}, Hs = {
-  canHandle: (r) => yt(r) && rr in r,
-  serialize({ value: r }) {
-    let t;
-    return r instanceof Error ? t = {
+}, xu = {
+  canHandle: (e) => Qa(e) && Vt in e,
+  serialize({ value: e }) {
+    let r;
+    return e instanceof Error ? r = {
       isError: !0,
       value: {
-        message: r.message,
-        name: r.name,
-        stack: r.stack
+        message: e.message,
+        name: e.name,
+        stack: e.stack
       }
-    } : t = { isError: !1, value: r }, [t, []];
+    } : r = { isError: !1, value: e }, [r, []];
   },
-  deserialize(r) {
-    throw r.isError ? Object.assign(new Error(r.value.message), r.value) : r.value;
+  deserialize(e) {
+    throw e.isError ? Object.assign(new Error(e.value.message), e.value) : e.value;
   }
-}, xe = /* @__PURE__ */ new Map([
-  ["proxy", Vs],
-  ["throw", Hs]
+}, Jr = /* @__PURE__ */ new Map([
+  ["proxy", Ou],
+  ["throw", xu]
 ]);
-function Gs(r, t) {
-  for (const o of r)
-    if (t === o || o === "*" || o instanceof RegExp && o.test(t))
+function Tu(e, r) {
+  for (const s of e)
+    if (r === s || s === "*" || s instanceof RegExp && s.test(r))
       return !0;
   return !1;
 }
-function qr(r, t = globalThis, o = ["*"]) {
-  t.addEventListener("message", function p(l) {
-    if (!l || !l.data)
+function gi(e, r = globalThis, s = ["*"]) {
+  r.addEventListener("message", function n(o) {
+    if (!o || !o.data)
       return;
-    if (!Gs(o, l.origin)) {
-      console.warn(`Invalid origin '${l.origin}' for comlink proxy`);
+    if (!Tu(s, o.origin)) {
+      console.warn(`Invalid origin '${o.origin}' for comlink proxy`);
       return;
     }
-    const { id: i, type: e, path: f } = Object.assign({ path: [] }, l.data), h = (l.data.argumentList || []).map(Re);
-    let b;
+    const { id: i, type: t, path: p } = Object.assign({ path: [] }, o.data), y = (o.data.argumentList || []).map(Rr);
+    let u;
     try {
-      const k = f.slice(0, -1).reduce((w, S) => w[S], r), m = f.reduce((w, S) => w[S], r);
-      switch (e) {
+      const d = p.slice(0, -1).reduce((_, b) => _[b], e), w = p.reduce((_, b) => _[b], e);
+      switch (t) {
         case "GET":
-          b = m;
+          u = w;
           break;
         case "SET":
-          k[f.slice(-1)[0]] = Re(l.data.value), b = !0;
+          d[p.slice(-1)[0]] = Rr(o.data.value), u = !0;
           break;
         case "APPLY":
-          b = m.apply(k, h);
+          u = w.apply(d, y);
           break;
         case "CONSTRUCT":
           {
-            const w = new m(...h);
-            b = wt(w);
+            const _ = new w(...y);
+            u = to(_);
           }
           break;
         case "ENDPOINT":
           {
-            const { port1: w, port2: S } = new MessageChannel();
-            qr(r, S), b = Ks(w, [w]);
+            const { port1: _, port2: b } = new MessageChannel();
+            gi(e, b), u = Fu(_, [_]);
           }
           break;
         case "RELEASE":
-          b = void 0;
+          u = void 0;
           break;
         default:
           return;
       }
-    } catch (k) {
-      b = { value: k, [rr]: 0 };
+    } catch (d) {
+      u = { value: d, [Vt]: 0 };
     }
-    Promise.resolve(b).catch((k) => ({ value: k, [rr]: 0 })).then((k) => {
-      const [m, w] = pr(k);
-      t.postMessage(Object.assign(Object.assign({}, m), { id: i }), w), e === "RELEASE" && (t.removeEventListener("message", p), ht(t), wr in r && typeof r[wr] == "function" && r[wr]());
-    }).catch((k) => {
-      const [m, w] = pr({
+    Promise.resolve(u).catch((d) => ({ value: d, [Vt]: 0 })).then((d) => {
+      const [w, _] = ss(d);
+      r.postMessage(Object.assign(Object.assign({}, w), { id: i }), _), t === "RELEASE" && (r.removeEventListener("message", n), Ja(r), Ds in e && typeof e[Ds] == "function" && e[Ds]());
+    }).catch((d) => {
+      const [w, _] = ss({
         value: new TypeError("Unserializable return value"),
-        [rr]: 0
+        [Vt]: 0
       });
-      t.postMessage(Object.assign(Object.assign({}, m), { id: i }), w);
+      r.postMessage(Object.assign(Object.assign({}, w), { id: i }), _);
     });
-  }), t.start && t.start();
+  }), r.start && r.start();
 }
-function Ys(r) {
-  return r.constructor.name === "MessagePort";
+function $u(e) {
+  return e.constructor.name === "MessagePort";
 }
-function ht(r) {
-  Ys(r) && r.close();
+function Ja(e) {
+  $u(e) && e.close();
 }
-function Rr(r, t) {
-  return Er(r, [], t);
+function wi(e, r) {
+  return ei(e, [], r);
 }
-function Ke(r) {
-  if (r)
+function qt(e) {
+  if (e)
     throw new Error("Proxy has been released and is not useable");
 }
-function gt(r) {
-  return Se(r, {
+function eo(e) {
+  return Xr(e, {
     type: "RELEASE"
   }).then(() => {
-    ht(r);
+    Ja(e);
   });
 }
-const nr = /* @__PURE__ */ new WeakMap(), ar = "FinalizationRegistry" in globalThis && new FinalizationRegistry((r) => {
-  const t = (nr.get(r) || 0) - 1;
-  nr.set(r, t), t === 0 && gt(r);
+const rs = /* @__PURE__ */ new WeakMap(), ts = "FinalizationRegistry" in globalThis && new FinalizationRegistry((e) => {
+  const r = (rs.get(e) || 0) - 1;
+  rs.set(e, r), r === 0 && eo(e);
 });
-function Zs(r, t) {
-  const o = (nr.get(t) || 0) + 1;
-  nr.set(t, o), ar && ar.register(r, t, r);
+function Au(e, r) {
+  const s = (rs.get(r) || 0) + 1;
+  rs.set(r, s), ts && ts.register(e, r, e);
 }
-function Qs(r) {
-  ar && ar.unregister(r);
+function Su(e) {
+  ts && ts.unregister(e);
 }
-function Er(r, t = [], o = function() {
+function ei(e, r = [], s = function() {
 }) {
-  let p = !1;
-  const l = new Proxy(o, {
-    get(i, e) {
-      if (Ke(p), e === zs)
+  let n = !1;
+  const o = new Proxy(s, {
+    get(i, t) {
+      if (qt(n), t === Eu)
         return () => {
-          Qs(l), gt(r), p = !0;
+          Su(o), eo(e), n = !0;
         };
-      if (e === "then") {
-        if (t.length === 0)
-          return { then: () => l };
-        const f = Se(r, {
+      if (t === "then") {
+        if (r.length === 0)
+          return { then: () => o };
+        const p = Xr(e, {
           type: "GET",
-          path: t.map((h) => h.toString())
-        }).then(Re);
-        return f.then.bind(f);
+          path: r.map((y) => y.toString())
+        }).then(Rr);
+        return p.then.bind(p);
       }
-      return Er(r, [...t, e]);
+      return ei(e, [...r, t]);
     },
-    set(i, e, f) {
-      Ke(p);
-      const [h, b] = pr(f);
-      return Se(r, {
+    set(i, t, p) {
+      qt(n);
+      const [y, u] = ss(p);
+      return Xr(e, {
         type: "SET",
-        path: [...t, e].map((k) => k.toString()),
-        value: h
-      }, b).then(Re);
+        path: [...r, t].map((d) => d.toString()),
+        value: y
+      }, u).then(Rr);
     },
-    apply(i, e, f) {
-      Ke(p);
-      const h = t[t.length - 1];
-      if (h === Us)
-        return Se(r, {
+    apply(i, t, p) {
+      qt(n);
+      const y = r[r.length - 1];
+      if (y === ku)
+        return Xr(e, {
           type: "ENDPOINT"
-        }).then(Re);
-      if (h === "bind")
-        return Er(r, t.slice(0, -1));
-      const [b, k] = Ur(f);
-      return Se(r, {
+        }).then(Rr);
+      if (y === "bind")
+        return ei(e, r.slice(0, -1));
+      const [u, d] = Pn(p);
+      return Xr(e, {
         type: "APPLY",
-        path: t.map((m) => m.toString()),
-        argumentList: b
-      }, k).then(Re);
+        path: r.map((w) => w.toString()),
+        argumentList: u
+      }, d).then(Rr);
     },
-    construct(i, e) {
-      Ke(p);
-      const [f, h] = Ur(e);
-      return Se(r, {
+    construct(i, t) {
+      qt(n);
+      const [p, y] = Pn(t);
+      return Xr(e, {
         type: "CONSTRUCT",
-        path: t.map((b) => b.toString()),
-        argumentList: f
-      }, h).then(Re);
+        path: r.map((u) => u.toString()),
+        argumentList: p
+      }, y).then(Rr);
     }
   });
-  return Zs(l, r), l;
+  return Au(o, e), o;
 }
-function Js(r) {
-  return Array.prototype.concat.apply([], r);
+function Ru(e) {
+  return Array.prototype.concat.apply([], e);
 }
-function Ur(r) {
-  const t = r.map(pr);
-  return [t.map((o) => o[0]), Js(t.map((o) => o[1]))];
+function Pn(e) {
+  const r = e.map(ss);
+  return [r.map((s) => s[0]), Ru(r.map((s) => s[1]))];
 }
-const bt = /* @__PURE__ */ new WeakMap();
-function Ks(r, t) {
-  return bt.set(r, t), r;
+const ro = /* @__PURE__ */ new WeakMap();
+function Fu(e, r) {
+  return ro.set(e, r), e;
 }
-function wt(r) {
-  return Object.assign(r, { [mt]: !0 });
+function to(e) {
+  return Object.assign(e, { [Xa]: !0 });
 }
-function Xs(r, t = globalThis, o = "*") {
+function ju(e, r = globalThis, s = "*") {
   return {
-    postMessage: (p, l) => r.postMessage(p, o, l),
-    addEventListener: t.addEventListener.bind(t),
-    removeEventListener: t.removeEventListener.bind(t)
+    postMessage: (n, o) => e.postMessage(n, s, o),
+    addEventListener: r.addEventListener.bind(r),
+    removeEventListener: r.removeEventListener.bind(r)
   };
 }
-function pr(r) {
-  for (const [t, o] of xe)
-    if (o.canHandle(r)) {
-      const [p, l] = o.serialize(r);
+function ss(e) {
+  for (const [r, s] of Jr)
+    if (s.canHandle(e)) {
+      const [n, o] = s.serialize(e);
       return [
         {
           type: "HANDLER",
-          name: t,
-          value: p
+          name: r,
+          value: n
         },
-        l
+        o
       ];
     }
   return [
     {
       type: "RAW",
-      value: r
+      value: e
     },
-    bt.get(r) || []
+    ro.get(e) || []
   ];
 }
-function Re(r) {
-  switch (r.type) {
+function Rr(e) {
+  switch (e.type) {
     case "HANDLER":
-      return xe.get(r.name).deserialize(r.value);
+      return Jr.get(e.name).deserialize(e.value);
     case "RAW":
-      return r.value;
+      return e.value;
   }
 }
-function Se(r, t, o) {
-  return new Promise((p) => {
-    const l = ei();
-    r.addEventListener("message", function i(e) {
-      !e.data || !e.data.id || e.data.id !== l || (r.removeEventListener("message", i), p(e.data));
-    }), r.start && r.start(), r.postMessage(Object.assign({ id: l }, t), o);
+function Xr(e, r, s) {
+  return new Promise((n) => {
+    const o = Bu();
+    e.addEventListener("message", function i(t) {
+      !t.data || !t.data.id || t.data.id !== o || (e.removeEventListener("message", i), n(t.data));
+    }), e.start && e.start(), e.postMessage(Object.assign({ id: o }, r), s);
   });
 }
-function ei() {
+function Bu() {
   return new Array(4).fill(0).map(() => Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16)).join("-");
 }
-function ri(r, t = void 0) {
-  si();
-  const o = r instanceof Worker ? r : Xs(r, t), p = Rr(o), l = vt(p);
-  return new Proxy(l, {
-    get: (i, e) => e === "isConnected" ? async () => {
+function Iu(e, r = void 0) {
+  Nu();
+  const s = e instanceof Worker ? e : ju(e, r), n = wi(s), o = so(n);
+  return new Proxy(o, {
+    get: (i, t) => t === "isConnected" ? async () => {
       for (; ; )
         try {
-          await ti(p.isConnected(), 200);
+          await Lu(n.isConnected(), 200);
           break;
         } catch {
         }
-    } : p[e]
+    } : n[t]
   });
 }
-async function ti(r, t) {
-  return new Promise((o, p) => {
-    setTimeout(p, t), r.then(o);
+async function Lu(e, r) {
+  return new Promise((s, n) => {
+    setTimeout(n, r), e.then(s);
   });
 }
-let zr = !1;
-function si() {
-  if (zr)
+let kn = !1;
+function Nu() {
+  if (kn)
     return;
-  zr = !0, xe.set("EVENT", {
-    canHandle: (o) => o instanceof CustomEvent,
-    serialize: (o) => [
+  kn = !0, Jr.set("EVENT", {
+    canHandle: (s) => s instanceof CustomEvent,
+    serialize: (s) => [
       {
-        detail: o.detail
+        detail: s.detail
       },
       []
     ],
-    deserialize: (o) => o
-  }), xe.set("FUNCTION", {
-    canHandle: (o) => typeof o == "function",
-    serialize(o) {
-      const { port1: p, port2: l } = new MessageChannel();
-      return qr(o, p), [l, [l]];
+    deserialize: (s) => s
+  }), Jr.set("FUNCTION", {
+    canHandle: (s) => typeof s == "function",
+    serialize(s) {
+      const { port1: n, port2: o } = new MessageChannel();
+      return gi(s, n), [o, [o]];
     },
-    deserialize(o) {
-      return o.start(), Rr(o);
+    deserialize(s) {
+      return s.start(), wi(s);
     }
-  }), xe.set("PHPResponse", {
-    canHandle: (o) => typeof o == "object" && o !== null && "headers" in o && "bytes" in o && "errors" in o && "exitCode" in o && "httpStatusCode" in o,
-    serialize(o) {
-      return [o.toRawData(), []];
+  }), Jr.set("PHPResponse", {
+    canHandle: (s) => typeof s == "object" && s !== null && "headers" in s && "bytes" in s && "errors" in s && "exitCode" in s && "httpStatusCode" in s,
+    serialize(s) {
+      return [s.toRawData(), []];
     },
-    deserialize(o) {
-      return or.fromRawData(o);
+    deserialize(s) {
+      return Xt.fromRawData(s);
     }
   });
-  const r = xe.get("throw"), t = r == null ? void 0 : r.serialize;
-  r.serialize = ({ value: o }) => {
-    const p = t({ value: o });
-    return o.response && (p[0].value.response = o.response), o.source && (p[0].value.source = o.source), p;
+  const e = Jr.get("throw"), r = e == null ? void 0 : e.serialize;
+  e.serialize = ({ value: s }) => {
+    const n = r({ value: s });
+    return s.response && (n[0].value.response = s.response), s.source && (n[0].value.source = s.source), n;
   };
 }
-function vt(r) {
-  return new Proxy(r, {
-    get(t, o) {
-      switch (typeof t[o]) {
+function so(e) {
+  return new Proxy(e, {
+    get(r, s) {
+      switch (typeof r[s]) {
         case "function":
-          return (...p) => t[o](...p);
+          return (...n) => r[s](...n);
         case "object":
-          return t[o] === null ? t[o] : vt(t[o]);
+          return r[s] === null ? r[s] : so(r[s]);
         case "undefined":
         case "number":
         case "string":
-          return t[o];
+          return r[s];
         default:
-          return wt(t[o]);
+          return to(r[s]);
       }
     }
   });
 }
-new Promise((r) => {
-});
-async function fi({
-  iframe: r,
-  blueprint: t,
-  remoteUrl: o,
-  progressTracker: p = new ur(),
-  disableProgressBar: l,
+async function Hu({
+  iframe: e,
+  blueprint: r,
+  remoteUrl: s,
+  progressTracker: n = new os(),
+  disableProgressBar: o,
   onBlueprintStepCompleted: i,
-  onClientConnected: e = () => {
+  onClientConnected: t = () => {
   },
-  sapiName: f,
-  onBeforeBlueprint: h,
-  mounts: b,
-  shouldInstallWordPress: k
+  sapiName: p,
+  onBeforeBlueprint: y,
+  mounts: u,
+  scope: d,
+  corsProxy: w,
+  shouldInstallWordPress: _
 }) {
-  oi(o), ii(r), o = ni(o, {
-    progressbar: !l
-  }), p.setCaption("Preparing WordPress"), t || (t = {
-    phpExtensionBundles: ["kitchen-sink"]
+  Du(s), Cu(e), s = qu(s, {
+    progressbar: !o
+  }), n.setCaption("Preparing WordPress"), r || (r = {});
+  const b = yu(r, {
+    progress: n.stage(0.5),
+    onStepCompleted: i,
+    corsProxy: w
   });
-  const m = xs(t, {
-    progress: p.stage(0.5),
-    onStepCompleted: i
+  await new Promise((q) => {
+    e.src = s, e.addEventListener("load", q, !1);
   });
-  await new Promise((D) => {
-    r.src = o, r.addEventListener("load", D, !1);
-  });
-  const w = ri(
-    r.contentWindow,
-    r.ownerDocument.defaultView
+  const j = Iu(
+    e.contentWindow,
+    e.ownerDocument.defaultView
   );
-  await w.isConnected(), p.pipe(w);
-  const S = p.stage();
-  return await w.onDownloadProgress(S.loadingListener), await w.boot({
-    mounts: b,
-    sapiName: f,
-    shouldInstallWordPress: k,
-    phpVersion: m.versions.php,
-    wpVersion: m.versions.wp,
-    phpExtensions: m.phpExtensions,
-    withNetworking: m.features.networking
-  }), await w.isReady(), S.finish(), St(ae, w), e(w), h && await h(), await Bs(m, w), p.finish(), w;
+  await j.isConnected(), n.pipe(j);
+  const P = n.stage();
+  return await j.onDownloadProgress(P.loadingListener), await j.boot({
+    mounts: u,
+    sapiName: p,
+    scope: d ?? Math.random().toFixed(16),
+    shouldInstallWordPress: _,
+    phpVersion: b.versions.php,
+    wpVersion: b.versions.wp,
+    withNetworking: b.features.networking
+  }), await j.isReady(), P.finish(), mo(Se, j), t(j), y && await y(), await Pu(b, j), n.finish(), j;
 }
-function ii(r) {
-  var t, o;
-  (t = r.sandbox) != null && t.length && !((o = r.sandbox) != null && o.contains("allow-storage-access-by-user-activation")) && r.sandbox.add("allow-storage-access-by-user-activation");
+function Cu(e) {
+  var r, s;
+  (r = e.sandbox) != null && r.length && !((s = e.sandbox) != null && s.contains("allow-storage-access-by-user-activation")) && e.sandbox.add("allow-storage-access-by-user-activation");
 }
-const tr = "https://playground.wordpress.net";
-function oi(r) {
-  const t = new URL(r, tr);
-  if ((t.origin === tr || t.hostname === "localhost") && t.pathname !== "/remote.html")
+const Yt = "https://playground.wordpress.net";
+function Du(e) {
+  const r = new URL(e, Yt);
+  if ((r.origin === Yt || r.hostname === "localhost") && r.pathname !== "/remote.html")
     throw new Error(
-      `Invalid remote URL: ${t}. Expected origin to be ${tr}/remote.html.`
+      `Invalid remote URL: ${r}. Expected origin to be ${Yt}/remote.html.`
     );
 }
-function ni(r, t) {
-  const o = new URL(r, tr), p = new URLSearchParams(o.search);
-  for (const [l, i] of Object.entries(t))
+function qu(e, r) {
+  const s = new URL(e, Yt), n = new URLSearchParams(s.search);
+  for (const [o, i] of Object.entries(r))
     if (i != null && i !== !1)
       if (Array.isArray(i))
-        for (const e of i)
-          p.append(l, e.toString());
+        for (const t of i)
+          n.append(o, t.toString());
       else
-        p.set(l, i.toString());
-  return o.search = p.toString(), o.toString();
+        n.set(o, i.toString());
+  return s.search = n.toString(), s.toString();
 }
 export {
-  gs as LatestSupportedPHPVersion,
-  jr as SupportedPHPVersions,
-  pi as SupportedPHPVersionsList,
-  $r as activatePlugin,
-  Kr as activateTheme,
-  xs as compileBlueprint,
-  Gt as cp,
-  st as defineSiteUrl,
-  sr as defineWpConfigConsts,
-  Vt as enableMultisite,
-  Xt as exportWXR,
-  it as importThemeStarterContent,
-  Kt as importWordPressFiles,
-  Jt as importWxr,
-  es as installPlugin,
-  rs as installTheme,
-  kr as login,
-  Zt as mkdir,
-  Yt as mv,
-  ie as phpVar,
-  lr as phpVars,
-  _r as request,
-  ts as resetData,
-  Xr as rm,
-  Qt as rmdir,
-  Bs as runBlueprintSteps,
-  Ct as runPHP,
-  It as runPHPWithOptions,
-  Dt as runSql,
-  ss as runWpInstallationWizard,
-  ai as setPhpIniEntries,
-  li as setPluginProxyURL,
-  ls as setSiteLanguage,
-  et as setSiteOptions,
-  fi as startPlaygroundWeb,
-  Tr as unzip,
-  Ut as updateUserMeta,
-  as as wpCLI,
-  Hr as wpContentFilesExcludedFromExport,
-  tt as writeFile,
-  is as zipWpContent
+  Do as LatestSupportedPHPVersion,
+  ni as SupportedPHPVersions,
+  zu as SupportedPHPVersionsList,
+  An as activatePlugin,
+  Sn as activateTheme,
+  yu as compileBlueprint,
+  Ro as cp,
+  Cn as defineSiteUrl,
+  ti as defineWpConfigConsts,
+  So as enableMultisite,
+  Mo as exportWXR,
+  Dn as importThemeStarterContent,
+  zo as importWordPressFiles,
+  Uo as importWxr,
+  Wo as installPlugin,
+  Ho as installTheme,
+  Zo as login,
+  jo as mkdir,
+  Fo as mv,
+  Fe as phpVar,
+  is as phpVars,
+  ko as request,
+  Go as resetData,
+  Rn as rm,
+  Bo as rmdir,
+  Pu as runBlueprintSteps,
+  _o as runPHP,
+  vo as runPHPWithOptions,
+  Po as runSql,
+  Vo as runWpInstallationWizard,
+  Uu as setPhpIniEntries,
+  Wu as setPluginProxyURL,
+  Qo as setSiteLanguage,
+  Fn as setSiteOptions,
+  Hu as startPlaygroundWeb,
+  ai as unzip,
+  To as updateUserMeta,
+  Bn as wpCLI,
+  On as wpContentFilesExcludedFromExport,
+  In as writeFile,
+  qo as writeFiles,
+  Yo as zipWpContent
 };

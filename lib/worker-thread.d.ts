@@ -11,7 +11,6 @@ export type WorkerBootOptions = {
     wpVersion?: string;
     phpVersion?: SupportedPHPVersion;
     sapiName?: string;
-    phpExtensions?: string[];
     scope: string;
     withNetworking: boolean;
     mounts?: Array<MountDescriptor>;
@@ -57,7 +56,7 @@ export declare class PlaygroundWorkerEndpoint extends PHPWorker {
     unmountOpfs(mountpoint: string): Promise<void>;
     backfillStaticFilesRemovedFromMinifiedBuild(): Promise<void>;
     hasCachedStaticFilesRemovedFromMinifiedBuild(): Promise<boolean>;
-    boot({ scope, mounts, wpVersion, phpVersion, phpExtensions, sapiName, shouldInstallWordPress, }: WorkerBootOptions): Promise<void>;
+    boot({ scope, mounts, wpVersion, phpVersion, sapiName, shouldInstallWordPress, }: WorkerBootOptions): Promise<void>;
     journalFSEvents(root: string, callback: (op: FilesystemOperation) => void): Promise<() => any>;
     replayFSJournal(events: FilesystemOperation[]): Promise<void>;
 }
