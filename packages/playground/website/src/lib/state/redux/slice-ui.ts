@@ -28,10 +28,7 @@ const isMobile = window.innerWidth < 875;
 const shouldOpenSiteManagerByDefault = false;
 
 const initialState: UIState = {
-	activeModal:
-		query.get('modal') === 'mount-markdown-directory'
-			? 'mount-markdown-directory'
-			: null,
+	activeModal: query.get('modal') || null,
 	offline: !navigator.onLine,
 	// NOTE: Please do not eliminate the cases in this siteManagerIsOpen expression,
 	// even if they seem redundant. We may experiment which toggling the manager
@@ -67,6 +64,14 @@ const uiSlice = createSlice({
 			}
 		},
 		setActiveModal: (state, action: PayloadAction<string | null>) => {
+			const url = new URL(window.location.href);
+			if (action.payload === null) {
+				url.searchParams.delete('modal');
+			} else {
+				url.searchParams.set('modal', action.payload);
+			}
+			window.history.replaceState({}, '', url.href);
+
 			state.activeModal = action.payload;
 		},
 		setOffline: (state, action: PayloadAction<boolean>) => {

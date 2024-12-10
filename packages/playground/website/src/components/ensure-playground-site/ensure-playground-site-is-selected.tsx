@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { resolveBlueprintFromURL } from '../../lib/state/url/resolve-blueprint-from-url';
 import { useCurrentUrl } from '../../lib/state/url/router-hooks';
 import { opfsSiteStorage } from '../../lib/state/opfs/opfs-site-storage';
@@ -6,8 +6,10 @@ import {
 	siteListingLoaded,
 	selectSiteBySlug,
 	setTemporarySiteSpec,
+	deriveSiteNameFromSlug,
 } from '../../lib/state/redux/slice-sites';
 import {
+	selectActiveSite,
 	setActiveSite,
 	useAppDispatch,
 	useAppSelector,
@@ -15,6 +17,10 @@ import {
 import { redirectTo } from '../../lib/state/url/router';
 import { logger } from '@php-wasm/logger';
 import { Blueprint } from '@wp-playground/blueprints';
+import { usePrevious } from '../../lib/hooks/use-previous';
+import { modalSlugs } from '../layout';
+import { setActiveModal } from '../../lib/state/redux/slice-ui';
+import { selectClientBySiteSlug } from '../../lib/state/redux/slice-clients';
 
 /**
  * Ensures the redux store always has an activeSite value.
@@ -32,12 +38,24 @@ export function EnsurePlaygroundSiteIsSelected({
 	const siteListingStatus = useAppSelector(
 		(state) => state.sites.loadingState
 	);
+	const activeSite = useAppSelector((state) => selectActiveSite(state));
 	const dispatch = useAppDispatch();
 	const url = useCurrentUrl();
 	const requestedSiteSlug = url.searchParams.get('site-slug');
 	const requestedSiteObject = useAppSelector((state) =>
 		selectSiteBySlug(state, requestedSiteSlug!)
 	);
+	const requestedClientInfo = useAppSelector(
+		(state) =>
+			requestedSiteSlug &&
+			selectClientBySiteSlug(state, requestedSiteSlug)
+	);
+	const [needMissingSitePromptForSlug, setNeedMissingSitePromptForSlug] =
+		useState<false | string>(false);
+
+	const promptIfSiteMissing =
+		url.searchParams.get('if-stored-site-missing') === 'prompt';
+	const prevUrl = usePrevious(url);
 
 	useEffect(() => {
 		if (!opfsSiteStorage) {
@@ -68,50 +86,108 @@ export function EnsurePlaygroundSiteIsSelected({
 			if (requestedSiteSlug) {
 				// If the site does not exist, redirect to a new temporary site.
 				if (!requestedSiteObject) {
-					// @TODO: Notification: 'The requested site was not found. Redirecting to a new temporary site.'
-					logger.log(
-						'The requested site was not found. Redirecting to a new temporary site.'
-					);
-					const currentUrl = new URL(window.location.href);
-					currentUrl.searchParams.delete('site-slug');
-					redirectTo(currentUrl.toString());
-					return;
+					if (promptIfSiteMissing) {
+						logger.log(
+							'The requested site was not found. Creating a new temporary site.'
+						);
+
+						await createNewTemporarySite(
+							dispatch,
+							requestedSiteSlug
+						);
+						setNeedMissingSitePromptForSlug(requestedSiteSlug);
+						return;
+					} else {
+						// @TODO: Notification: 'The requested site was not found. Redirecting to a new temporary site.'
+						logger.log(
+							'The requested site was not found. Redirecting to a new temporary site.'
+						);
+						const currentUrl = new URL(window.location.href);
+						currentUrl.searchParams.delete('site-slug');
+						redirectTo(currentUrl.toString());
+						return;
+					}
 				}
 
 				dispatch(setActiveSite(requestedSiteSlug));
 				return;
 			}
 
-			// If the site slug is missing, create a new temporary site.
-			// Lean on the Query API parameters and the Blueprint API to
-			// create the new site.
-			const url = new URL(window.location.href);
-			let blueprint: Blueprint | undefined = undefined;
-			try {
-				blueprint = await resolveBlueprintFromURL(url);
-			} catch (e) {
-				logger.error('Error resolving blueprint:', e);
+			// If only the 'modal' parameter changes in searchParams, don't reload the page
+			const notRefreshingParam = 'modal';
+			const oldParams = new URLSearchParams(prevUrl?.search);
+			const newParams = new URLSearchParams(url?.search);
+			oldParams.delete(notRefreshingParam);
+			newParams.delete(notRefreshingParam);
+			const avoidUnnecessaryTempSiteReload =
+				activeSite && oldParams.toString() === newParams.toString();
+			if (avoidUnnecessaryTempSiteReload) {
+				return;
 			}
-			// Create a new site otherwise
-			const newSiteInfo = await dispatch(
-				setTemporarySiteSpec({
-					metadata: {
-						originalBlueprint: blueprint,
-					},
-					originalUrlParams: {
-						searchParams: Object.fromEntries(
-							url.searchParams.entries()
-						),
-						hash: url.hash,
-					},
-				})
-			);
-			dispatch(setActiveSite(newSiteInfo.slug));
+
+			await createNewTemporarySite(dispatch);
 		}
 
 		ensureSiteIsSelected();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [url.href, requestedSiteSlug, siteListingStatus]);
 
+	useEffect(() => {
+		if (
+			needMissingSitePromptForSlug &&
+			needMissingSitePromptForSlug === requestedSiteSlug &&
+			requestedClientInfo
+		) {
+			dispatch(setActiveModal(modalSlugs.MISSING_SITE_PROMPT));
+			setNeedMissingSitePromptForSlug(false);
+		}
+	}, [
+		needMissingSitePromptForSlug,
+		requestedSiteSlug,
+		requestedClientInfo,
+		dispatch,
+	]);
+
 	return children;
+}
+
+function parseSearchParams(searchParams: URLSearchParams) {
+	const params: Record<string, any> = {};
+	for (const key of searchParams.keys()) {
+		const value = searchParams.getAll(key);
+		params[key] = value.length > 1 ? value : value[0];
+	}
+	return params;
+}
+
+async function createNewTemporarySite(
+	dispatch: ReturnType<typeof useAppDispatch>,
+	requestedSiteSlug?: string
+) {
+	// If the site slug is missing, create a new temporary site.
+	// Lean on the Query API parameters and the Blueprint API to
+	// create the new site.
+	const newUrl = new URL(window.location.href);
+	let blueprint: Blueprint | undefined = undefined;
+	try {
+		blueprint = await resolveBlueprintFromURL(newUrl);
+	} catch (e) {
+		logger.error('Error resolving blueprint:', e);
+	}
+	// Create a new site otherwise
+	const newSiteInfo = await dispatch(
+		setTemporarySiteSpec({
+			metadata: {
+				originalBlueprint: blueprint,
+				name: requestedSiteSlug
+					? deriveSiteNameFromSlug(requestedSiteSlug)
+					: undefined,
+			},
+			originalUrlParams: {
+				searchParams: parseSearchParams(newUrl.searchParams),
+				hash: newUrl.hash,
+			},
+		})
+	);
+	await dispatch(setActiveSite(newSiteInfo.slug));
 }

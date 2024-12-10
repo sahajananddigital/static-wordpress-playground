@@ -1,6 +1,6 @@
 import { PHP, UniversalPHP } from '@php-wasm/universal';
 import { joinPaths, phpVar } from '@php-wasm/util';
-import { unzipFile } from '@wp-playground/common';
+import { unzipFile, createMemoizedFetch } from '@wp-playground/common';
 export { bootWordPress, getFileNotFoundActionForWordPress } from './boot';
 export { getLoadedWordPressVersion } from './version-detect';
 
@@ -113,10 +113,26 @@ export async function setupPlatformLevelMuPlugins(php: UniversalPHP) {
 			}
 			return false;
 		}
+
 		/**
 		 * Logs the user in on their first visit if the Playground runtime told us to.
 		 */
 		function playground_auto_login() {
+			/**
+			 * The redirect should only run if the current PHP request is
+			 * a HTTP request. If it's a PHP CLI run, we can't login the user
+			 * because logins require cookies which aren't available in the CLI.
+			 *
+			 * Currently all Playground requests use the "cli" SAPI name
+			 * to ensure support for WP-CLI, so the best way to distinguish
+			 * between a CLI run and an HTTP request is by checking if the
+			 * $_SERVER['REQUEST_URI'] global is set.
+			 *
+			 * If $_SERVER['REQUEST_URI'] is not set, we assume it's a CLI run.
+			 */
+			if (empty($_SERVER['REQUEST_URI'])) {
+				return;
+			}
 			$user_name = playground_get_username_for_auto_login();
 			if ( false === $user_name ) {
 				return;
@@ -131,27 +147,37 @@ export async function setupPlatformLevelMuPlugins(php: UniversalPHP) {
 			if (!$user) {
 				return;
 			}
+			/**
+			 * This approach is described in a comment on
+			 * https://developer.wordpress.org/reference/functions/wp_set_current_user/
+			 */
 			wp_set_current_user( $user->ID, $user->user_login );
 			wp_set_auth_cookie( $user->ID );
 			do_action( 'wp_login', $user->user_login, $user );
 			setcookie('playground_auto_login_already_happened', '1');
-		}
 
+			/**
+			 * Reload page to ensure the user is logged in correctly.
+			 * WordPress uses cookies to determine if the user is logged in,
+			 * so we need to reload the page to ensure the cookies are set.
+			 */
+			$redirect_url = $_SERVER['REQUEST_URI'];
+			/**
+			 * Intentionally do not use wp_redirect() here. It removes
+			 * %0A and %0D sequences from the URL, which we don't want.
+			 * There are valid use-cases for encoded newlines in the query string,
+			 * for example html-api-debugger accepts markup with newlines
+			 * encoded as %0A via the query string.
+			 */
+			header( "Location: $redirect_url", true, 302 );
+			exit;
+		}
 		/**
 		 * Autologin users from the wp-login.php page.
 		 *
 		 * The wp hook isn't triggered on
 		 **/
-		add_action('init', function() {
-			playground_auto_login();
-			/**
-			 * Check if the request is for the login page.
-			 */
-			if (is_login() && is_user_logged_in() && !empty($_GET['redirect_to'])) {
-				wp_redirect($_GET['redirect_to']);
-				exit;
-			}
-		}, 1);
+		add_action('init', 'playground_auto_login', 1);
 
 		/**
 		 * Disable the Site Admin Email Verification Screen for any session started
@@ -518,4 +544,96 @@ function isCleanDirContainingSiteMetadata(path: string, php: PHP) {
 	}
 
 	return false;
+}
+
+const memoizedFetch = createMemoizedFetch(fetch);
+
+/**
+ * Resolves a specific WordPress release URL and version string based on
+ * a version query string such as "latest", "beta", or "6.6".
+ *
+ * Examples:
+ * ```js
+ * const { releaseUrl, version } = await resolveWordPressRelease('latest')
+ * // becomes https://wordpress.org/wordpress-6.6.2.zip and '6.6.2'
+ *
+ * const { releaseUrl, version } = await resolveWordPressRelease('beta')
+ * // becomes https://wordpress.org/wordpress-6.6.2-RC1.zip and '6.6.2-RC1'
+ *
+ * const { releaseUrl, version } = await resolveWordPressRelease('6.6')
+ * // becomes https://wordpress.org/wordpress-6.6.2.zip and '6.6.2'
+ * ```
+ *
+ * @param versionQuery - The WordPress version query string to resolve.
+ * @returns The resolved WordPress release URL and version string.
+ */
+export async function resolveWordPressRelease(versionQuery = 'latest') {
+	if (
+		versionQuery.startsWith('https://') ||
+		versionQuery.startsWith('http://')
+	) {
+		const shasum = await crypto.subtle.digest(
+			'SHA-1',
+			new TextEncoder().encode(versionQuery)
+		);
+		const sha1 = Array.from(new Uint8Array(shasum))
+			.map((b) => b.toString(16).padStart(2, '0'))
+			.join('');
+		return {
+			releaseUrl: versionQuery,
+			version: 'custom-' + sha1.substring(0, 8),
+			source: 'inferred',
+		};
+	} else if (versionQuery === 'trunk' || versionQuery === 'nightly') {
+		return {
+			releaseUrl:
+				'https://wordpress.org/nightly-builds/wordpress-latest.zip',
+			version: 'nightly-' + new Date().toISOString().split('T')[0],
+			source: 'inferred',
+		};
+	}
+
+	const response = await memoizedFetch(
+		'https://api.wordpress.org/core/version-check/1.7/?channel=beta'
+	);
+	let latestVersions = await response.json();
+
+	latestVersions = latestVersions.offers.filter(
+		(v: any) => v.response === 'autoupdate'
+	);
+
+	for (const apiVersion of latestVersions) {
+		if (versionQuery === 'beta' && apiVersion.version.includes('beta')) {
+			return {
+				releaseUrl: apiVersion.download,
+				version: apiVersion.version,
+				source: 'api',
+			};
+		} else if (
+			versionQuery === 'latest' &&
+			!apiVersion.version.includes('beta')
+		) {
+			// The first non-beta item in the list is the latest version.
+			return {
+				releaseUrl: apiVersion.download,
+				version: apiVersion.version,
+				source: 'api',
+			};
+		} else if (
+			apiVersion.version.substring(0, versionQuery.length) ===
+			versionQuery
+		) {
+			return {
+				releaseUrl: apiVersion.download,
+				version: apiVersion.version,
+				source: 'api',
+			};
+		}
+	}
+
+	return {
+		releaseUrl: `https://wordpress.org/wordpress-${versionQuery}.zip`,
+		version: versionQuery,
+		source: 'inferred',
+	};
 }

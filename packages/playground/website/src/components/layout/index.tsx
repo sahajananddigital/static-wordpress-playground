@@ -32,8 +32,23 @@ import {
 	setActiveModal,
 	setSiteManagerOpen,
 } from '../../lib/state/redux/slice-ui';
+import { ImportFormModal } from '../import-form-modal';
+import { PreviewPRModal } from '../../github/preview-pr';
+import { MissingSiteModal } from '../missing-site-modal';
 
 acquireOAuthTokenIfNeeded();
+
+export const modalSlugs = {
+	LOG: 'log',
+	ERROR_REPORT: 'error-report',
+	START_ERROR: 'start-error',
+	IMPORT_FORM: 'import-form',
+	GITHUB_IMPORT: 'github-import',
+	GITHUB_EXPORT: 'github-export',
+	PREVIEW_PR_WP: 'preview-pr-wordpress',
+	PREVIEW_PR_GUTENBERG: 'preview-pr-gutenberg',
+	MISSING_SITE_PROMPT: 'missing-site-prompt',
+};
 
 const displayMode = getDisplayModeFromQuery();
 function getDisplayModeFromQuery(): DisplayMode {
@@ -150,7 +165,7 @@ function Modals(blueprint: Blueprint) {
 		addCrashListener(logger, (e) => {
 			const error = e as CustomEvent;
 			if (error.detail?.source === 'php-wasm') {
-				dispatch(setActiveModal('error-report'));
+				dispatch(setActiveModal(modalSlugs.ERROR_REPORT));
 			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -160,21 +175,20 @@ function Modals(blueprint: Blueprint) {
 		(state: PlaygroundReduxState) => state.ui.activeModal
 	);
 
-	if (currentModal === 'log') {
+	if (currentModal === modalSlugs.LOG) {
 		return <LogModal />;
-	} else if (currentModal === 'error-report') {
+	} else if (currentModal === modalSlugs.ERROR_REPORT) {
 		return <ErrorReportModal blueprint={blueprint} />;
-	} else if (currentModal === 'start-error') {
+	} else if (currentModal === modalSlugs.START_ERROR) {
 		return <StartErrorModal />;
-	}
-
-	return (
-		<>
-			{query.get('gh-ensure-auth') === 'yes' ? (
-				<GitHubOAuthGuardModal />
-			) : (
-				''
-			)}
+	} else if (currentModal === modalSlugs.IMPORT_FORM) {
+		return <ImportFormModal />;
+	} else if (currentModal === modalSlugs.PREVIEW_PR_WP) {
+		return <PreviewPRModal target="wordpress" />;
+	} else if (currentModal === modalSlugs.PREVIEW_PR_GUTENBERG) {
+		return <PreviewPRModal target="gutenberg" />;
+	} else if (currentModal === modalSlugs.GITHUB_IMPORT) {
+		return (
 			<GithubImportModal
 				onImported={({
 					url,
@@ -196,6 +210,9 @@ function Modals(blueprint: Blueprint) {
 					setGithubExportFiles(files);
 				}}
 			/>
+		);
+	} else if (currentModal === modalSlugs.GITHUB_EXPORT) {
+		return (
 			<GithubExportModal
 				allowZipExport={
 					(query.get('ghexport-allow-include-zip') ?? 'yes') === 'yes'
@@ -207,6 +224,14 @@ function Modals(blueprint: Blueprint) {
 					setGithubExportFiles(undefined);
 				}}
 			/>
-		</>
-	);
+		);
+	} else if (currentModal === modalSlugs.MISSING_SITE_PROMPT) {
+		return <MissingSiteModal />;
+	}
+
+	if (query.get('gh-ensure-auth') === 'yes') {
+		return <GitHubOAuthGuardModal />;
+	}
+
+	return;
 }
